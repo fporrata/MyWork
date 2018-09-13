@@ -470,9 +470,4 @@ fit_and_plot_model(df, DecisionTreeRegressor(max_depth=2))
 ![png](output_54_0.png)
 
 
-<div style="text-align:center; margin: 40px 0 40px 0;">
-[**Back to Contents**](#toc)
-</div>
-
-
 </div>
