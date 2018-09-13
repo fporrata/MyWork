@@ -161,9 +161,6 @@ plt.plot(df.x, np.sin(df.x), color='k')
 ![png](output_15_1.png)
 
 
-<div style="text-align:center; margin: 40px 0 40px 0;">
-[**Back to Contents**](#toc)
-</div>
 
 <br id="mean">
 # 2 -  Mean model
@@ -212,10 +209,6 @@ plt.plot(df.x, [pred]*len(df.x), 'k--' )
 
 ![png](output_23_1.png)
 
-
-<div style="text-align:center; margin: 40px 0 40px 0;">
-[**Back to Contents**](#toc)
-</div>
 
 <br id="linear">
 # 3. Linear regression
@@ -288,11 +281,6 @@ plt.plot(df.x, lm.predict(features), 'k--')
 
 
 ![png](output_33_1.png)
-
-
-<div style="text-align:center; margin: 40px 0 40px 0;">
-[**Back to Contents**](#toc)
-</div>
 
 <br id="polynomial">
 # 4 - Polynomial linear regression
@@ -374,10 +362,6 @@ fit_and_plot_polynomial_model(df, LinearRegression(), 10)
 
 ![png](output_45_0.png)
 
-
-<div style="text-align:center; margin: 40px 0 40px 0;">
-[**Back to Contents**](#toc)
-</div>
 
 <br id="tree">
 # 5. Decision trees
