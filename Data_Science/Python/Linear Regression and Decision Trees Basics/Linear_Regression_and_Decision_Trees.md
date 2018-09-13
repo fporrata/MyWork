@@ -153,7 +153,7 @@ plt.plot(df.x, np.sin(df.x), color='k')
 
 
 
-    [<matplotlib.lines.Line2D at 0x214446ca080>]
+   
 
 
 
@@ -205,7 +205,7 @@ plt.plot(df.x, [pred]*len(df.x), 'k--' )
 
 
 
-    [<matplotlib.lines.Line2D at 0x214446fd2e8>]
+   
 
 
 
@@ -282,7 +282,7 @@ plt.plot(df.x, lm.predict(features), 'k--')
 
 
 
-    [<matplotlib.lines.Line2D at 0x21444ee2550>]
+    
 
 
 
