@@ -1,18 +1,15 @@
 
-<h1 style="font-size:42px; text-align:center; margin-bottom:30px;"><span style="color:SteelBlue">Module 4:</span> The Big Picture</h1>
-<hr>
-Linear Regression and Decision Trees Basics</span>.
-
+<h1 style="font-size:42px; text-align:center; margin-bottom:30px;"><span style="color:SteelBlue">Linear Regression and Decision Trees Basics:</span></h1>
 
 <br><hr id="toc">
 
 ### Table of Contents
 
 1. [Toy example: noisy sine wave](#sine)
-* [Mean model](#mean)
-* [Linear regression](#linear)
-* [Polynomial linear regression](#polynomial)
-* [Decision trees](#tree)
+2. [Mean model](#mean)
+3. [Linear regression](#linear)
+4. [Polynomial linear regression](#polynomial)
+5. [Decision trees](#tree)
 
 <br><hr>
 
