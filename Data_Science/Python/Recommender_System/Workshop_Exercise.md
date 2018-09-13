@@ -33,15 +33,6 @@ plotly.offline.init_notebook_mode(connected=True)
 warnings.filterwarnings("ignore")
 ```
 
-    Using TensorFlow backend.
-    F:\anaconda3\lib\site-packages\gensim\utils.py:1167: UserWarning: detected Windows; aliasing chunkize to chunkize_serial
-      warnings.warn("detected Windows; aliasing chunkize to chunkize_serial")
-    
-
-
-<script>requirejs.config({paths: { 'plotly': ['https://cdn.plot.ly/plotly-latest.min']},});if(!window.Plotly) {{require(['plotly'],function(plotly) {window.Plotly=plotly;});}}</script>
-
-
 # 2 - Load Preprocessed Data
 
 
