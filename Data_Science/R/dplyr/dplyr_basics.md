@@ -69,6 +69,7 @@ lut <- c("AA" = "American", "AS" = "Alaska", "B6" = "JetBlue", "CO" = "Continent
 ## num_range("x", 1:5): the variables named x01, x02, x03, x04 and x05, 
 ## one_of(x): every name that appears in x, which should be a character vector. 
 ---
+
 ## Print out a tbl containing just ArrDelay and DepDelay
 `select(hflights, ends_with("Delay"))`
 
@@ -106,7 +107,10 @@ lut <- c("AA" = "American", "AS" = "Alaska", "B6" = "JetBlue", "CO" = "Continent
 `m1 <- mutate(hflights, loss = ArrDelay - DepDelay, loss_ratio = loss/DepDelay )`
 
 ## Add the three variables as described in the third instruction: m2
-`m2 <- mutate(hflights, TotalTaxi = TaxiIn + TaxiOut, ActualGroundTime = ActualElapsedTime - AirTime, Diff = TotalTaxi - ActualGroundTime )`
+```R
+m2 <- mutate(hflights, TotalTaxi = TaxiIn + TaxiOut, ActualGroundTime = ActualElapsedTime - AirTime, Diff = TotalTaxi - ActualGroundTime )
+```
+
 ---
 # Logical operators 
 ## R comes with a set of logical operators that you can use inside filter(): 
@@ -119,6 +123,7 @@ lut <- c("AA" = "American", "AS" = "Alaska", "B6" = "JetBlue", "CO" = "Continent
 ## x > y, TRUE if x is greater than y 
 ## x %in% c(a, b, c), TRUE if x is in the vector c(a, b, c) 
 ---
+
 ##  All flights that traveled 3000 miles or more
 `filter(hflights, Distance > 3000)`
 
@@ -181,6 +186,7 @@ lut <- c("AA" = "American", "AS" = "Alaska", "B6" = "JetBlue", "CO" = "Continent
 
 ##  Print the maximum taxiing difference of temp2 with summarise()
 `summarise(temp2, max_taxi_diff = max(abs(TaxiIn - TaxiOut)))`
+
 ---
 # dplyr aggregate functions 
 ## dplyr provides several helpful aggregate functions of its own, in addition to the ones that are already defined in R. These include: 
@@ -191,6 +197,7 @@ lut <- c("AA" = "American", "AS" = "Alaska", "B6" = "JetBlue", "CO" = "Continent
 ## n() - The number of rows in the data.frame or group of observations that summarise() describes. 
 ## n_distinct(x) - The number of unique values in vector x. 
 ---
+
 ## Generate summarizing statistics for hflights
 ```R
 summarise(hflights,
