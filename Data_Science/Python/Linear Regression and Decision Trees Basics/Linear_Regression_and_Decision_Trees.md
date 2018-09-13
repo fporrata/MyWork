@@ -1,27 +1,18 @@
 
 <h1 style="font-size:42px; text-align:center; margin-bottom:30px;"><span style="color:SteelBlue">Module 4:</span> The Big Picture</h1>
 <hr>
-Welcome to the **Companion Workbook** for <span style="color:royalblue">Module 4: The Big Picture</span>.
+Linear Regression and Decision Trees Basics</span>.
 
-
-### Instructions
-
-As you go through the online lessons, follow along here to run the lesson code for yourself. We recommend reading the lesson first, then completing its accompanying section in the workbook.
-
-While there are no exercises in this module, we strongly recommend recreating the lesson code and playing around with it.
 
 <br><hr id="toc">
 
 ### Table of Contents
 
-1. [Model complexity](#complexity)
-* [Toy example: noisy sine wave](#sine)
+1. [Toy example: noisy sine wave](#sine)
 * [Mean model](#mean)
 * [Linear regression](#linear)
 * [Polynomial linear regression](#polynomial)
 * [Decision trees](#tree)
-
-**Tip:** Each section builds on the previous ones.
 
 <br><hr>
 
@@ -64,13 +55,8 @@ import seaborn as sns
 
 This is the first time we'll use these libraries, so this module will also be a gentle introduction to plotting.
 
-<br id="complexity">
-# 1. Model complexity
-
-No code to run. 
-
 <br id="sine">
-# 2. - Toy example: noisy sine wave
+# 1. - Toy example: noisy sine wave
 
 For the rest of this module, we're going to switch over to a toy example.
 * Remember, the relevant code is all included in the online lesson.
@@ -183,7 +169,7 @@ plt.plot(df.x, np.sin(df.x), color='k')
 </div>
 
 <br id="mean">
-# 3 -  Mean model
+# 2 -  Mean model
 
 Now it's time to start building some models. Let's start with a **very simple** model. 
 
@@ -235,7 +221,7 @@ plt.plot(df.x, [pred]*len(df.x), 'k--' )
 </div>
 
 <br id="linear">
-# 4. Linear regression
+# 3. Linear regression
 
 Next, let's introduce linear regression. 
 
@@ -312,7 +298,7 @@ plt.plot(df.x, lm.predict(features), 'k--')
 </div>
 
 <br id="polynomial">
-# 5 - Polynomial linear regression
+# 4 - Polynomial linear regression
 
 Next, we'll take a look at polynomial linear regression.
 
@@ -397,7 +383,7 @@ fit_and_plot_polynomial_model(df, LinearRegression(), 10)
 </div>
 
 <br id="tree">
-# 6. Decision trees
+# 5. Decision trees
 
 Just for fun, let's see what happens when you crank model complexity way up.
 
