@@ -507,20 +507,5 @@ fit_and_plot_model(df, DecisionTreeRegressor(max_depth=2))
 [**Back to Contents**](#toc)
 </div>
 
-<br>
-## Next Steps
 
-First, a huge congrats on finishing the first project!
-
-
-Here are a few of things you did in this final module:
-* You learned about one of the most important concepts in machine learning: model complexity.
-* You generated an artificial dataset from a noisy sine wave.
-* You fit and plotted mean, linear regression, polynomial linear, and decision tree models.
-* And you compared their results against the "true underlying relationship" in the artificial dataset.
-
-In the next project, <span style="color:royalblue">Project 2: Real-Estate Tycoon</span>, we will dive deeper into these concepts, plus many others. You will get to practice the entire **machine learning workflow** from end to end!
-
-<div style="text-align:center; margin: 40px 0 40px 0;">
-[**Back to Contents**](#toc)
 </div>
