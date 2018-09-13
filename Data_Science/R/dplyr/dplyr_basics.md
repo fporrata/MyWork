@@ -1,10 +1,10 @@
 #The dplyr package contains five key data manipulation functions, also called verbs:
 
-#select(), which returns a subset of the columns,
-#filter(), that is able to return a subset of the rows,
-#arrange(), that reorders the rows according to single or multiple variables,
-#mutate(), used to add columns from existing data,
-#summarise(), which reduces each group to a single row by calculating aggregate measures.
+#select(), which returns a subset of the columns, \
+#filter(), that is able to return a subset of the rows, \
+#arrange(), that reorders the rows according to single or multiple variables, \
+#mutate(), used to add columns from existing data, \
+#summarise(), which reduces each group to a single row by calculating aggregate measures. \
 
 
 # Load the dplyr package
@@ -56,14 +56,14 @@ select(hflights,14:19)
 # Find the most concise way to select: columns Year up to and including DayOfWeek, columns ArrDelay up to and including Diverted. You can examine the order of the variables in hflights with names(hflights) in the console.
 select(hflights, c(1:4, 12:21))
 
-#dplyr comes with a set of helper functions that can help you select groups of variables inside a select() call:
+#dplyr comes with a set of helper functions that can help you select groups of variables inside a select() call: \
 
-#starts_with("X"): every name that starts with "X",
-#ends_with("X"): every name that ends with "X",
-#contains("X"): every name that contains "X",
-#matches("X"): every name that matches "X", where "X" can be a regular expression,
-#num_range("x", 1:5): the variables named x01, x02, x03, x04 and x05,
-#one_of(x): every name that appears in x, which should be a character vector.
+#starts_with("X"): every name that starts with "X", \
+#ends_with("X"): every name that ends with "X", \
+#contains("X"): every name that contains "X", \
+#matches("X"): every name that matches "X", where "X" can be a regular expression, \
+#num_range("x", 1:5): the variables named x01, x02, x03, x04 and x05, \
+#one_of(x): every name that appears in x, which should be a character vector. \
 
 # Print out a tbl containing just ArrDelay and DepDelay
 select(hflights, ends_with("Delay"))
@@ -104,16 +104,16 @@ m1 <- mutate(hflights, loss = ArrDelay - DepDelay, loss_ratio = loss/DepDelay )
 # Add the three variables as described in the third instruction: m2
 m2 <- mutate(hflights, TotalTaxi = TaxiIn + TaxiOut, ActualGroundTime = ActualElapsedTime - AirTime, Diff = TotalTaxi - ActualGroundTime )
 
-#Logical operators
-#R comes with a set of logical operators that you can use inside filter():
+#Logical operators \
+#R comes with a set of logical operators that you can use inside filter(): \
 
-#x < y, TRUE if x is less than y
-#x <= y, TRUE if x is less than or equal to y
-#x == y, TRUE if x equals y
-#x != y, TRUE if x does not equal y
-#x >= y, TRUE if x is greater than or equal to y
-#x > y, TRUE if x is greater than y
-#x %in% c(a, b, c), TRUE if x is in the vector c(a, b, c)
+#x < y, TRUE if x is less than y \
+#x <= y, TRUE if x is less than or equal to y \
+#x == y, TRUE if x equals y \
+#x != y, TRUE if x does not equal y \
+#x >= y, TRUE if x is greater than or equal to y \
+#x > y, TRUE if x is greater than y \
+#x %in% c(a, b, c), TRUE if x is in the vector c(a, b, c) \
 
 # All flights that traveled 3000 miles or more
 filter(hflights, Distance > 3000)
@@ -178,14 +178,14 @@ temp2 <- filter(hflights, !is.na(TaxiIn) & !is.na(TaxiOut))
 # Print the maximum taxiing difference of temp2 with summarise()
 summarise(temp2, max_taxi_diff = max(abs(TaxiIn - TaxiOut)))
 
-#dplyr aggregate functions
-#dplyr provides several helpful aggregate functions of its own, in addition to the ones that are already defined in R. These include:
+#dplyr aggregate functions \
+#dplyr provides several helpful aggregate functions of its own, in addition to the ones that are already defined in R. These include: \
 
-#first(x) - The first element of vector x.
-#last(x) - The last element of vector x.
-#nth(x, n) - The nth element of vector x.
-#n() - The number of rows in the data.frame or group of observations that summarise() describes.
-#n_distinct(x) - The number of unique values in vector x.
+#first(x) - The first element of vector x. \
+#last(x) - The last element of vector x. \
+#nth(x, n) - The nth element of vector x. \
+#n() - The number of rows in the data.frame or group of observations that summarise() describes. \
+#n_distinct(x) - The number of unique values in vector x. \
 
 # Generate summarizing statistics for hflights
 summarise(hflights,
@@ -240,7 +240,7 @@ hflights %>%
   mutate(rank = rank(desc(n))) %>%
   filter(rank == 1)
   
-   Use summarise to calculate n_carrier
+# Use summarise to calculate n_carrier
 hflights2 %>% summarise(n_carrier = n_distinct(UniqueCarrier))
   
 # Set up a connection to the mysql database
