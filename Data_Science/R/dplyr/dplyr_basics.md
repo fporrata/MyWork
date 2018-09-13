@@ -273,7 +273,7 @@ hflights %>%
 my_db <- src_mysql(dbname = "dplyr", 
                    host = "courses.csrrinzqubik.us-east-1.rds.amazonaws.com", 
                    port = 3306, 
-                   user = "student",
+                   user = "*****",
                    password = "*****")
 ```
 
