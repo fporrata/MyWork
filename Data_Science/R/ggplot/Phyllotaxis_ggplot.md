@@ -169,7 +169,7 @@ theme(panel.background = element_rect(fill = "darkmagenta", colour = "darkmagent
 
 
 ## 9. All together now: imaginary flowers
-<p><img style="float: left;margin:2px 2px 2px 2px" src="https://s3.amazonaws.com/assets.datacamp.com/production/project_62/img/flower.png" height="280" width="280"></p>
+![png](output_0_1.PNG)
 <p>The techniques you've seen so far allows you to create an <em>infinite</em> number of patterns inspired by nature: the only limit is your imagination. But making art has also been a fun excuse to learn to use <code>ggplot</code>. All the tricks we have seen in this notebook are useful when plotting <em>real</em> data too.</p>
 <p>The image on the left is a simple variation of the previous flower and is in essence very similar to the first figure in which we plotted 50 points in a circle. I hope you've enjoyed the journey between that simple circle and this beautiful flower.</p>
 
