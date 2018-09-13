@@ -56,7 +56,9 @@ lut <- c("AA" = "American", "AS" = "Alaska", "B6" = "JetBlue", "CO" = "Continent
 `select(hflights,14:19)`
 
 ## Find the most concise way to select: columns Year up to and including DayOfWeek, columns ArrDelay up to and including Diverted. You can examine the order of the variables in hflights with names(hflights) in the console.
+
 `select(hflights, c(1:4, 12:21))`
+
 ---
 # dplyr comes with a set of helper functions that can help you select groups of variables inside a select() call: 
 
@@ -210,49 +212,63 @@ summarise(aa,
 `hflights %>% mutate(diff = TaxiOut - TaxiIn) %>% filter(!is.na(diff)) %>% summarise(avg = mean(diff))`
 
 ##  Chain together mutate(), filter() and summarise()
-`hflights %>% mutate(RealTime = ActualElapsedTime + 100, mph = Distance / RealTime * 60) %>%
-    filter(!is.na(mph) & mph < 70) %>% summarise(n_less = n(), n_dest = n_distinct(Dest), min_dist = min(Distance), max_dist = max(Distance))`
+```R
+hflights %>% mutate(RealTime = ActualElapsedTime + 100, mph = Distance / RealTime * 60) %>%
+    filter(!is.na(mph) & mph < 70) %>% summarise(n_less = n(), n_dest = n_distinct(Dest), min_dist = min(Distance), max_dist = max(Distance))
+```    
 	
 ##  Finish the command with a filter() and summarise() call
-`hflights %>%
-  mutate(RealTime = ActualElapsedTime + 100, mph = Distance / RealTime * 60) %>% filter(mph < 105 | Cancelled == 1 | Diverted == 1) %>% summarise(n_non = n(), n_dest = n_distinct(Dest), min_dist = min(Distance), max_dist = max(Distance))`
+```R
+hflights %>%
+  mutate(RealTime = ActualElapsedTime + 100, mph = Distance / RealTime * 60) %>% filter(mph < 105 | Cancelled == 1 | Diverted == 1) %>% summarise(n_non = n(), n_dest = n_distinct(Dest), min_dist = min(Distance), max_dist = max(Distance))
+```
   
 ##  Count the number of overnight flights
 `hflights %>% filter(!is.na(DepTime) & !is.na(ArrTime) & DepTime > ArrTime) %>% summarise(num = n())`
 
 ##  Make an ordered per-carrier summary of hflights
-`hflights %>%
+```R
+hflights %>%
   group_by(UniqueCarrier) %>%
   summarise(p_canc = mean(Cancelled == 1) * 100,
             avg_delay = mean(ArrDelay, na.rm = TRUE)) %>%
-  arrange(avg_delay, p_canc)`
+  arrange(avg_delay, p_canc)
+```
   
 ##  Ordered overview of average arrival delays per carrier
-`hflights %>% filter(!is.na(ArrDelay) & ArrDelay > 0) %>% group_by(UniqueCarrier) %>% summarise(avg = mean(ArrDelay)) %>% mutate(rank = rank(avg)) %>% arrange(rank)`
+```R
+hflights %>% filter(!is.na(ArrDelay) & ArrDelay > 0) %>% group_by(UniqueCarrier) %>% summarise(avg = mean(ArrDelay)) %>% mutate(rank = rank(avg)) %>% arrange(rank)
+```
 
 ##  How many airplanes only flew to one destination?
-`hflights %>%
+```R
+hflights %>%
   group_by(TailNum) %>%
   summarise(ndest = n_distinct(Dest)) %>%
   filter(ndest == 1) %>%
-  summarise(nplanes = n())`
+  summarise(nplanes = n())
+```
 
 ##  Find the most visited destination for each carrier
-`hflights %>%
+```R
+hflights %>%
   group_by(UniqueCarrier, Dest) %>%
   summarise(n = n()) %>%
   mutate(rank = rank(desc(n))) %>%
-  filter(rank == 1)`
+  filter(rank == 1)
+```
   
 ##  Use summarise to calculate n_carrier
 `hflights2 %>% summarise(n_carrier = n_distinct(UniqueCarrier))`
   
 ##  Set up a connection to the mysql database
-`my_db <- src_mysql(dbname = "dplyr", 
+```R
+my_db <- src_mysql(dbname = "dplyr", 
                    host = "courses.csrrinzqubik.us-east-1.rds.amazonaws.com", 
                    port = 3306, 
                    user = "student",
-                   password = "datacamp")`
+                   password = "datacamp")
+```
 
 ##  Reference a table within that source: nycflights
 `nycflights <- tbl(my_db, "dplyr")`
