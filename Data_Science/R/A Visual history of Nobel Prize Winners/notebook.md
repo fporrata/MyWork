@@ -1,6 +1,6 @@
 
 ## 1. The most Nobel of Prizes
-<p><img style="float: right;margin:5px 20px 5px 1px; max-width:250px" src="https://s3.amazonaws.com/assets.datacamp.com/production/project_309/img/Nobel_Prize.png"></p>
+![png](output_0_0.png)
 <p>The Nobel Prize is perhaps the worlds most well known scientific award. Except for the honor, prestige and substantial prize money the recipient also gets a gold medal showing Alfred Nobel (1833 - 1896) who established the prize. Every year it's given to scientists and scholars in the categories chemistry, literature, physics, physiology or medicine, economics, and peace. The first Nobel Prize was handed out in 1901, and at that time the Prize was very Eurocentric and male-focused, but nowadays it's not biased in any way whatsoever. Surely. Right?</p>
 <p>Well, we're going to find out! The Nobel Foundation has made a dataset available of all prize winners from the start of the prize, in 1901, to 2016. Let's load it in and take a look.</p>
 
@@ -16,28 +16,6 @@ nobel <- read_csv("datasets/nobel.csv")
 head(nobel)
 ```
 
-    Parsed with column specification:
-    cols(
-      year = col_integer(),
-      category = col_character(),
-      prize = col_character(),
-      motivation = col_character(),
-      prize_share = col_character(),
-      laureate_id = col_integer(),
-      laureate_type = col_character(),
-      full_name = col_character(),
-      birth_date = col_date(format = ""),
-      birth_city = col_character(),
-      birth_country = col_character(),
-      sex = col_character(),
-      organization_name = col_character(),
-      organization_city = col_character(),
-      organization_country = col_character(),
-      death_date = col_date(format = ""),
-      death_city = col_character(),
-      death_country = col_character()
-    )
-
 
 
 <table>
@@ -52,63 +30,6 @@ head(nobel)
 </tbody>
 </table>
 
-
-
-
-```R
-library(testthat) 
-library(IRkernel.testthat)
-
-run_tests({
-    test_that("Test that tidyverse is loaded", {
-    expect_true( "package:tidyverse" %in% search(), 
-        info = "The tidyverse package should be loaded using library().")
-    })
-    
-    test_that("Read in data correctly.", {
-        expect_is(nobel, "tbl_df", 
-            info = 'You should use read_csv (with an underscore) to read "datasets/nobel.csv" into nobel.')
-    })
-    
-    test_that("Read in data correctly.", {
-        nobel_temp <- read_csv('datasets/nobel.csv')
-        expect_equivalent(nobel, nobel_temp, 
-            info = 'nobel should contain the data in "datasets/nobel.csv".')
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 20.044 0.455 2729.658 0.006 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 2. So, who gets the Nobel Prize?
@@ -242,56 +163,6 @@ nobel %>%
 
 
 
-```R
-last_value <- .Last.value
-
-correct_value <- nobel %>%
-    group_by(birth_country) %>%
-    count()  %>% 
-    arrange(desc(n))  %>% 
-    head(20)
-
-run_tests({
-    test_that("That the by country count is correct", {
-    expect_equivalent(last_value$birth_country[1], last_value$birth_country[1], 
-        info = "The countries should be arranged by n, arrange(desc(n)), and the top country should be United States of America")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 20.146 0.459 2729.762 0.006 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 3. USA dominance
 <p>Not so surprising perhaps: the most common Nobel laureate between 1901 and 2016 was a man born in the United States of America. But in 1901 all the laureates were European. When did the USA start to dominate the Nobel Prize charts?</p>
 
@@ -330,54 +201,6 @@ prop_usa_winners
 
 
 
-```R
-correct_prop_usa_winners <- nobel %>% 
-    mutate(usa_born_winner = birth_country == "United States of America",
-           decade = floor(year / 10) * 10 ) %>% 
-    group_by(decade) %>%
-    summarize(proportion = mean(usa_born_winner, na.rm = TRUE))
-
-run_tests({
-    test_that("prop_usa_winners is calculated correctly", {
-    expect_true("proportion" %in% names(prop_usa_winners) &
-                all(prop_usa_winners$proportion %in% correct_prop_usa_winners$proportion), 
-        info = "The column proportion in prop_usa_winners should contain the proportion of usa_born_winner by decade.")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 20.189 0.463 2729.809 0.006 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
 
 ## 4. USA dominance, visualized
 <p>A table is OK, but to <em>see</em> when the USA started to dominate the Nobel charts we need a plot!</p>
@@ -395,61 +218,6 @@ ggplot(prop_usa_winners, aes(x = decade, y = proportion)) + geom_line() + geom_p
 
 
 ![png](output_10_1.png)
-
-
-
-```R
-p <- last_plot()
-
-correct_p <- ggplot(prop_usa_winners, aes(decade, proportion)) +
-    geom_line() + geom_point() +
-    scale_y_continuous(labels = scales::percent, limits = 0:1, expand = c(0,0))
-
-run_tests({
-    test_that("The plot uses the correct dataset", {
-    expect_equivalent(p$data, correct_p$data, 
-        info = "The plot should show the data in prop_usa_winners.")
-    })
-    
-    test_that("correct columns are plotted", {
-        mappings <- str_replace(as.character(p$mapping), "~", "")
-        expect_true(all(c("decade", "proportion") %in% mappings), 
-            info = "You should plot decade on the x-axis, prop_female on the y-axis, and category should be mapped to color.")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 20.404 0.463 2730.023 0.006 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 5. What is the gender of a typical Nobel Prize winner?
@@ -476,63 +244,6 @@ ggplot(prop_female_winners, aes(x = decade, y = proportion, color = category)) +
 ![png](output_13_1.png)
 
 
-
-```R
-p <- last_plot()
-
-correct_prop_female_winners <- nobel %>%
-    mutate(female_winner = sex == "Female",
-           decade = floor(year / 10) * 10)  %>% 
-    group_by(decade, category)  %>% 
-    summarize(proportion = mean(female_winner, na.rm = TRUE))
-
-run_tests({
-    test_that("prop_female_winners$prop_female is correct", {
-    expect_true(all(prop_female_winners$proportion %in% correct_prop_female_winners$proportion), 
-        info = "prop_female_winners$prop_female need to have the proportion of female winners per decade.")
-    })
-    
-    test_that("correct columns are plotted", {
-    mappings <- str_replace(as.character(p$mapping), "~", "")
-    expect_true(all(c("decade", "proportion", "category") %in% mappings), 
-        info = "You should plot decade on the x-axis, prop_female on the y-axis, and category should be mapped to color.")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 20.968 0.463 2730.587 0.006 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 6. The first woman to win the Nobel Prize
 <p>The plot above is a bit messy as the lines are overplotting. But it does show some interesting trends and patterns. Overall the imbalance is pretty large with physics, economics, and chemistry having the largest imbalance. Medicine has a somewhat positive trend, and since the 1990s the literature prize is also now more balanced. The big outlier is the peace prize during the 2010s, but keep in mind that this just covers the years 2010 to 2016.</p>
 <p>Given this imbalance, who was the first woman to receive a Nobel Prize? And in what category?</p>
@@ -551,56 +262,6 @@ nobel %>%
 	<tr><td>1903                                                                                                                                                          </td><td>Physics                                                                                                                                                       </td><td>The Nobel Prize in Physics 1903                                                                                                                               </td><td>"in recognition of the extraordinary services they have rendered by their joint researches on the radiation phenomena discovered by Professor Henri Becquerel"</td><td>1/4                                                                                                                                                           </td><td>6                                                                                                                                                             </td><td>Individual                                                                                                                                                    </td><td>Marie Curie, n&lt;U+00E9&gt;e Sklodowska                                                                                                                      </td><td>1867-11-07                                                                                                                                                    </td><td>Warsaw                                                                                                                                                        </td><td>...                                                                                                                                                           </td><td>Female                                                                                                                                                        </td><td>NA                                                                                                                                                            </td><td>NA                                                                                                                                                            </td><td>NA                                                                                                                                                            </td><td>1934-07-04                                                                                                                                                    </td><td>Sallanches                                                                                                                                                    </td><td>France                                                                                                                                                        </td><td>FALSE                                                                                                                                                         </td><td>1900                                                                                                                                                          </td><td>TRUE                                                                                                                                                          </td></tr>
 </tbody>
 </table>
-
-
-
-
-```R
-last_value <- .Last.value
-
-correct_last_value <- nobel %>%
-    filter(sex == "Female")  %>% 
-    top_n(1, desc(year))
-
-run_tests({
-    test_that("Marie Curie is picked out.", {
-    expect_equivalent(last_value$full_name, correct_last_value$full_name,
-        info = "You should pick out the first woman to win a Nobel Prize. Hint: Her first name was Marie.")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 21.02 0.463 2730.638 0.006 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 7. Repeat laureates
@@ -625,58 +286,6 @@ nobel %>%
 	<tr><td>Office of the United Nations High Commissioner for Refugees (UNHCR)                     </td><td>2                                                                                       </td></tr>
 </tbody>
 </table>
-
-
-
-
-```R
-last_value <- .Last.value
-
-correct_last_value <- nobel %>%
-    group_by(full_name)  %>% 
-    count()  %>% 
-    filter(n >= 2)
-
-run_tests({
-    test_that("The right winners were selected", {
-    expect_equivalent(sort(last_value$full_name), sort(correct_last_value$full_name),
-        info = "You should filter away everybody that didn't win the prize at least twice.")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 21.109 0.463 2730.726 0.006 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
 
 ## 8. How old are you when you get the prize?
 <p>The list of repeat winners contains some illustrious names! We again meet Marie Curie, who got the prize in physics for discovering radiation and in chemistry for isolating radium and polonium. John Bardeen got it twice in physics for transistors and superconductivity, Frederick Sanger got it twice in chemistry, and Linus Carl Pauling got it first in chemistry and later in peace for his work in promoting nuclear disarmament. We also learn that organizations also get the prize as both the Red Cross and the UNHCR have gotten it twice.</p>
@@ -706,60 +315,6 @@ ggplot(nobel_age, aes(x = year, y = age))  + geom_point() + geom_smooth()
 ![png](output_22_2.png)
 
 
-
-```R
-p <- last_plot()
-
-correct_nobel_age <- nobel %>%
-    mutate(age = year - year(birth_date))
-
-run_tests({
-    test_that("nobel_age$age is correct", {
-    expect_true(all(nobel_age$age %in% correct_nobel_age$age), 
-        info = "nobel_age$age need to have the age of the winner when they received the prize.")
-    })
-    
-    test_that("correct columns are plotted", {
-    mappings <- str_replace(as.character(p$mapping), "~", "")
-    expect_true(all(c("year", "age") %in% mappings), 
-        info = "You should plot year on the x-axis and age on the y-axis.")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 21.409 0.467 2731.03 0.006 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 9. Age differences between prize categories
 <p>The plot above shows us a lot! We see that people use to be around 55 when they received the price, but nowadays the average is closer to 65. But there is a large spread in the laureates' ages, and while most are 50+, some are very young.</p>
 <p>We also see that the density of points is much high nowadays than in the early 1900s -- nowadays many more of the prizes are shared, and so there are many more winners. We also see that there was a disruption in awarded prizes around the Second World War (1939 - 1945). </p>
@@ -781,50 +336,6 @@ ggplot(nobel_age, aes(x = year, y = age))  + geom_point() + geom_smooth(se = FAL
 
 ![png](output_25_2.png)
 
-
-
-```R
-facet_class <- class(last_plot()$facet)
-
-run_tests({
-    test_that("The plot is faceted", {
-    expect_true(! "FacetNull" %in% facet_class, 
-        info = "The plot needs to be faceted by category. Try using facet_wrap().")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 22.065 0.467 2731.685 0.006 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 10. Oldest and youngest winners
@@ -860,56 +371,8 @@ nobel_age %>% top_n(1,desc(age))
 
 
 
-
-```R
-last_value <- .Last.value
-correct_last_value <- nobel_age %>% top_n(1, desc(age))
-
-run_tests({
-    test_that("The youngest winner is correct", {
-    expect_equivalent(last_value$full_name, correct_last_value$full_name,
-        info = "The last row you extract in the code cell should be the youngest Nobel Prize winner.")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 22.118 0.467 2731.738 0.006 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
-## 11. You get a prize!
-<p><img style="float: right;margin:20px 20px 20px 20px; max-width:200px" src="https://s3.amazonaws.com/assets.datacamp.com/production/project_309/img/paint_nobel_prize.png"></p>
-<p>Hey! You get a prize for making it to the very end of this notebook! It might not be a Nobel Prize, but I made it myself in paint so it should count for something. But don't despair, Leonid Hurwicz was 90 years old when he got his prize, so it might not be too late for you. Who knows.</p>
-<p>Before you leave, what was again the name of the youngest winner ever who in 2014 got the prize for "[her] struggle against the suppression of children and young people and for the right of all children to education"?</p>
+## 11. Youngest Winner
+<p>The name of the youngest winner ever who in 2014 got the prize for "[her] struggle against the suppression of children and young people and for the right of all children to education"?</p>
 
 
 ```R
@@ -917,45 +380,4 @@ run_tests({
 youngest_winner <- "Malala Yousafzai"
 ```
 
-
-```R
-run_tests({
-    test_that("youngest_winner is correct", {
-    expect_true(any(str_detect(tolower(youngest_winner), c("malala", "yousafzai"))), 
-        info = "youngest_winner should be a string. Try writing only the first / given name.")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 22.149 0.467 2731.768 0.006 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
