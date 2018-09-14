@@ -19,16 +19,6 @@ yearly <- read_csv("datasets/yearly_deaths_by_clinic.csv")
 yearly
 ```
 
-    Parsed with column specification:
-    cols(
-      year = col_integer(),
-      births = col_integer(),
-      deaths = col_integer(),
-      clinic = col_character()
-    )
-    
-
-
 <table>
 <thead><tr><th scope=col>year</th><th scope=col>births</th><th scope=col>deaths</th><th scope=col>clinic</th></tr></thead>
 <tbody>
