@@ -15,16 +15,6 @@ responses <- read_csv("datasets/kagglesurvey.csv")
 head(responses, n = 10)
 ```
 
-    Parsed with column specification:
-    cols(
-      Respondent = col_integer(),
-      WorkToolsSelect = col_character(),
-      LanguageRecommendationSelect = col_character(),
-      EmployerIndustry = col_character(),
-      WorkAlgorithmsSelect = col_character()
-    )
-
-
 
 <table>
 <thead><tr><th scope=col>Respondent</th><th scope=col>WorkToolsSelect</th><th scope=col>LanguageRecommendationSelect</th><th scope=col>EmployerIndustry</th><th scope=col>WorkAlgorithmsSelect</th></tr></thead>
@@ -45,66 +35,12 @@ head(responses, n = 10)
 
 
 
-```R
-library("testthat")
-library('IRkernel.testthat')
-
-run_tests({
-    test_that("Read in data correctly.", {
-        expect_is(responses, "tbl_df", 
-            info = 'You should use read_csv (with an underscore) to read "datasets/kagglesurvey.csv" into responses')
-    })
-    
-    test_that("Read in data correctly.", {
-        responses_test <- read_csv('datasets/kagglesurvey.csv')
-        expect_equivalent(responses, responses_test, 
-            info = 'responses should contain the data in "datasets/kagglesurvey.csv"')
-    })
-    
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 25.732 0.448 7478.173 0.003 0.002
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
 
 ## 2. Using multiple tools
 <p>Now that we've loaded in the survey results, we want to focus on the tools and languages that the survey respondents use at work. </p>
 
 
 ```R
-# Printing the first respondents' tools and languages
-#responses[1,"WorkToolsSelect"]
-#strsplit(responses[1,"WorkToolsSelect"], split = ",")
 # Creating a new data frame called tools
 tools <- responses
 
@@ -130,54 +66,6 @@ head(tools)
 </table>
 
 
-
-
-```R
-run_tests({
-    test_that("Tools and Languages were Split and Unnested", {
-        expect_true(nrow(tools) == 47409, 
-            info = 'Make sure that you split the tools at the commas and unnested them')
-    })
-    
-    test_that("Tools and Languages were Unnested", {
-        expect_is(tools$work_tools, "character", 
-            info = 'The work_tools column should be of class "character". Make sure that you unnested the results of strsplit()')
-    })
-    
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 25.86 0.448 7478.301 0.003 0.002
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 3. Counting users of each tool
@@ -213,57 +101,6 @@ head(tool_count)
 </tbody>
 </table>
 
-
-
-
-```R
-run_tests({
-    test_that("Tools were Grouped and Summarised", {
-        expect_true(nrow(tool_count) == 50, 
-            info = 'Make sure that you grouped by tools and then summarised')
-    })
-    
-    test_that("Values were sorted correctly", {
-        expect_true(tool_count[1, 2] == 6073, 
-            info = 'Do not forget to sort your tool counts from largest to smallest')
-    })
-    
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 25.897 0.455 7478.344 0.003 0.002
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 4. Plotting the most popular tools
 <p>Let's see how your favorite tools stack up against the rest. </p>
 
@@ -282,51 +119,6 @@ tool_count %>% filter(!is.na(work_tools)) %>%  ggplot(aes(x = reorder(work_tools
 
 
 ![png](output_10_1.png)
-
-
-
-```R
-run_tests({
-   test_that("Plot is a bar chart",{
-      p <- last_plot()
-      q <- p$layers[[1]]
-      expect_is(q$geom, "GeomBar", 
-                info = "You should plot a bar chart with ggplot")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 26.167 0.455 7478.614 0.003 0.002
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 5. The R vs Python debate
@@ -362,52 +154,6 @@ head(debate_tools)
 </tbody>
 </table>
 
-
-
-
-```R
-run_tests({
-    test_that("New column was created", {
-        expect_is(debate_tools$language_preference, "character", 
-            info = 'The language_preference column should be of class "character". Make sure that you filled this new column correctly')
-    })
-    
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 26.223 0.455 7478.669 0.003 0.002
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 6. Plotting R vs Python users
 <p>Now we just need to take a closer look at how many respondents use R, Python, and both!</p>
 
@@ -434,52 +180,6 @@ debate_plot %>% ggplot(aes(x = language_preference, y = number_responses)) +
 
 ![png](output_16_1.png)
 
-
-
-```R
-run_tests({
-   test_that("Plot is a bar chart",{
-      p <- last_plot()
-      q <- p$layers[[1]]
-      expect_is(q$geom, "GeomBar",
-               info = "You should plot a bar chart with ggplot")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 26.523 0.456 7478.969 0.003 0.002
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 7. Language recommendations
 <p>It looks like the largest group of professionals program in both Python and R. But what happens when they are asked which language they recommend to new learners? Do R lovers always recommend R? </p>
 
@@ -500,10 +200,7 @@ recommendations <- recommendations %>% filter(!is.na(LanguageRecommendationSelec
 recommendations
 ```
 
-    Selecting by number_responses
-
-
-
+  
 <table>
 <thead><tr><th scope=col>language_preference</th><th scope=col>LanguageRecommendationSelect</th><th scope=col>number_responses</th></tr></thead>
 <tbody>
@@ -527,51 +224,6 @@ recommendations
 </table>
 
 
-
-
-```R
-run_tests({
-    test_that("Tools have been summarised", {
-        expect_true(nrow(recommendations) == 16, 
-            info = 'Make sure that you are only keeping the top 4 responses for each language used')
-    })
-    
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 26.572 0.456 7479.019 0.003 0.002
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 8. The most recommended language by the language used
 <p>Just one thing left. Let's graphically determine which languages are most recommended based on the language that a person uses.</p>
 
@@ -588,48 +240,6 @@ ggplot(recommendations, aes(x = LanguageRecommendationSelect, y = number_respons
 
 
 
-```R
-run_tests({
-   test_that("Plot is a bar chart",{
-      p <- last_plot()
-      q <- p$layers[[1]]
-      expect_is(q$geom, "GeomBar")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 27.1 0.46 7479.552 0.003 0.002
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
 
 ## 9. The moral of the story
 <p>So we've made it to the end. We've found that Python is the most popular language used among Kaggle data scientists, but R users aren't far behind. And while Python users may highly recommend that new learners learn Python, would R users find the following statement <code>TRUE</code> or <code>FALSE</code>? </p>
@@ -637,49 +247,8 @@ run_tests({
 
 ```R
 # Would R users find this statement TRUE or FALSE?
-R_is_number_one = TRUE
+R_is_number_one <- TRUE
 ```
 
 
-```R
-run_tests({
-    test_that("The question has been answered", {
-        expect_true(R_is_number_one, 
-            info = 'Try again! Should R_is_number_one be set to TRUE or FALSE?')
-    })
-    
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 27.142 0.46 7479.594 0.003 0.002
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
