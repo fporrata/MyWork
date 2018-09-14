@@ -108,15 +108,6 @@ monthly <- monthly %>% mutate(proportion_deaths = deaths/births)
 head(monthly, n = 1)
 ```
 
-    Parsed with column specification:
-    cols(
-      date = col_date(format = ""),
-      births = col_integer(),
-      deaths = col_integer()
-    )
-    
-
-
 <table>
 <thead><tr><th scope=col>date</th><th scope=col>births</th><th scope=col>deaths</th><th scope=col>proportion_deaths</th></tr></thead>
 <tbody>
