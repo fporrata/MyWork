@@ -92,12 +92,6 @@ bb_count %>%
 
 ## 4. Chord "bigrams"
 <p>Just as some chords are more common and more idiomatic than others, not all chord <em>progressions</em> are created equal. To look for common patterns in the structuring of chord progressions, we can use many of the same modes of analysis used in text-mining to analyze phrases. A chord change is simply a <em>bigram</em> — a two-"word" phrase — composed of a starting chord and a following chord. Here are the most common two-chord "phrases" in the McGill Billboard dataset.
-To help you get your ear around some of these common progressions, here's a short audio clip containing some of the most common chord bigrams.
-<br><br></p>
-<audio controls src="bigrams.mp3">
-  Your browser does not support the audio tag.
-</audio>
-
 
 ```R
 # Wrangling and counting bigrams
