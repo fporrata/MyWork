@@ -72,8 +72,6 @@ bb_count %>% top_n(20)
 Musicians may notice right away that the most common chords in this corpus are chords that are easy to play on both the guitar and the piano: C, G, A, and D major — and to an extent, F and E major. (They also belong to keys, or scales, that are easy to play on most instruments, so they fit well with melodies and solos, as well.) After that, there is a steep drop off in the frequency with which individual chords appear. </p>
 <p>To illustrate this, here is a short video demonstrating the relative ease (and difficulty) of some of the most common (and not-so-common) chords in the McGill Billboard dataset.
 <br><br>
-<a href="https://player.vimeo.com/video/251381886" target="blank_"><img style="max-width: 500px;" src="https://s3.amazonaws.com/assets.datacamp.com/production/project_78/img/smaller_video_screenshot.jpeg"></a></p>
-
 
 ```R
 # Creating a bar plot from `bb_count`
@@ -96,7 +94,7 @@ bb_count %>%
 <p>Just as some chords are more common and more idiomatic than others, not all chord <em>progressions</em> are created equal. To look for common patterns in the structuring of chord progressions, we can use many of the same modes of analysis used in text-mining to analyze phrases. A chord change is simply a <em>bigram</em> — a two-"word" phrase — composed of a starting chord and a following chord. Here are the most common two-chord "phrases" in the McGill Billboard dataset.
 To help you get your ear around some of these common progressions, here's a short audio clip containing some of the most common chord bigrams.
 <br><br></p>
-<audio controls src="http://assets.datacamp.com/production/project_79/img/bigrams.mp3">
+<audio controls src="bigrams.mp3">
   Your browser does not support the audio tag.
 </audio>
 
