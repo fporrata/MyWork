@@ -14,21 +14,7 @@ bb <- read_csv('datasets/bb_chords.csv')
 head(bb)
 ```
 
-    Parsed with column specification:
-    cols(
-      year = col_integer(),
-      chord = col_character(),
-      root_integer = col_character(),
-      root_roman = col_character(),
-      quality = col_character(),
-      title_compressed = col_character(),
-      artist_compressed = col_character(),
-      title = col_character(),
-      artist = col_character()
-    )
-
-
-
+  
 <table>
 <thead><tr><th scope=col>year</th><th scope=col>chord</th><th scope=col>root_integer</th><th scope=col>root_roman</th><th scope=col>quality</th><th scope=col>title_compressed</th><th scope=col>artist_compressed</th><th scope=col>title</th><th scope=col>artist</th></tr></thead>
 <tbody>
@@ -40,61 +26,6 @@ head(bb)
 	<tr><td>1961        </td><td>C:maj       </td><td>0           </td><td>I           </td><td>maj         </td><td>idon'tmind  </td><td>jamesbrown  </td><td>I Don't Mind</td><td>James Brown </td></tr>
 </tbody>
 </table>
-
-
-
-
-```R
-# These packages need to be loaded in the first `@tests` cell. 
-library(testthat) 
-library(IRkernel.testthat)
-
-run_tests({
-    test_that("Read in data correctly.", {
-        expect_is(bb, "tbl_df", 
-            info = 'You should use read_csv (with an underscore) to read "datasets/bb_chords.csv" into bb')
-    })
-    
-    test_that("Read in data correctly.", {
-        bb_correct <- read_csv('datasets/bb_chords.csv')
-        expect_equivalent(bb, bb_correct, 
-            info = 'bb should contain the data in "datasets/bb_chords.csv"')
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 29.306 0.378 4090.079 0.003 0.001
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
 
 ## 2. The most common chords
 <p>As seen in the previous task, this is a <em>tidy</em> dataset: each row represents a single observation, and each column a particular variable or attribute of that observation. Note that the metadata for each song (title, artist, year) is repeated for each chord -- like "I Don't Mind" by James Brown, 1961 -- while the unique attributes of each chord (chord symbol, chord quality, and analytical designations like integer and Roman-numeral notation) is included once for each chord change.</p>
@@ -109,10 +40,6 @@ bb_count <- bb %>% count(chord) %>% arrange(desc(n))
 # Displaying the top 20 chords
 bb_count %>% top_n(20)
 ```
-
-    Selecting by n
-
-
 
 <table>
 <thead><tr><th scope=col>chord</th><th scope=col>n</th></tr></thead>
@@ -140,53 +67,6 @@ bb_count %>% top_n(20)
 </tbody>
 </table>
 
-
-
-
-```R
-run_tests({
-    test_that("bb_count is correct", {
-        correct_bb_count <- bb %>%
-          count(chord, sort = TRUE)
-        expect_equivalent(bb_count, correct_bb_count, 
-            info = "bb_count should contain the count of each type of chord.")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 29.396 0.382 4090.171 0.003 0.001
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 3. Visualizing the most common chords
 <p>Of course, it's easier to get a feel for just how common some of these chords are if we graph them and show the percentage of the total chord count represented by each chord.
 Musicians may notice right away that the most common chords in this corpus are chords that are easy to play on both the guitar and the piano: C, G, A, and D major — and to an extent, F and E major. (They also belong to keys, or scales, that are easy to play on most instruments, so they fit well with melodies and solos, as well.) After that, there is a steep drop off in the frequency with which individual chords appear. </p>
@@ -211,50 +91,6 @@ bb_count %>%
 
 
 ![png](output_7_1.png)
-
-
-
-```R
-run_tests({
-    test_that("bb_count has some data in it", {
-    expect_true(length(bb_count) > 0, 
-        info = "Looks like you're missing data in `bb_count`.")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 29.636 0.382 4090.411 0.003 0.001
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
 
 ## 4. Chord "bigrams"
 <p>Just as some chords are more common and more idiomatic than others, not all chord <em>progressions</em> are created equal. To look for common patterns in the structuring of chord progressions, we can use many of the same modes of analysis used in text-mining to analyze phrases. A chord change is simply a <em>bigram</em> — a two-"word" phrase — composed of a starting chord and a following chord. Here are the most common two-chord "phrases" in the McGill Billboard dataset.
@@ -307,57 +143,6 @@ bb_bigram_count[1:20,]
 </tbody>
 </table>
 
-
-
-
-```R
-run_tests({
-    test_that("bb_bigram_count is correct", {
-      correct_bb_bigram_count <- bb %>%
-      mutate(next_chord = lead(chord),
-             next_title = lead(title),
-             bigram = paste(chord, next_chord)) %>%
-      filter(title == next_title) %>%
-      count(bigram, sort = TRUE)
-    expect_equivalent(bb_bigram_count, correct_bb_bigram_count, 
-        info = "`bb_bigram_count` should contain the count of each type of bigram. Don't forget to sort by bigram frequency!")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 29.695 0.386 4090.473 0.003 0.001
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 5. Visualizing the most common chord progressions
 <p>We can get a better sense of just how popular some of these chord progressions are if we plot them on a bar graph. Note how the most common chord change, G major to D major, occurs more than twice as often than even some of the other top 20 chord bigrams.</p>
 
@@ -373,56 +158,7 @@ bb_bigram_count %>% arrange(desc(n)) %>% top_n(20) %>%
   ylab("Share of total bigrams") +theme(legend.position='none')
 ```
 
-    Selecting by n
-
-
-
-
-
 ![png](output_13_2.png)
-
-
-
-```R
-run_tests({
-    test_that("bb_bigram_count has some data in it", {
-    expect_true(length(bb_bigram_count) > 0, 
-        info = "Looks like you're missing data in `bb_bigram_count`.")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 30.027 0.394 4090.813 0.003 0.001
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 6. Finding the most common artists
@@ -476,55 +212,6 @@ bb_30_artists %>%
 	<tr><td>Billy Idol              </td><td>5                       </td></tr>
 </tbody>
 </table>
-
-
-
-
-```R
-run_tests({
-    test_that("bb artists counted and sorted", {
-      correct_bb_30_artists <- bb %>%
-        select(artist, title) %>%
-        unique() %>%
-        count(artist, sort = TRUE)
-    expect_equivalent(bb_30_artists, correct_bb_30_artists, 
-        info = "`bb_30_artists` should contain the number of soungs (not chords) by each artist in the corpus. Don't forget to sort!")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 30.094 0.394 4090.879 0.003 0.001
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
 
 ## 7. Tagging the corpus
 <p>There are relatively few artists in this list whose music is demonstrably "piano-driven," but we can identify a few that generally emphasize keyboards over guitar: Abba, Billy Joel, Elton John, and Stevie Wonder — totaling 17 songs in the corpus. There are many guitar-centered artists in this list, so for our test, we'll focus on three well known, guitar-heavy artists with a similar number of songs in the corpus: The Rolling Stones, The Beatles, and Eric Clapton (18 songs).</p>
@@ -612,53 +299,6 @@ bb_tagged
 </tbody>
 </table>
 
-
-
-
-```R
-run_tests({
-    test_that("bb artists counted and sorted", {
-      correct_bb_tagged <- bb %>%
-        inner_join(tags)
-    expect_equivalent(bb_tagged, correct_bb_tagged, 
-        info = "`bb_tagged` should be a successful join of `bb` and `tags` that only contains records cointained in both dataframes.")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 30.223 0.394 4091.007 0.003 0.001
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 8. Comparing chords in piano-driven and guitar-driven songs
 <p>Let's take a look at any difference in how common chords are in these two song groups. To clean things up, we'll just focus on the 20 chords most common in the McGill Billboard dataset overall.</p>
 <p>While we want to be careful about drawing any conclusions from such a small set of songs, we can see that the chords easiest to play on the guitar <em>do</em> dominate the guitar-driven songs, especially G, D, E, and C major, as well as A major and minor. Similarly, "flat" chords (B-flat, E-flat, A-flat major) occur frequently in piano-driven songs, though they are nearly absent from the guitar-driven songs. In fact, the first and fourth most frequent piano chords are "flat" chords that occur rarely, if at all, in the guitar songs.</p>
@@ -684,49 +324,6 @@ bb_tagged %>%
 
 
 ![png](output_22_1.png)
-
-
-
-```R
-run_tests({
-    test_that("bb_tagged has some data in it", {
-    expect_true(length(bb_tagged) > 0, 
-        info = "Looks like you're missing data in `bb_tagged`.")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 30.678 0.394 4091.468 0.003 0.001
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 9. Comparing chord bigrams in piano-driven and guitar-driven songs
@@ -756,107 +353,8 @@ bb_tagged %>%
 ![png](output_25_1.png)
 
 
-
-```R
-run_tests({
-    test_that("bb_bigram_count has some data in it", {
-    expect_true(length(bb_bigram_count) > 0, 
-        info = "Looks like you're missing data in `bb_bigram_count`.")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 30.999 0.397 4091.793 0.003 0.001
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 10. Conclusion
 <p>We set out asking if the degree to which a chord is "idiomatic" on an instrument affects how frequently it is used by a songwriter. It seems that is indeed the case. In a large representative sample of pop/rock songs from the historical Billboard charts, the chords most often learned first by guitarists and pianists are the most common. In fact, chords commonly deemed <em>easy</em> or <em>beginner-friendly</em> on <strong>both</strong> piano and guitar are far and away the most common in the corpus.</p>
 <p>We also examined a subset of 35 songs from seven piano- and guitar-heavy artists and found that guitarists and pianists tend to use different sets of chords for their songs. This was an extremely small (and likely not representative) sample, so we can do nothing more than hypothesize that this trend might carry over throughout the larger dataset. But it seems from this exploration that it's worth a closer look.</p>
 <p>There are still more questions to explore with this dataset. What about band-driven genres like classic R&amp;B and funk, where artists like James Brown and Chicago build chords from a large number of instruments each playing a single note? What about "progressive" bands like Yes and Genesis, where "easy" and "idiomatic" may be less of a concern during the songwriting process? And what if we compared this dataset to a collection of chords from classical songs, jazz charts, folk songs, liturgical songs?</p>
-<p>There's only one way to find out!</p>
-
-
-```R
-# Set to TRUE or FALSE to reflect your answer.
-hypothesis_valid <-TRUE
-
-# Set to TRUE or FALSE to reflect your answer.
-more_data_needed <- TRUE
-```
-
-
-```R
-run_tests({
-    test_that("hypothesis is true", {
-    expect_true(hypothesis_valid, 
-        info = "Are you sure the hypothesis isn't valid?!")
-    })
-    test_that("more_data_needed is true", {
-    expect_true(more_data_needed, 
-        info = "Are you sure we don't need more data?!")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 31.033 0.398 4091.826 0.003 0.001
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
