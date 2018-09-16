@@ -50,13 +50,9 @@ from matplotlib import pyplot as plt
 import seaborn as sns
 ```
 
-This is the first time we'll use these libraries, so this module will also be a gentle introduction to plotting.
-
 <br id="sine">
 # 1. - Toy example: noisy sine wave
 
-For the rest of this module, we're going to switch over to a toy example.
-* Remember, the relevant code is all included in the online lesson.
 
 First, create the dataset for the noisy sine wave:
 
