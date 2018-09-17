@@ -158,7 +158,7 @@ ggplot(difficulty, aes(x = level, y = p_win)) + geom_line() + geom_point() + geo
 
 ## 7. Computing uncertainty
 <p>![png](7_0.PNG) </p>
-<p>As Data Scientists we should always report some measure of the uncertainty of any provided numbers. Maybe tomorrow, another sample will give us slightly different values for the difficulties? Here we will simply use the <a href="https://en.wikipedia.org/wiki/Standard_error"><em>Standard error</em></a> as a measure of uncertainty:</p.
+<p>As Data Scientists we should always report some measure of the uncertainty of any provided numbers. Maybe tomorrow, another sample will give us slightly different values for the difficulties? Here we will simply use the <a href="https://en.wikipedia.org/wiki/Standard_error"><em>Standard error</em></a> as a measure of uncertainty:</p>
 
 ![png](7_1.PNG)
 
