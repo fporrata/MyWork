@@ -81,7 +81,9 @@ range(data$dt)
 ## 4. Computing level difficulty
 <p>Within each Candy Crush episode, there is a mix of easier and tougher levels. Luck and individual skill make the number of attempts required to pass a level different from player to player. The assumption is that difficult levels require more attempts on average than easier ones. That is, <em>the harder</em> a level is, <em>the lower</em> the probability to pass that level in a single attempt is.</p>
 <p>A simple approach to model this probability is as a <a href="https://en.wikipedia.org/wiki/Bernoulli_process">Bernoulli process</a>; as a binary outcome (you either win or lose) characterized by a single parameter <em>p<sub>win</sub></em>: the probability of winning the level in a single attempt. This probability can be estimated for each level as:</p>
-<p>![png](4.PNG)</p>
+
+![png](4.PNG)
+
 <!-- $$p_{win} = \frac{\sum wins}{\sum attempts}$$ -->
 <p>For example, let's say a level has been played 10 times and 2 of those attempts ended up in a victory. Then the probability of winning in a single attempt would be <em>p<sub>win</sub></em> = 2 / 10 = 20%.</p>
 <p>Now, let's compute the difficulty <em>p<sub>win</sub></em> separately for each of the 15 levels.</p>
@@ -120,7 +122,9 @@ difficulty
 
 
 ## 5. Plotting difficulty profile
-<p>![png](5.PNG) </p>
+
+![png](5.PNG) 
+
 <p>Great! We now have the difficulty for all the 15 levels in the episode. Keep in mind that, as we measure difficulty as the probability to pass a level in a single attempt, a <em>lower</em> value (a smaller probability of winning the level) implies a <em>higher</em> level difficulty.</p>
 <p>Now that we have the difficulty of the episode we should plot it. Let's plot a line graph with the levels on the X-axis and the difficulty (<em>p<sub>win</sub></em>) on the Y-axis. We call this plot the <em>difficulty profile</em> of the episode.</p>
 
@@ -154,18 +158,24 @@ ggplot(difficulty, aes(x = level, y = p_win)) + geom_line() + geom_point() + geo
 
 ## 7. Computing uncertainty
 <p>![png](7_0.PNG) </p>
-<p>As Data Scientists we should always report some measure of the uncertainty of any provided numbers. Maybe tomorrow, another sample will give us slightly different values for the difficulties? Here we will simply use the <a href="https://en.wikipedia.org/wiki/Standard_error"><em>Standard error</em></a> as a measure of uncertainty:</p>
-<p>![png](7_1.PNG)</p>
+<p>As Data Scientists we should always report some measure of the uncertainty of any provided numbers. Maybe tomorrow, another sample will give us slightly different values for the difficulties? Here we will simply use the <a href="https://en.wikipedia.org/wiki/Standard_error"><em>Standard error</em></a> as a measure of uncertainty:</p.
+
+![png](7_1.PNG)
+
 <!-- $$
 \sigma_{error} \approx \frac{\sigma_{sample}}{\sqrt{n}}
 $$ -->
 <p>Here <em>n</em> is the number of datapoints and <em>σ<sub>sample</sub></em> is the sample standard deviation. For a Bernoulli process, the sample standard deviation is: </p>
-<p>![png](7_2.PNG)</p>
+
+![png](7_2.PNG)
+
 <!-- $$
 \sigma_{sample} = \sqrt{p_{win} (1 - p_{win})} 
 $$ -->
 <p>Therefore, we can calculate the standard error like this:</p>
-<p>![png](7_3.PNG)</p>
+
+![png](7_3.PNG)
+
 <!-- $$
 \sigma_{error} \approx \sqrt{\frac{p_{win}(1 - p_{win})}{n}}
 $$ -->
