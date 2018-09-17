@@ -15,50 +15,6 @@ library(tidyverse)
 ```
 
 
-```R
-library(testthat) 
-library(IRkernel.testthat)
-
-run_tests({
-    test_that("the packages are loaded", {
-    expect_true( all(c("package:ggplot2", "package:readr", "package:dplyr") %in% search() ), 
-        info = "The dplyr, readr and ggplot2 packages should be loaded using import().")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 8.019 0.155 302.141 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
 
 ## 2. The data set
 <p>The dataset we will use contains one week of data from a sample of players who played Candy Crush back in 2014. The data is also from a single <em>episode</em>, that is, a set of 15 levels. It has the following columns:</p>
@@ -81,18 +37,7 @@ data <-read_csv("datasets/candy_crush.csv")
 head(data)
 ```
 
-    Parsed with column specification:
-    cols(
-      player_id = col_character(),
-      dt = col_date(format = ""),
-      level = col_integer(),
-      num_attempts = col_integer(),
-      num_success = col_integer()
-    )
-
-
-
-<table>
+ <table>
 <thead><tr><th scope=col>player_id</th><th scope=col>dt</th><th scope=col>level</th><th scope=col>num_attempts</th><th scope=col>num_success</th></tr></thead>
 <tbody>
 	<tr><td>6dd5af4c7228fa353d505767143f5815</td><td>2014-01-04                      </td><td> 4                              </td><td>3                               </td><td>1                               </td></tr>
@@ -103,53 +48,6 @@ head(data)
 	<tr><td>b94d403ac4edf639442f93eeffdc7d92</td><td>2014-01-01                      </td><td> 8                              </td><td>8                               </td><td>1                               </td></tr>
 </tbody>
 </table>
-
-
-
-
-```R
-library(tidyverse)
-
-run_tests({
-    test_that("data is read in correctly", {
-        correct_data <- read_csv("datasets/candy_crush.csv")
-        expect_equal(correct_data, data, 
-            info = "data should countain datasets/candy_crush.csv read in using read_csv")
-        })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 8.088 0.155 302.21 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 3. Checking the data set
@@ -179,50 +77,6 @@ range(data$dt)
 	<li><time datetime="2014-01-01">2014-01-01</time></li>
 	<li><time datetime="2014-01-07">2014-01-07</time></li>
 </ol>
-
-
-
-
-```R
-run_tests({
-    test_that("nothing", {
-        expect_true(TRUE, info = "")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 8.178 0.155 302.3 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
 
 ## 4. Computing level difficulty
 <p>Within each Candy Crush episode, there is a mix of easier and tougher levels. Luck and individual skill make the number of attempts required to pass a level different from player to player. The assumption is that difficult levels require more attempts on average than easier ones. That is, <em>the harder</em> a level is, <em>the lower</em> the probability to pass that level in a single attempt is.</p>
@@ -265,53 +119,6 @@ difficulty
 
 
 
-
-```R
-run_tests({
-    test_that("p_win is calculated correctly", {
-        correct_difficulty <- data %>%
-            group_by(level) %>%
-            summarise(attempts = sum(num_attempts), wins = sum(num_success)) %>%
-            mutate(p_win = wins / attempts)
-        expect_equal(correct_difficulty$p_win, difficulty$p_win, 
-            info = "difficulty$p_win should be estimated probability to pass each level in a single attempt")
-        })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 8.244 0.156 302.373 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 5. Plotting difficulty profile
 <p><img src="https://s3.amazonaws.com/assets.datacamp.com/production/project_139/img/tiffi.jpeg" style="height:150px; float:left"> </p>
 <p>Great! We now have the difficulty for all the 15 levels in the episode. Keep in mind that, as we measure difficulty as the probability to pass a level in a single attempt, a <em>lower</em> value (a smaller probability of winning the level) implies a <em>higher</em> level difficulty.</p>
@@ -328,50 +135,6 @@ ggplot(difficulty, aes(x = level, y = p_win)) + geom_line() + scale_x_continuous
 
 ![png](output_13_1.png)
 
-
-
-```R
-run_tests({
-    test_that("the student plotted a ggplot", {
-    expect_true('ggplot' %in% class(last_plot()), 
-        info = "You should plot difficulty using ggplot.")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 8.552 0.156 302.682 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 6. Spotting hard levels
 <p>What constitutes a <em>hard</em> level is subjective. However, to keep things simple, we could define a threshold of difficulty, say 10%, and label levels with <em>p<sub>win</sub></em> &lt; 10% as <em>hard</em>. It's relatively easy to spot these hard levels on the plot, but we can make the plot more friendly by explicitly highlighting the hard levels.</p>
 
@@ -387,50 +150,6 @@ ggplot(difficulty, aes(x = level, y = p_win)) + geom_line() + geom_point() + geo
 
 
 ![png](output_16_1.png)
-
-
-
-```R
-run_tests({
-    plot_layers <- sapply(last_plot()$layers, function(layer)  class(layer$geom)[1])
-    test_that("the student has plotted lines, points and a hline", {
-    expect_true(all(c('GeomLine', 'GeomPoint', 'GeomHline') %in%  plot_layers), 
-        info = "The plot should include lines between the datapoints, points at the datapoints and a horisontal line.")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 8.842 0.156 302.97 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 7. Computing uncertainty
@@ -459,51 +178,6 @@ difficulty <- difficulty %>% mutate(error = sqrt(p_win * (1 - p_win) / attempts)
 
 ```
 
-
-```R
-run_tests({
-    test_that("error is correct", {
-        correct_difficulty <- difficulty %>%
-            mutate(error = sqrt(p_win * (1 - p_win) / attempts))
-        expect_equal(correct_difficulty$error, difficulty$error,
-            info = "difficulty$error should be calculated as sqrt(p_win * (1 - p_win) / attempts)")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 8.887 0.156 303.015 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 8. Showing uncertainty
 <p>Now that we have a measure of uncertainty for each levels' difficulty estimate let's use <em>error bars</em> to show this uncertainty in the plot. We will set the length of the error bars to one standard error. The upper limit and the lower limit of each error bar should then be <em>p<sub>win</sub></em> + <em>σ<sub>error</sub></em> and <em>p<sub>win</sub></em> - <em>σ<sub>error</sub></em>, respectively.</p>
 
@@ -517,50 +191,6 @@ ggplot(difficulty, aes(x = level, y = p_win)) + geom_line() + geom_point() + geo
 
 
 ![png](output_22_1.png)
-
-
-
-```R
-run_tests({
-    plot_layers <- sapply(last_plot()$layers, function(layer)  class(layer$geom)[1])
-    test_that("the student has plotted lines, points and a hline", {
-    expect_true("GeomErrorbar" %in%  plot_layers, 
-        info = "The plot should include error bats using geom_errorbar.")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 9.18 0.156 303.308 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 9. A final metric
@@ -580,50 +210,6 @@ p
 9.44714093448606e-12
 
 
-
-```R
-run_tests({
-    test_that("p is correct", {
-        correct_p <- prod(difficulty$p_win)
-        expect_equal(correct_p, p,
-            info = "p should be calculated as the product of difficulty$p_win .")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 9.221 0.156 303.348 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 10. Should our level designer worry?
 <p>Given the probability we just calculated, should our level designer worry about that a lot of players might complete the episode in one attempt?</p>
 
@@ -633,46 +219,4 @@ run_tests({
 # players will complete the episode in one attempt?
 should_the_designer_worry <- FALSE
 ```
-
-
-```R
-run_tests({
-    test_that("should_the_designer_worry is FALSE", {
-    expect_false(should_the_designer_worry,
-        info = "The probability is really small, so I don't think the designer should worry that much...")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 9.258 0.156 303.384 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
