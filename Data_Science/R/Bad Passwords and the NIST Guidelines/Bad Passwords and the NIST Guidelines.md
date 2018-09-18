@@ -501,7 +501,6 @@ users %>% filter(bad_password) %>% select(password) %>% top_n(100)
 
 ```R
 # Enter a password that passes the NIST requirements
-# PLEASE DO NOT USE AN EXISTING PASSWORD HERE
 new_password <- "ht14jklr"
 ```
 
