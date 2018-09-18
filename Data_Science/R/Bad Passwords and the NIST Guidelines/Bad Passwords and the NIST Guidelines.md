@@ -22,16 +22,7 @@ count(users)
 # Taking a look at the 12 first users
 head(users, n = 12)
 ```
-
-    Parsed with column specification:
-    cols(
-      id = col_integer(),
-      user_name = col_character(),
-      password = col_character()
-    )
-
-
-
+ 
 <table>
 <thead><tr><th scope=col>n</th></tr></thead>
 <tbody>
@@ -59,59 +50,6 @@ head(users, n = 12)
 	<tr><td>12              </td><td>milford.hubbard </td><td>hubbard         </td></tr>
 </tbody>
 </table>
-
-
-
-
-```R
-library(testthat) 
-library(IRkernel.testthat)
-run_tests({
-    test_that("Read in data correctly.", {
-        expect_is(users, "tbl_df", 
-            info = 'You should use read_csv (with an underscore) to read "datasets/users.csv" into users')
-    })
-    
-    test_that("Read in data correctly.", {
-        correct_users <- read_csv('datasets/users.csv')
-        expect_equivalent(users, correct_users, 
-            info = 'users should contain the data in "datasets/users.csv"')
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 5.5 0.211 2547.596 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
 
 ## 2. Passwords should not be too short
 <p>If we take a look at the first 12 users above we already see some bad passwords. But let's not get ahead of ourselves and start flagging passwords <em>manually</em>. What is the first thing we should check according to the NIST Special Publication 800-63B?</p>
@@ -157,52 +95,6 @@ head(users, n = 12)
 	<tr><td>12              </td><td>milford.hubbard </td><td>hubbard         </td><td> 7              </td><td> TRUE           </td></tr>
 </tbody>
 </table>
-
-
-
-
-```R
-run_tests({
-    test_that("The correct number of users are flagged", {
-    sum(str_length(users$password) < 8)
-
-    expect_equal(sum(str_length(users$password) < 8), sum(users$too_short), 
-        info = "users$too_short should be a TRUE/FALSE column where all rows with passwords < 8 are TRUE.")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 5.559 0.211 2547.654 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 3.  Common passwords people use
@@ -333,51 +225,6 @@ head(common_passwords, n = 100)
 
 
 
-
-```R
-run_tests({
-    correct_common_passwords <- read_lines("datasets/10_million_password_list_top_10000.txt")
-    test_that("the data read in is correct", {
-    expect_equal(correct_common_passwords, common_passwords, 
-        info = "datasets/10_million_password_list_top_10000.txt should be read in using read_lines and put into common_passwords.")
-    })
-
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 5.593 0.211 2547.688 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 4.  Passwords should not be common passwords
 <p>The list of passwords was ordered, with the most common passwords first, and so we shouldn't be surprised to see passwords like <code>123456</code> and <code>qwerty</code> above. As hackers also have access to this list of common passwords, it's important that none of our users use these passwords!</p>
 <p>Let's flag all the passwords in our user database that are among the top 10,000 used passwords.</p>
@@ -416,51 +263,6 @@ head(users, n = 12)
 	<tr><td>12              </td><td>milford.hubbard </td><td>hubbard         </td><td> 7              </td><td> TRUE           </td><td>FALSE           </td></tr>
 </tbody>
 </table>
-
-
-
-
-```R
-run_tests({
-    test_that("the number of flagged passwords is correct", {
-    expect_equal(sum(users$password %in% common_passwords), sum(users$common_password), 
-        info = "users$common_password should be TRUE for each row with a password that is also in common_passwords.")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 5.633 0.215 2547.731 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
 
 ## 5. Passwords should not be common words
 <p>Ay ay ay! It turns out many of our users use common passwords, and of the first 12 users there are already two. However, as most common passwords also tend to be short, they were already flagged as being too short. What is the next thing we should check?</p>
@@ -507,59 +309,6 @@ head(users, n = 12)
 	<tr><td>12              </td><td>milford.hubbard </td><td>hubbard         </td><td> 7              </td><td> TRUE           </td><td>FALSE           </td><td>FALSE           </td></tr>
 </tbody>
 </table>
-
-
-
-
-```R
-run_tests({
-    correct_words <- read_lines("datasets/google-10000-english.txt") 
-    test_that("google-10000-english.txt is read in correctly", {
-        expect_equal(correct_words, words, 
-            info = "datasets/google-10000-english.txt should be read in using read_lines and put into words.")
-    })
-    
-    test_that("the number of flagged passwords is correct", {
-        users$common_word <- str_to_lower(users$password) %in% words
-        expect_equal(sum(users$common_word), sum(str_to_lower(users$password) %in% correct_words), 
-            info = "users$common_word should be TRUE for each row with a password that is also in words.")
-    })
-
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 5.681 0.215 2547.779 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
 
 ## 6. Passwords should not be your name
 <p>It turns out many of our passwords were common English words too! Next up on the NIST list:</p>
@@ -608,58 +357,6 @@ head(users, n = 12)
 </tbody>
 </table>
 
-
-
-
-```R
-run_tests({
-    correct_first_name <- str_extract(users$user_name, "^\\w+")
-    correct_last_name <- str_extract(users$user_name, "\\w+$")
-
-    # Flagging the users with passwords that matches their names
-    correct_uses_name <- str_to_lower(users$password) == correct_first_name |
-                         str_to_lower(users$password) == correct_last_name
-    test_that("the number of flagged passwords is correct", {
-        expect_equal(sum(correct_uses_name), sum( users$uses_name), 
-            info = "users$uses_name should be TRUE for each row with a password which is also the first or last name.")
-    })
-
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 5.739 0.215 2547.836 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 7. Passwords should not be repetitive
 <p>Milford Hubbard (user number 12 above), what where you thinking!? Ok, so the last thing we are going to check is a bit tricky:</p>
 <blockquote>
@@ -700,57 +397,6 @@ subset(users, too_many_repeats == TRUE )
 	<tr><td>942             </td><td>mitch.ferguson  </td><td>aaaaaa          </td><td>6               </td><td> TRUE           </td><td> TRUE           </td><td>FALSE           </td><td>mitch           </td><td>ferguson        </td><td>FALSE           </td><td>6               </td><td>TRUE            </td></tr>
 </tbody>
 </table>
-
-
-
-
-```R
-run_tests({
-    correct_max_repeats <- sapply(users$password, function(password) {
-        split_password <- str_split(password, "")[[1]]
-        rle_password <- rle(split_password)
-        max(rle_password$lengths)
-    })
-
-    test_that("the number of flagged passwords is correct", {
-        expect_equal(sum(users$too_many_repeats), sum( users$max_repeats >= 4), 
-            info = "users$too_many_repeats should be TRUE for each row with a password with 4 or more repeats.")
-    })
-
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 5.852 0.215 2547.948 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 8. All together now!
@@ -844,54 +490,6 @@ users %>% filter(bad_password) %>% select(password) %>% top_n(100)
 </table>
 
 
-
-
-```R
-run_tests({
-    correct_bad_password <- users$too_short | users$common_word |
-                      users$common_password | users$uses_name |
-                      users$too_many_repeats
-    test_that("all the bad passwords are flagged", {
-    expect_equal(sum(correct_bad_password), sum(users$bad_password), 
-        info = "All rows with passwords that should be flagged as bad should have users$bad_password set to TRUE.")
-    })
-
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 5.918 0.215 2548.013 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 9. Otherwise, the password should be up to the user
 <p>In this notebook, we've implemented the password checks recommended by the NIST Special Publication 800-63B. It's certainly possible to better implement these checks, for example, by using a longer list of common passwords. Also note that the NIST checks in no way guarantee that a chosen password is good, just that it's not obviously bad.</p>
 <p>Apart from the checks we've implemented above the NIST is also clear with what password rules should <em>not</em> be imposed:</p>
@@ -907,54 +505,4 @@ run_tests({
 new_password <- "ht14jklr"
 ```
 
-
-```R
-run_tests({
-    temp_common_passwords <- read_lines("datasets/10_million_password_list_top_10000.txt")
-    temp_words <- read_lines("datasets/google-10000-english.txt")
-
-    is_bad <- str_length(new_password) < 8 |
-        new_password %in% temp_common_passwords |
-        str_to_lower(new_password) %in% temp_words |
-        max(rle(str_split(new_password, "")[[1]])$lengths) >= 4
-
-    test_that("", {
-    expect_false(is_bad, 
-        info = "This password does not fulfill the NIST requirements.")
-    })
-
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 5.955 0.215 2548.05 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
