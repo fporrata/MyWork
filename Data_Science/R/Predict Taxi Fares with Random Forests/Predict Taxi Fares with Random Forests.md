@@ -214,7 +214,10 @@ mean_if_enough_data <- function(x) {
 }
 
 # Plotting the mean trip prices from the data
-# .... COPY CODE FROM TASK 9 AND MODIFY HERE ....
+ggmap(manhattan, darken = 0.5) +
+   scale_fill_viridis(option = 'plasma') +
+   stat_summary_2d(data = taxi, aes(x = long, y = lat, z = total), bins = 60, alpha = 0.6, fun = mean_if_enough_data) + 
+labs(x = "Longitude", y = "Latitude", fill = "Predicted Fare")
 ```
 
 ![png](output_26_2.png)
