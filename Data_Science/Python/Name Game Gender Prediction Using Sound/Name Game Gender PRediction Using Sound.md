@@ -17,34 +17,7 @@ fuzzy.nysiis('him') == fuzzy.nysiis('hymn')
 ```
 
     FRANCASC
-
-
-
-
-
     True
-
-
-
-
-```python
-%%nose
-import sys
-
-def test_fuzzy_is_loaded():
-    assert 'fuzzy' in sys.modules, \
-    'The fuzzy module should be loaded'
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
 
 ## 2. Authoring the authors
 <p>The New York Times puts out a weekly list of best-selling books from different genres, and which has been published since the 1930’s.  We’ll focus on Children’s Picture Books, and analyze the gender distribution of authors to see if there have been changes over time. We'll begin by reading in the data on the best selling authors from 2008 to 2017.</p>
@@ -73,19 +46,6 @@ author_df.head()
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -143,28 +103,6 @@ author_df.head()
 </div>
 
 
-
-
-```python
-%%nose
-    
-def test_check_authors():
-    len_auth = len(author_df['first_name'])
-    all_names = list(author_df['first_name'])
-    assert ('Shel' in all_names and len_auth==603), \
-    'first_name column does not contan the correct first names of authors'
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
-
 ## 3. It's time to bring on the phonics... _again_!
 <p>When we were young children, we were taught to read using phonics; sounding out the letters that compose words. So let's relive history and do that again, but using python this time. We will now create a new column or list that contains the phonetic equivalent of every first name that we just extracted. </p>
 <p>To make sure we're on the right track, let's compare the number of unique values in the <code>first_name</code> column and the number of unique values in the nysiis coded column. As a rule of thumb, the number of unique nysiis first names should be less than or equal to the number of actual first names.</p>
@@ -185,34 +123,7 @@ author_df['nysiis_name'] = pd.Series(nysiis_name).values
 # Printing out the difference between unique firstnames and unique nysiis_names:
 np.unique(author_df['first_name']).size - np.unique(author_df['nysiis_name']).size
 ```
-
-
-
-
     25
-
-
-
-
-```python
-%%nose
-
-import numpy as np
-
-def test_check_nysiis_list():
-    assert len( np.unique(author_df['nysiis_name']) ) == 145, \
-        'The nysiis_name column does not contan the correct entries'
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
 
 ## 4. The inbetweeners
 <p>We'll use <code>babynames_nysiis.csv</code>, a dataset that is derived from <a href="https://www.ssa.gov/oact/babynames/limits.html">the Social Security Administration’s baby name data</a>, to identify author genders. The dataset contains unique NYSIIS versions of baby names, and also includes the percentage of times the name appeared as a female name (<code>perc_female</code>) and the percentage of times it appeared as a male name (<code>perc_male</code>). </p>
@@ -248,19 +159,6 @@ babies_df.head()
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -310,26 +208,6 @@ babies_df.head()
   </tbody>
 </table>
 </div>
-
-
-
-
-```python
-%%nose
-
-def test_gender_distribution():
-    assert len([i for i, x in enumerate(babies_df['gender']) if x == 'N']) == 1170,\
-        'gender column does not contain the correct number of Male, Female and Neutral names, which are 7031, 8939 and 1170 respectively'
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
 
 
 ## 5. Playing matchmaker
@@ -384,30 +262,6 @@ author_df['author_gender'].value_counts()
     N            8
     Name: author_gender, dtype: int64
 
-
-
-
-```python
-%%nose
-
-def len_authors():
-    return len(author_df[author_df.author_gender == "M"])
-
-def test_num_males():
-    assert len_authors() == 191, \
-        'The number of Males (M) and Females (F) appear to be wrong. These are 191 and 395 respectively'
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
-
 ## 6. Tally up
 <p>From the results above see that there are more female authors on the New York Times best seller's list than male authors. Our dataset spans 2008 to 2017. Let's find out if there have been changes over time.</p>
 
@@ -439,19 +293,6 @@ pd.DataFrame(data, headers, years)
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -512,32 +353,6 @@ pd.DataFrame(data, headers, years)
 </table>
 </div>
 
-
-
-
-```python
-%%nose
-
-def test_years():
-    correct_years = list(np.unique(author_df.Year))
-    assert list(years) == correct_years, \
-    'years should be the unique years in author_df["Year"] sorted in ascending order.'
-
-def test_gender_by_yr():
-    assert sum(males_by_yr)==191, \
-    'At least one of the lists (males_by_yr, females_by_yr, unknown_by_yr) contains an incorrect value.'
-```
-
-
-
-
-
-
-    2/2 tests passed
-
-
-
-
 ## 7. Foreign-born authors?
 <p>Our gender data comes from social security applications of individuals born in the US. Hence, one possible explanation for why there are "unknown" genders associated with some author names is because these authors were foreign-born. While making this assumption, we should note that these are only a subset of foreign-born authors as others will have names that have a match in <code>baby_df</code> (and in the social security dataset). </p>
 <p>Using a bar chart, let's explore the trend of foreign-born authors with no name matches in the social security dataset.</p>
@@ -554,7 +369,7 @@ import matplotlib.pyplot as plt
 plt.bar(x = years, height = unknown_by_yr)
 
 
-# [OPTIONAL] - Setting a title, and axes labels
+#Setting a title, and axes labels
 plt.title("Count of Unknown names by year")
 plt.xlabel("Year")
 plt.ylabel("Number of Unknown")    
@@ -563,30 +378,6 @@ plt.show()
 
 
 ![png](output_19_0.png)
-
-
-
-```python
-%%nose
-
-# It's hard to test plots.
-def test_nothing():
-    assert True, ""
-
-#def test_pos():
-#    assert  pos ==list(range(len(unknown_by_yr))) or pos== range(len(unknown_by_yr)) or pos==years, \
-#    'pos should be a list containing integer values with the same length as unknown_by_yr '
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
 
 ## 8. Raising the bar
 <p>What’s more exciting than a bar chart is a grouped bar chart. This type of chart is good for displaying <em>changes</em> over time while also <em>comparing</em> two or more groups. Let’s use a grouped bar chart to look at the distribution of male and female authors over time.</p>
@@ -603,7 +394,7 @@ plt.bar(x = years, height = males_by_yr, width=0.25, color='lightblue')
 # Plotting females_by_yr by years_shifted
 plt.bar(x = years_shifted, height = females_by_yr, width=0.25, color='pink')
 
-# [OPTIONAL] - Adding relevant Axes labels and Chart Title
+#Adding relevant Axes labels and Chart Title
 plt.title("Distribution of male and female authors over time")
 plt.xlabel("Year")
 plt.ylabel("Authors")  
@@ -615,24 +406,6 @@ plt.show()
 
 
 ![png](output_22_0.png)
-
-
-
-```python
-%%nose
-
-def test_years_shifted():
-    correct_years_shifted = [year + 0.25 for year in years]
-    assert list(years_shifted) == correct_years_shifted, \
-    'years_shifted should be like years but with 0.25 added to each year.'
-```
-
-
-
-
-
-
-    1/1 tests passed
 
 
 
