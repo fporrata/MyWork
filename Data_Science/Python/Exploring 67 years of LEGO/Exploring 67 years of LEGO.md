@@ -7,7 +7,9 @@
 
 ## 2. Reading Data
 <p>A comprehensive database of lego blocks is provided by <a href="https://rebrickable.com/downloads/">Rebrickable</a>. The data is available as csv files and the schema is shown below.</p>
-<p><img src="https://s3.amazonaws.com/assets.datacamp.com/production/project_10/datasets/downloads_schema.png" alt="schema"></p>
+
+![png](2.png)
+
 <p>Let us start by reading in the colors data to get a sense of the diversity of lego sets!</p>
 
 
@@ -105,7 +107,9 @@ print(colors_summary)
 
 ## 5. Explore Lego Sets
 <p>Another interesting dataset available in this database is the <code>sets</code> data. It contains a comprehensive list of sets over the years and the number of parts that each of these sets contained. </p>
-<p><img src="https://imgur.com/1k4PoXs.png" alt="sets_data"></p>
+
+![png](3.png)
+
 <p>Let us use this data to explore how the average number of parts in Lego sets has varied over the years.</p>
 
 
