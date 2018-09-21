@@ -136,7 +136,7 @@ parts_by_year.plot()
 themes_by_year = sets[['year', 'theme_id']].groupby('year', as_index = False).agg({"theme_id": pd.Series.nunique})
 
 themes_by_year.plot.line(x='year', y='theme_id')
-# Plot trends in average number of parts by year
+# Plot trends unique themes by year
 themes_by_year.head()
 
 ```
