@@ -1,30 +1,9 @@
 
 ## 1. Introduction
 <p>Everyone loves Lego (unless you ever stepped on one). Did you know by the way that "Lego" was derived from the Danish phrase leg godt, which means "play well"? Unless you speak Danish, probably not. </p>
-<p>In this project, we will analyze a fascinating dataset on every single lego block that has ever been built!</p>
-<p><img src="https://s3.amazonaws.com/assets.datacamp.com/production/project_10/datasets/lego-bricks.jpeg" alt="lego"></p>
+<p>In this project, we will analyze a fascinating dataset on every single lego block that has ever been built!.  We will use pandas for the simple analys.</p>
 
-
-```python
-# Nothing to do here
-```
-
-
-```python
-%%nose
-def test_default():
-  assert True
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
+![png](0.PNG)
 
 ## 2. Reading Data
 <p>A comprehensive database of lego blocks is provided by <a href="https://rebrickable.com/downloads/">Rebrickable</a>. The data is available as csv files and the schema is shown below.</p>
@@ -97,25 +76,6 @@ colors.head()
 </table>
 </div>
 
-
-
-
-```python
-%%nose
-def test_colors_exists():
-    assert 'colors' in globals(), "You should read the data into a variable named `colors`"
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
-
 ## 3. Exploring Colors
 <p>Now that we have read the <code>colors</code> data, we can start exploring it! Let us start by understanding the number of colors available.</p>
 
@@ -125,22 +85,6 @@ def test_colors_exists():
 num_colors = colors.name.nunique()
 
 ```
-
-
-```python
-%%nose
-def test_num_colors():
-    assert num_colors == 135, "The variable num_colors should equal 135"
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
 
 
 ## 4. Transparent Colors in Lego Sets
@@ -157,25 +101,6 @@ print(colors_summary)
     is_trans                
     f         107   107  107
     t          28    28   28
-
-
-
-```python
-%%nose
-def test_colors_summary_exists():
-    assert 'colors_summary' in globals(), "You should have defined a variable named `colors_summary`"
-def test_colors_summary():
-    assert colors_summary.shape == (2, 3), "The DataFrame colors_summary should contain 2 rows and 3 columns"
-```
-
-
-
-
-
-
-    2/2 tests passed
-
-
 
 
 ## 5. Explore Lego Sets
@@ -196,35 +121,7 @@ parts_by_year.plot()
 
 ```
 
-
-
-
-    <matplotlib.axes._subplots.AxesSubplot at 0x7f851ab2def0>
-
-
-
-
 ![png](output_13_1.png)
-
-
-
-```python
-%%nose
-def test_sets_exists():
-    assert 'sets' in globals(), "You should read the data into a variable named `sets`"
-def test_parts_by_year_exists():
-    assert 'parts_by_year' in globals(), "You should have defined a variable named `parts_by_year`"
-```
-
-
-
-
-
-
-    2/2 tests passed
-
-
-
 
 ## 6. Lego Themes Over Years
 <p>Lego blocks ship under multiple <a href="https://shop.lego.com/en-US/Themes">themes</a>. Let us try to get a sense of how the number of themes shipped has varied over the years.</p>
@@ -286,51 +183,5 @@ themes_by_year.head()
 
 
 ![png](output_16_1.png)
-
-
-
-```python
-%%nose
-def test_themes_by_year_exists():
-    assert 'themes_by_year' in globals(), "You should have defined a variable named `themes_by_year`"
-def test_themes_by_year():
-    assert themes_by_year.shape == (66, 2), "The DataFrame themes_by_year should contain 66 rows and 2 columns"
-def test_themes_by_year_names():
-    colnames = ['year', 'theme_id']
-    assert all(name in themes_by_year for name in colnames), "Your DataFrame, bnames, should have columns named: year, theme_id"
-```
-
-
-
-
-
-
-    3/3 tests passed
-
-
-
-
-## 7. Wrapping It All Up!
-<p>Lego blocks offer an unlimited amount of fun across ages. We explored some interesting trends around colors, parts, and themes. </p>
-
-
-```python
-# Nothing to do here
-```
-
-
-```python
-%%nose
-def test_default():
-  assert True
-```
-
-
-
-
-
-
-    1/1 tests passed
-
 
 
