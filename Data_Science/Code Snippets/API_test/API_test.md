@@ -4,7 +4,7 @@ I used this simple code snippet to test a third party provider API update functi
 Some of the useful tidbits that you can use are:<br>
 -  Use of the arrow package to convert dates to UTC
 -  Use of numpy to check for nan
--  Use of pandas to merge two data frames, drop na values and loop using itertuples to loop through the dataframe
+-  Use of pandas to merge two data frames, drop na values and loop through the dataframe using itertuples 
 -  Use of requests to make the API call
 <br>
 Note that I have to hide some information from the code but I am including the example for illustration purposes
