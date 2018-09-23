@@ -59,7 +59,7 @@ headers = {
 
 i = 1
 for row in section_data_clean.itertuples():
-    url = "https://**********************************************8"
+    url = "https://**********************************************"
     payload =  "{\"batch_id\": \"" + row.batchid   + "\",\"timestamp\": \"" + str(arrow.get(row.teststarttime).replace(tzinfo='US/Eastern').to('UTC').isoformat()) + "\",\"results\": {" + build_results_string(row.testlength, row.testRL, row.testFDR, row.testImpedance) +  "}}"
     payload = payload.replace(",}}", "}}")
     
