@@ -8,8 +8,9 @@ Some of the useful tidbits that you can use are:<br>
 -  Use of requests to make the API call
 <br>
 <br>
-Note, that I have to hide some information from the code but I am including the example for illustration purposes
-
+Note that I have to hide some information from the code but I am including the example for illustration purposes
+<br>
+<br>
 
 ```python
 import arrow
