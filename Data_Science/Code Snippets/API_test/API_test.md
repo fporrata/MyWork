@@ -37,10 +37,10 @@ def build_results_string(testlength, testRL, testFDR, testImpedance):
 #example date conversion code
 #t = arrow.get(section_data["teststarttime"]).replace(tzinfo='US/Eastern').to('UTC').isoformat()
 
-oden_batches =  pd.read_csv("Oden_Batches.csv", header = 0)
+batches =  pd.read_csv("Batches.csv", header = 0)
 section_data = pd.read_csv("Data_Sections.csv", header = 0, parse_dates=['teststarttime'])
 
-final_data = pd.merge(section_data, oden_batches,  left_on='section', right_on='batchname')
+final_data = pd.merge(section_data, batches,  left_on='section', right_on='batchname')
 
 
 #GET The names of the columns in Dataframe
