@@ -1,19 +1,9 @@
 
-# Introduction to data analysis using machine learning #
-
-## 05. Comparison of Classification Algorithms ##
-
-by David Taylor, [www.prooffreader.com](http://www.prooffreader.com) (blog) [www.dtdata.io](http://dtdata.io) (hire me!)
-
-For links to more material including a slideshow explaining all this stuff in further detail, please see the front page of [this GitHub repo.](https://github.com/Prooffreader/intro_machine_learning)
-
-This is notebook 5 of 8. The next notebook is: [[06. Classification with Decision Trees]](http://nbviewer.ipython.org/github/Prooffreader/intro_machine_learning/blob/master/06_Classification_Decision_Trees.ipynb)
-
-[[01]](http://nbviewer.ipython.org/github/Prooffreader/intro_machine_learning/blob/master/01_The_Dataset.ipynb) [[02]](http://nbviewer.ipython.org/github/Prooffreader/intro_machine_learning/blob/master/02_Clustering_KMeans.ipynb) [[03]](http://nbviewer.ipython.org/github/Prooffreader/intro_machine_learning/blob/master/03_Clustering_OtherAlgos.ipynb) [[04]](http://nbviewer.ipython.org/github/Prooffreader/intro_machine_learning/blob/master/04_Classification_kNN.ipynb) **[05]** [[06]](http://nbviewer.ipython.org/github/Prooffreader/intro_machine_learning/blob/master/06_Classification_Decision_Trees.ipynb) [[07]](http://nbviewer.ipython.org/github/Prooffreader/intro_machine_learning/blob/master/07_Classification_Random_Forest.ipynb) [[08]](http://nbviewer.ipython.org/github/Prooffreader/intro_machine_learning/blob/master/08_Dimensionality_Reduction.ipynb)
+## 05. Comparison of Classification Algorithms 
 
 ***
 
-We compare ten different classification algorithms, including the k-Nearest Neighbors we looked at in the [previous notebook](http://nbviewer.ipython.org/github/Prooffreader/intro_machine_learning/blob/master/04_Classification_kNN.ipynb)). Again, we restrict the algorithm to the normalized ``sweetness`` and ``acidity`` columns, and for ease of visualization, the three classes (``orange``, ``pear`` and ``apple``) have been condensed to two (``citrus`` and ``non-citrus``, the latter the union of ``pear`` and ``apple``).
+We compare ten different classification algorithms, including the k-Nearest Neighbors. Again, we restrict the algorithm to the normalized ``sweetness`` and ``acidity`` columns, and for ease of visualization, the three classes (``orange``, ``pear`` and ``apple``) have been condensed to two (``citrus`` and ``non-citrus``, the latter the union of ``pear`` and ``apple``).
 
 
 ```python
