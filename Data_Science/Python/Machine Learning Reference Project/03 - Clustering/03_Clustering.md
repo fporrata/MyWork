@@ -1,7 +1,5 @@
 
-# Introduction to data analysis using machine learning 
-
-## 03. Clustering with other algorithms 
+## 03. Clustering algorithms 
 
 #### 1. Import libraries and load data #
 
