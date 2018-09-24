@@ -244,24 +244,56 @@ dates.info()
 dates.groupby(['handle']).sum()
 ```
 
-<class 'pandas.core.frame.DataFrame'>
-RangeIndex: 43 entries, 0 to 42
-Data columns (total 6 columns):
-order       43 non-null int64
-date        43 non-null datetime64[ns]
-attacks     43 non-null int64
-deaths      43 non-null int64
-day_name    43 non-null object
-handle      43 non-null bool
-dtypes: bool(1), datetime64[ns](1), int64(3), object(1)
-memory usage: 1.8+ KB
 
+    <class 'pandas.core.frame.DataFrame'>
+    RangeIndex: 43 entries, 0 to 42
+    Data columns (total 6 columns):
+    order           43 non-null int64
+    date            43 non-null datetime64[ns]
+    attacks         43 non-null float64
+    deaths          43 non-null int64
+    day_name        43 non-null object
+    handle          43 non-null bool
+    dtypes: bool(1), datetime64[ns](1), int64(3), object(1)
+    memory usage: 1.8+ KB
 
        order attacks deaths
 handle			
 False	231	 528	500
 True	715	 43	    116
+<div>
 
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>order</th>
+      <th>attacks</th>
+      <th>deaths</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>handle</th>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <th>False</th>
+      <td>231</td>
+      <td>528</td>
+      <td>500</td>
+    </tr>
+    <tr>
+      <th>True</th>
+      <td>715</td>
+      <td>43</td>
+      <td>116</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 
 ## 7. The picture worth a thousand words
