@@ -1,17 +1,7 @@
 
-# Introduction to data analysis using machine learning #
+# Introduction to data analysis using machine learning 
 
-## 02. Clustering with K-Means ##
-
-by David Taylor, [www.prooffreader.com](http://www.prooffreader.com) (blog) [www.dtdata.io](http://dtdata.io) (hire me!)
-
-For links to more material including a slideshow explaining all this stuff in further detail, please see the front page of [this GitHub repo.](https://github.com/Prooffreader/intro_machine_learning)
-
-This is notebook 2 of 8. The next notebook is: [[03. Clustering with other algorithms]](http://nbviewer.ipython.org/github/Prooffreader/intro_machine_learning/blob/master/03_Clustering_OtherAlgos.ipynb)
-
-[[01]](http://nbviewer.ipython.org/github/Prooffreader/intro_machine_learning/blob/master/01_The_Dataset.ipynb) **[02]** [[03]](http://nbviewer.ipython.org/github/Prooffreader/intro_machine_learning/blob/master/03_Clustering_OtherAlgos.ipynb) [[04]](http://nbviewer.ipython.org/github/Prooffreader/intro_machine_learning/blob/master/04_Classification_kNN.ipynb) [[05]](http://nbviewer.ipython.org/github/Prooffreader/intro_machine_learning/blob/master/05_Classification_OtherAlgos.ipynb) [[06]](http://nbviewer.ipython.org/github/Prooffreader/intro_machine_learning/blob/master/06_Classification_Decision_Trees.ipynb) [[07]](http://nbviewer.ipython.org/github/Prooffreader/intro_machine_learning/blob/master/07_Classification_Random_Forest.ipynb) [[08]](http://nbviewer.ipython.org/github/Prooffreader/intro_machine_learning/blob/master/08_Dimensionality_Reduction.ipynb)
-
-***
+## 02. Clustering with K-Means
 
 In this notebook, we will look at the popular K-Means clustering algorithm, using the fruit database outlined in the [last notebook](http://nbviewer.ipython.org/github/Prooffreader/intro_machine_learning/blob/master/01_The_Dataset.ipynb). The chief advantage of K-Means is that it's quick and robust, but its chief disadvantage is that you need to decide how many clusters there are beforehand ... except there's a way around that, the silhouette coefficient, which we'll see at the end of this notebook.
 
