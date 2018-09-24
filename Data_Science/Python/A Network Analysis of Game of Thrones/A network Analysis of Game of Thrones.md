@@ -93,17 +93,12 @@ G_book1 = nx.Graph()
 ```
 
 ## 3. Populate the network with the DataFrame
-<p>Currently, the graph object <code>G_book1</code> is empty. Let's now populate it with the edges from <code>book1</code>. And while we're at it, let's load in the rest of the books too!</p>
+<p>Let's now populate a graph object with the edges from all books.</p>
 
 
 ```python
-# Iterating through the DataFrame to add edges
-#for _, edge in book1.iterrows():
-#        G_book1.add_edge(edge['Source'], edge['Target'], weight=edge['weight'])
-
-
 # Creating a list of networks for all the books
-#books = [G_book1]
+books = []
 book_fnames = ['datasets/book1.csv', 'datasets/book2.csv', 'datasets/book3.csv', 'datasets/book4.csv', 'datasets/book5.csv']
 for book_fname in book_fnames:
     book = pd.read_csv(book_fname)
