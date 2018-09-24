@@ -81,15 +81,13 @@ book1.head()
 
 ## 2. Time for some Network of Thrones
 <p>The resulting DataFrame <code>book1</code> has 5 columns: <code>Source</code>, <code>Target</code>, <code>Type</code>, <code>weight</code>, and <code>book</code>. Source and target are the two nodes that are linked by an edge. A network can have directed or undirected edges and in this network all the edges are undirected. The weight attribute of every edge tells us the number of interactions that the characters have had over the book, and the book column tells us the book number.</p>
-<p>Once we have the data loaded as a pandas DataFrame, it's time to create a network. We will use <code>networkx</code>, a network analysis library, and create a graph object for the first book.</p>
+<p>We will use <code>networkx</code>, a network analysis library, and create a graph object for the network.</p>
 
 
 ```python
 # Importing modules
 import networkx as nx
 
-# Creating an empty graph object
-G_book1 = nx.Graph()
 ```
 
 ## 3. Populate the network with the DataFrame
