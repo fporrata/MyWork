@@ -236,7 +236,7 @@ def all_equal(x, y, tol=1e-8):
     #convert nan to 0 for easier comparison
     x = x.fillna(0)
     y = y.fillna(0)
-    z = abs((x-y)) > 1e-8
+    z = abs((x-y)) > tol
     #if there is a True value in z, it means there is a difference between the series so return False.  Use negation (not)
     return not (z == True).any()
 
