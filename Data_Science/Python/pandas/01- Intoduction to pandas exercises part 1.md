@@ -1,7 +1,4 @@
 
-(c) 2016 Enplus Advisors, Inc.
-
-
 ```python
 import numpy as np
 import pandas as pd
