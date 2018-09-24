@@ -3,7 +3,7 @@
 
 ## 02. Clustering with K-Means
 
-In this notebook, we will look at the popular K-Means clustering algorithm, using the fruit database outlined in the [last notebook](http://nbviewer.ipython.org/github/Prooffreader/intro_machine_learning/blob/master/01_The_Dataset.ipynb). The chief advantage of K-Means is that it's quick and robust, but its chief disadvantage is that you need to decide how many clusters there are beforehand ... except there's a way around that, the silhouette coefficient, which we'll see at the end of this notebook.
+In this notebook, we will look at the popular K-Means clustering algorithm, using the fruit database. The chief advantage of K-Means is that it's quick and robust, but its chief disadvantage is that you need to decide how many clusters there are beforehand ... except there's a way around that, the silhouette coefficient, which we'll see at the end of this notebook.
 
 #### 1. import libraries and datafile #
 
