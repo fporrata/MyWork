@@ -1,8 +1,7 @@
 
 ## 1. Dr. John Snow
 
-0.PNG
-
+![png](0.PNG)
 
 <p>Dr. John Snow (1813-1858) was a famous British physician and is widely recognized as a legendary figure in the history of public health and a leading pioneer in the development of anesthesia. Some even say one of the greatest physicians of all time.</p>
 <p>As a leading advocate of both anesthesia and hygienic practices in medicine, he not only experimented with ether and chloroform but also designed a mask and method how to administer it. He personally administered chloroform to Queen Victoria during the births of her eighth and ninth children, in 1853 and 1857, which assured a growing public acceptance of the use of anesthetics during childbirth.</p>
@@ -35,7 +34,7 @@ print(deaths.head())
 
 ## 2. Cholera attacks!
 
-1.PNG
+![png](1.PNG)
 
 <p>Prior to John Snow's discovery cholera was a regular visitor to London’s overcrowded and unsanitary streets. During the time of the third cholera outbreak, it was one of the most studied subjects (between years 1839-1856 over 700 studies and essays were published in London alone) and nearly all of the authors believed the outbreaks were due to miasma or "bad air". </p>
 <p>It was John Snow's pioneering work with anesthesia and gases that made him doubt the miasma model of the disease. Originally he formulated and published his theory that cholera is spread by water or food  in an essay On the Mode of Communication of Cholera (before the outbreak in 1849). The essay received negative reviews in the Lancet and the London Medical Gazette. </p>
@@ -141,7 +140,7 @@ deaths.describe()
 
 ## 3. You know nothing, John Snow!
 
-2.PNG
+![png](2.PNG)
 
 <p>It was somehow unthinkable that one man could debunk the miasma theory and prove that all the others got it wrong, so his work was mostly ignored. His medical colleagues simply said: "You know nothing, John Snow!"</p>
 <p>As already mentioned John Snow's first attempt to debunk the "miasma" theory ended with negative reviews. However, a reviewer made a helpful suggestion in terms of what evidence would be compelling: the crucial natural experiment would be to find people living side by side with lifestyles similar in all respects except for the water source. The cholera outbreak in Soho, London in 1854 gave Snow the opportunity not only to save lives this time but also to further test and improve his theory. But what about the final proof that he was right?  </p>
@@ -163,7 +162,7 @@ len(deaths_list)
 
 ## 4. The Ghost Map
 
-3.PNG
+![png](3.PNG)
 
 <p>His original map, unfortunately, is not available (it might never even existed). We can see the famous one that he drew about a year later in 1855, though, and it is displayed in this cell. Because the map depicts and visualizes the deaths sometimes it is called also <strong>The Ghost Map</strong>. </p>
 <p>We now know how John Snow did it and have the data too, so let's recreate his map using modern techniques. </p>
@@ -179,12 +178,12 @@ for point in range(0, len(deaths_list)):
 map
 ```
 
-M1.PNG
+![png](M1.PNG)
 
 
 ## 5. It's the pump!
 
-4.PNG
+![png](4.PNG)
 
 <p>After marking the deaths on the map, what John Snow saw was not a random pattern (we saw this on our recreation of The Ghost Map too). The majority of the deaths were concentrated at the corner of Broad Street (now Broadwick Street) and Cambridge Street (now Lexington Street). A cluster of deaths around the junction of these streets was the epicenter of the outbreak, but what was there? Yes, a water pump.</p>
 <p>John Snow at the time already had a developed theory that cholera spreads through water, so to test this he marked on the map also the locations of the water pumps nearby. And here it was, the whole picture.</p>
@@ -212,12 +211,12 @@ map1
 
 ```
 
-M2.PNG
+![png](M2.PNG)
 
 
 ## 6.  You know nothing, John Snow! (again)
 
-5.PNG
+![png](5.PNG)
 
 <p>So, John Snow finally had his proof that there was a connection between deaths as a consequence of the cholera outbreak and the public water pump that was probably contaminated. But he didn't just stop there and investigated further.</p>
 <p>He was looking for anomalies now (we would now say "outliers in data") and found two in fact where there were no deaths. First was brewery right on the Broad Street, so he went there and learned that they drank mostly beer (in other words not the water from the local pump, which confirms his theory that the pump is the source of the outbreak). The second building without any deaths was workhouse near Poland street where he learned that their source of water was not the pump on the Broad Street (confirmation again). The locations of both buildings are visualized also on the map on the left.</p>
@@ -257,10 +256,6 @@ dates.groupby(['handle']).sum()
     dtypes: bool(1), datetime64[ns](1), int64(3), object(1)
     memory usage: 1.8+ KB
 
-       order attacks deaths
-handle			
-False	231	 528	500
-True	715	 43	    116
 <div>
 
 <table border="1" class="dataframe">
@@ -298,7 +293,7 @@ True	715	 43	    116
 
 ## 7. The picture worth a thousand words
 
-6.PNG
+![png](6.PNG)
 
 <p>Removing the handle from the pump prevented any more of the infected water from being collected. The spring below the pump was later found to have been contaminated with sewage. This act was later recognized as an early example of epidemiology, public health medicine and the application of science (the germ theory of disease) in a real-life crisis. </p>
 <p>A replica of the pump, together with an explanatory and memorial plaque and without a handle was erected in 1992  near the location of the original close to the back wall of what today is the John Snow pub. The site is subtly marked with a pink granite kerbstone in front of a small wall plaque.</p>
@@ -324,12 +319,12 @@ p.line(dates['date'], dates['attacks'], color='black', alpha=1, line_width=2, le
 show(p)
 ```
 
-bokeh_plot.png
+![png](bokeh_plot.png)
 
 
 ## 8. John Snow's myth & Did we learn something?
 
-7.PNG
+![png](7.PNG)
 
 <p>From the previous interactive visualization, we can clearly see that the peak of the cholera outbreak happened before removing the handle and it was already in decline (downside trajectory) before the 8th of September 1854.</p>
 <p>This different view on the data is very important because in case that we compare just absolute numbers this could lead us to wrong conclusion that removing the handle on Broad Street pump for sure stopped the outbreak, which is simply not true (it surely did help but did not stop the outbreak) and John Snow was aware of this (he just did what needed to be done and never aspired to become a hero).</p>
