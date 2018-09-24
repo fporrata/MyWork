@@ -53,13 +53,6 @@ df.sort(['sweetness', 'acidity', 'weight', 'elongatedness'], inplace=True)
 df.reset_index(drop=True, inplace=True)
 df.tail(10)
 ```
-
-    3.4.2 |Anaconda 2.1.0 (64-bit)| (default, Jan  9 2015, 10:32:40) [MSC v.1600 64 bit (AMD64)]
-    
-
-
-
-
 <div style="max-height:1000px;max-width:1500px;overflow:auto;">
 <table border="1" class="dataframe">
   <thead>
