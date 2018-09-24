@@ -1,21 +1,12 @@
 
-# Introduction to data analysis using machine learning #
+# Machine Learning Reference Project#
 
 ## 01. The Dataset ##
 
-by David Taylor, [www.prooffreader.com](http://www.prooffreader.com) (blog) [www.dtdata.io](http://dtdata.io)  
-
-For links to more material including a slideshow explaining all this stuff in further detail, please see the front page of [this GitHub repo.](https://github.com/Prooffreader/intro_machine_learning)
-
-This is notebook 1 of 8. The next notebook is: [[02. Clustering with K-Means]](http://nbviewer.ipython.org/github/Prooffreader/intro_machine_learning/blob/master/02_Clustering_KMeans.ipynb)
-
-Quicklinks: **[01]** [[02]](http://nbviewer.ipython.org/github/Prooffreader/intro_machine_learning/blob/master/02_Clustering_KMeans.ipynb) [[03]](http://nbviewer.ipython.org/github/Prooffreader/intro_machine_learning/blob/master/03_Clustering_OtherAlgos.ipynb) [[04]](http://nbviewer.ipython.org/github/Prooffreader/intro_machine_learning/blob/master/04_Classification_kNN.ipynb) [[05]](http://nbviewer.ipython.org/github/Prooffreader/intro_machine_learning/blob/master/05_Classification_OtherAlgos.ipynb) [[06]](http://nbviewer.ipython.org/github/Prooffreader/intro_machine_learning/blob/master/06_Classification_Decision_Trees.ipynb) [[07]](http://nbviewer.ipython.org/github/Prooffreader/intro_machine_learning/blob/master/07_Classification_Random_Forest.ipynb) [[08]](http://nbviewer.ipython.org/github/Prooffreader/intro_machine_learning/blob/master/08_Dimensionality_Reduction.ipynb)
 
 ***
 
-The dataset is invented. I took the well-known Wines dataset from http://archive.ics.uci.edu/ml/datasets/Wine, got rid of most of the features and changed others and invented one.
-
-The dataset is now called ``fruit``. It allows us to compare apples to oranges! (Also apples to pears, since that's the French expression).
+The dataset consists of fruits. 
 
 The columns are:
 
@@ -28,7 +19,7 @@ The columns are:
 * ``sweetness``: in totally fictional units; I just took the (unit-unspecified) values for proline from ``Wines`` and fudged them a bit.
 * ``acidity``: same note as ``sweetness``, except original column was OD280/315.
 
-##### Waitaminute! Blue fruit? #
+##### Blue fruit? #
 
 I added some noise to this dataset by pretending the color names were assigned manually, and a certain number of people who performed the task had different sorts of color-blindedness.
 
