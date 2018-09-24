@@ -1,21 +1,9 @@
 
-# Introduction to data analysis using machine learning #
-
 ## 04. Classification with k-Nearest Neighbors ##
-
-by David Taylor, [www.prooffreader.com](http://www.prooffreader.com) (blog) [www.dtdata.io](http://dtdata.io) (hire me!)
-
-For links to more material including a slideshow explaining all this stuff in further detail, please see the front page of [this GitHub repo.](https://github.com/Prooffreader/intro_machine_learning)
-
-This is notebook 4 of 8. The next notebook is: [[05. Classification with other algorithms]](http://nbviewer.ipython.org/github/Prooffreader/intro_machine_learning/blob/master/05_Classification_OtherAlgos.ipynb)
-
-[[01]](http://nbviewer.ipython.org/github/Prooffreader/intro_machine_learning/blob/master/01_The_Dataset.ipynb) [[02]](http://nbviewer.ipython.org/github/Prooffreader/intro_machine_learning/blob/master/02_Clustering_KMeans.ipynb) [[03]](http://nbviewer.ipython.org/github/Prooffreader/intro_machine_learning/blob/master/03_Clustering_OtherAlgos.ipynb) **[04]** [[05]](http://nbviewer.ipython.org/github/Prooffreader/intro_machine_learning/blob/master/05_Classification_OtherAlgos.ipynb) [[06]](http://nbviewer.ipython.org/github/Prooffreader/intro_machine_learning/blob/master/06_Classification_Decision_Trees.ipynb) [[07]](http://nbviewer.ipython.org/github/Prooffreader/intro_machine_learning/blob/master/07_Classification_Random_Forest.ipynb) [[08]](http://nbviewer.ipython.org/github/Prooffreader/intro_machine_learning/blob/master/08_Dimensionality_Reduction.ipynb)
 
 ***
 
-In the [previous notebook](http://nbviewer.ipython.org/github/Prooffreader/intro_machine_learning/blob/master/04_Classification_kNN.ipynb), we finished our look at Unsupervised Learning, a.k.a. clustering; now we'll start Supervised Learning, with the k-Nearest Neighbors algorithm. It's not used much in practice, but it's very intuitive so it's useful for beginners.
-
-Again, we will confine ourselves to the normalized ``sweetness`` and ``acidity`` columns for ease and convenience.
+We will confine ourselves to the normalized ``sweetness`` and ``acidity`` columns for ease and convenience.
 
 #### 1. Import libraries and load data #
 
@@ -356,34 +344,6 @@ ax.set_xticks(range(1,22))
 ax.legend()
 ax.set_xticklabels(ks)
 ```
-
-
-
-
-    [<matplotlib.text.Text at 0xad1e710>,
-     <matplotlib.text.Text at 0xad216d8>,
-     <matplotlib.text.Text at 0xad40390>,
-     <matplotlib.text.Text at 0xad40da0>,
-     <matplotlib.text.Text at 0xad457f0>,
-     <matplotlib.text.Text at 0xad4a240>,
-     <matplotlib.text.Text at 0xad4ac50>,
-     <matplotlib.text.Text at 0xad4d6a0>,
-     <matplotlib.text.Text at 0xad520f0>,
-     <matplotlib.text.Text at 0xad52b00>,
-     <matplotlib.text.Text at 0xad54550>,
-     <matplotlib.text.Text at 0xad54f60>,
-     <matplotlib.text.Text at 0xad599b0>,
-     <matplotlib.text.Text at 0xad5e400>,
-     <matplotlib.text.Text at 0xad5ee10>,
-     <matplotlib.text.Text at 0xbdd0860>,
-     <matplotlib.text.Text at 0xbdd62b0>,
-     <matplotlib.text.Text at 0xbdd6cc0>,
-     <matplotlib.text.Text at 0xbdd8710>,
-     <matplotlib.text.Text at 0xbddc160>,
-     <matplotlib.text.Text at 0xbddcb70>]
-
-
-
 
 ![png](output_14_1.png)
 
