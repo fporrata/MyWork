@@ -1,7 +1,7 @@
 
-# Machine Learning Reference Project#
+# Machine Learning Reference Project
 
-## 01. The Dataset ##
+## 01. The Dataset 
 
 
 ***
@@ -19,7 +19,7 @@ The columns are:
 * ``sweetness``: in totally fictional units; I just took the (unit-unspecified) values for proline from ``Wines`` and fudged them a bit.
 * ``acidity``: same note as ``sweetness``, except original column was OD280/315.
 
-##### Blue fruit? #
+##### Blue fruit? 
 
 I added some noise to this dataset by pretending the color names were assigned manually, and a certain number of people who performed the task had different sorts of color-blindedness.
 
