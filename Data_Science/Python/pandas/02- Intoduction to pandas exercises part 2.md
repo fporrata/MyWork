@@ -1,7 +1,4 @@
 
-(c) 2016 Enplus Advisors, Inc.
-
-
 ```python
 import numpy as np
 import pandas as pd
@@ -27,13 +24,7 @@ df = pd.DataFrame(_df)
 ```python
 type(df.open)
 ```
-
-
-
-
     pandas.core.series.Series
-
-
 
 
 ```python
@@ -47,11 +38,7 @@ type(df['open'])
     3    101.65
     4     35.53
     Name: open, dtype: float64
-    
-
-
-
-
+ 
     pandas.core.series.Series
 
 
@@ -69,10 +56,6 @@ type(df[['date']])
     3  2015-12-30
     4  2015-12-30
     
-
-
-
-
     pandas.core.frame.DataFrame
 
 
@@ -111,23 +94,8 @@ df1 = df.set_index('ticker')
 df1
 ```
 
-
-
-
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -179,23 +147,8 @@ df2 = df1.reset_index().set_index('date')
 df2
 ```
 
-
-
-
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -246,23 +199,8 @@ df2
 df2.sort_index()
 ```
 
-
-
-
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -332,22 +270,7 @@ df3.sort_values(by = 'close')
 ```
 
 
-
-
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
