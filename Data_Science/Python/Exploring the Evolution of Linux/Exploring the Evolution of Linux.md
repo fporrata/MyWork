@@ -1,9 +1,9 @@
 
 ## 1. Introduction
 <p>Version control repositories like CVS, Subversion or Git can be a real gold mine for software developers. They contain every change to the source code including the date (the "when"), the responsible developer (the "who"), as well as little message that describes the intention (the "what") of a change.</p>
-<p><a href="https://commons.wikimedia.org/wiki/File:Tux.svg">
-<img style="float: right;margin:5px 20px 5px 1px" width="150px" src="https://s3.amazonaws.com/assets.datacamp.com/production/project_111/img/tux.png" alt="Tux - the Linux mascot">
-</a></p>
+
+![png](0.PNG)
+
 <p>In this notebook, we will analyze the evolution of a very famous open-source project &ndash; the Linux kernel. The Linux kernel is the heart of some Linux distributions like Debian, Ubuntu or CentOS. </p>
 <p>We get some first insights into the work of the development efforts by </p>
 <ul>
@@ -35,37 +35,6 @@ print(read_data)
     1502228709#Florian Fainelli
     1502223836#Jon Paul Maloy
 
-
-
-```python
-%%nose
-
-def test_listing_of_file_contents():
-    
-    # FIXME1: if student executes cell more than once, variable _i2 is then not defined. Solution?
-    
-    #PATH = "datasets/git_log_excerpt.csv"
-    # hard coded cell number: maybe a little bit fragile
-    #cell_input_from_sample_code = _i2
-    #assert PATH in cell_input_from_sample_code, \
-    #"The file %s should be read in." % PATH
-    
-    # FIXME2: can't access the sample code cell's output here because of the use of 'print'
-    
-    # test currently deactivated: too hard to create a table test case
-    assert True
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
-
 ## 2. Reading in the dataset
 <p>The dataset was created by using the command <code>git log --encoding=latin-1 --pretty="%at#%aN"</code>. The <code>latin-1</code> encoded text output was saved in a header-less csv file. In this file, each row is a commit entry with the following information:</p>
 <ul>
@@ -84,29 +53,9 @@ git_log = pd.read_csv("datasets/git_log.gz", names=['timestamp','author'], sep="
 
 # Printing out the first 5 rows
 git_log.head()
-
-
-
-
 ```
 
-
-
-
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -147,62 +96,6 @@ git_log.head()
 
 
 
-
-```python
-%%nose
-
-
-def test_is_pandas_loaded_as_pd():
-    
-    try:
-        pd # throws NameError
-        pd.DataFrame # throws AttributeError
-    except NameError:
-        assert False, "Module pandas not loaded as pd."
-    except AttributeError:
-        assert False, "Variable pd is used as short name for another module."
-    
-    
-def test_is_git_log_data_frame_existing():
-    
-    try:
-        # checks implicitly if git_log by catching the NameError exception
-        assert isinstance(git_log, pd.DataFrame), "git_log isn't a DataFrame."
-              
-    except NameError as e:
-        assert False, "Variable git_log doesn't exist."
-
-
-def test_has_git_log_correct_columns():
-    
-    expected = ['timestamp', 'author']
-    assert all(git_log.columns.get_values() == expected), \
-        "Expected columns are %s" % expected
-        
-
-def test_is_logfile_content_read_in_correctly():
-    
-    correct_git_log = pd.read_csv(
-        'datasets/git_log.gz',
-        sep='#',
-        encoding='latin-1',
-        header=None,
-        names=['timestamp', 'author'])
-    
-    assert correct_git_log.equals(git_log), \
-        "The content of datasets/git_log.gz wasn't correctly read into git_log. Check the parameters of read_csv."
-```
-
-
-
-
-
-
-    4/4 tests passed
-
-
-
-
 ## 3. Getting an overview
 <p>The dataset contains the information about every single code contribution (a "commit") to the Linux kernel over the last 13 years. We'll first take a look at the number of authors and their commits to the repository.</p>
 
@@ -220,27 +113,6 @@ print("%s authors committed %s code changes." % (number_of_authors, number_of_co
 ```
 
     17385 authors committed 699071 code changes.
-
-
-
-```python
-%%nose
-
-def test_basic_statistics():
-    assert number_of_commits == len(git_log), \
-    "The number of commits should be right."
-    assert number_of_authors == len(git_log['author'].dropna().unique()), \
-    "The number of authors should be right."
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
 
 
 ## 4. Finding the TOP 10 contributors
@@ -271,56 +143,6 @@ top_10_authors
     Name: author, dtype: int64
 
 
-
-
-```python
-%%nose
-
-
-def test_is_series_or_data_frame():
-    
-    assert isinstance(top_10_authors, pd.Series) or isinstance(top_10_authors, pd.DataFrame), \
-    "top_10_authors isn't a Series or DataFrame, but of type %s." % type(top_10_authors)
-
-    
-def test_is_result_structurally_alright():
-    
-    top10 = top_10_authors.squeeze()
-    # after a squeeze(), the DataFrame with one Series should be converted to a Series
-    assert isinstance(top10, pd.Series), \
-    "top_10_authors should only contain the data for authors and the number of commits."
-    
-
-def test_is_right_number_of_entries():
-    
-    expected_number_of_entries = 10
-    assert len(top_10_authors.squeeze()) is expected_number_of_entries, \
-    "The number of TOP 10 entries should be %r. Be sure to store the result into the 'top_10_authors' variable." % expected_number_of_entries 
-    
-    
-def test_is_expected_top_author():
-    
-    expected_top_author = "Linus Torvalds"
-    assert top_10_authors.squeeze().index[0] == expected_top_author, \
-    "The number one contributor should be %s." % expected_top_author
-    
-    
-def test_is_expected_top_commits():    
-    expected_top_commits = 23361
-    assert top_10_authors.squeeze()[0] == expected_top_commits, \
-    "The number of the most commits should be %r." % expected_top_commits
-```
-
-
-
-
-
-
-    5/5 tests passed
-
-
-
-
 ## 5. Wrangling the data
 <p>For our analysis, we want to visualize the contributions over time. For this, we use the information in the <code>timestamp</code> column to create a time series-based column.</p>
 
@@ -343,32 +165,6 @@ git_log['timestamp'].describe()
     first     1970-01-01 00:00:01
     last      2037-04-25 08:08:26
     Name: timestamp, dtype: object
-
-
-
-
-```python
-%%nose
-
-def test_timestamps():
-    
-    START_DATE = '1970-01-01 00:00:01'
-    assert START_DATE in str(git_log['timestamp'].min()), \
-    'The first timestamp should be %s.' % START_DATE
-    
-    END_DATE = '2037-04-25 08:08:26'
-    assert END_DATE in str(git_log['timestamp'].max()), \
-    'The last timestamp should be %s.' % END_DATE
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
 
 
 ## 6. Treating wrong timestamps
@@ -405,30 +201,6 @@ corrected_log['timestamp'].describe()
 
 
 
-```python
-%%nose
-
-def test_corrected_timestamps():
-    
-    FIRST_REAL_COMMIT = '2005-04-16 22:20:36'
-    assert FIRST_REAL_COMMIT in str(corrected_log['timestamp'].min()), \
-    'The first real commit timestamp should be %s.' % FIRST_REAL_COMMIT
-    
-    LAST_REAL_COMMIT = '2017-10-03 12:57:00'
-    assert LAST_REAL_COMMIT in str(corrected_log['timestamp'].max()), \
-    'The last real commit timestamp should be %s.' % LAST_REAL_COMMIT
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
-
 ## 7. Grouping commits per year
 <p>To find out how the development activity has increased over time, we'll group the commits by year and count them up.</p>
 
@@ -450,19 +222,6 @@ commits_per_year.head()
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -500,35 +259,6 @@ commits_per_year.head()
 </div>
 
 
-
-
-```python
-%%nose
-
-def test_number_of_commits_per_year():
-    
-    YEARS = 13
-    assert len(commits_per_year) == YEARS, \
-    'Number of years should be %s.' % YEARS
-    
-    
-def test_new_beginning_of_git_log():
-    
-    START = '2005-01-01 00:00:00'
-    assert START in str(commits_per_year.index[0]), \
-    'DataFrame should start at %s' % START
-```
-
-
-
-
-
-
-    2/2 tests passed
-
-
-
-
 ## 8. Visualizing the history of Linux
 <p>Finally, we'll make a plot out of these counts to better see how the development effort on Linux has increased over the the last few years. </p>
 
@@ -544,41 +274,7 @@ ax.set_ylabel("Commits")
 ```
 
 
-
-
-    <matplotlib.text.Text at 0x7f911fbf0ba8>
-
-
-
-
 ![png](output_22_1.png)
-
-
-
-```python
-%%nose
-
-def test_call_to_plot():
-    
-    # FIXME: Different results local and on build server.
-    # - local (expected): AssertionError: Plot type should be a bar chart.
-    # - build server: NameError: name '_i20' is not defined
-    # deactivating tests
-    
-    #assert "kind='bar'" in _i20, "Plot type should be a bar chart."
-    
-    # test currently deactivated: too hard to create a table test case
-    assert True
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
 
 
 ## 9.  Conclusion
@@ -589,22 +285,3 @@ def test_call_to_plot():
 # calculating or setting the year with the most commits to Linux
 year_with_most_commits = 2016 
 ```
-
-
-```python
-%%nose
-
-def test_year_with_most_commits():
-    assert str(year_with_most_commits).endswith("16") , \
-        "Write the year with the most commits as 20??, but with ?? replaced."
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
