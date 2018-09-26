@@ -11,20 +11,20 @@ import numpy as np
  
 # from sklearn.model_selection
 from sklearn.model_selection import train_test_split
-# Load boston dataset
+# Load diabetes dataset
 diabetes= datasets.load_diabetes()
  
 # print(diabetes.keys())
-#print(diabetes.DESCR)
+# print(diabetes.DESCR)
 # print(diabetes.data.shape)
  
-# Define  predictor values:  All 12 features
+# Define  predictor values
 X=diabetes.data[:,np.newaxis,3]
-# print(x.shape)
+# print(X.shape)
  
-# Define targets values:  target feature i.e. Price of Home
+# Define targets values: 
 Y=diabetes.target
-# print(y.shape)
+# print(Y.shape)
  
 # Split train and test data
 X_train,X_test,Y_train,Y_test=train_test_split(X,Y,test_size=0.3)
