@@ -25,24 +25,7 @@ users.head(12)
 
     982
 
-
-
-
-
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -130,29 +113,6 @@ users.head(12)
 </div>
 
 
-
-
-```python
-%%nose
-
-import pandas as pd
-
-def test_users_read_in_correctly():
-    correct_users = pd.read_csv("datasets/users.csv")
-    assert correct_users.equals(users), \
-    'users should contain the data in "datasets/users.csv"'
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
-
 ## 2. Passwords should not be too short
 <p>If we take a look at the first 12 users above we already see some bad passwords. But let's not get ahead of ourselves and start flagging passwords <em>manually</em>. What is the first thing we should check according to the NIST Special Publication 800-63B?</p>
 <blockquote>
@@ -177,24 +137,7 @@ users.head(12)
 
     376
 
-
-
-
-
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -307,27 +250,6 @@ users.head(12)
 </table>
 </div>
 
-
-
-
-```python
-%%nose
-
-def test_length_sum_correct():
-    assert (users['password'].str.len() < 8).sum() == users['too_short'].sum(), \
-    "users['too_short'] should be a True/False column where all rows with passwords < 8 are True."
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
-
 ## 3.  Common passwords people use
 <p>Already this simple rule flagged a couple of offenders among the first 12 users. Next up in Special Publication 800-63B is the rule that</p>
 <blockquote>
@@ -375,29 +297,6 @@ common_passwords.head(20)
     19       666666
     Name: 0, dtype: object
 
-
-
-
-```python
-%%nose
-
-def test_common_passwords_correct():
-    correct_common_passwords = pd.read_csv("datasets/10_million_password_list_top_10000.txt",
-                                           header=None, squeeze=True)
-    assert correct_common_passwords.equals(common_passwords), \
-    'datasets/10_million_password_list_top_10000.txt should be read as a Series and put into common_passwords.'
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
-
 ## 4.  Passwords should not be common passwords
 <p>The list of passwords was ordered, with the most common passwords first, and so we shouldn't be surprised to see passwords like <code>123456</code> and <code>qwerty</code> above. As hackers also have access to this list of common passwords, it's important that none of our users use these passwords!</p>
 <p>Let's flag all the passwords in our user database that are among the top 10,000 used passwords.</p>
@@ -416,24 +315,7 @@ users.head(12)
 
     129
 
-
-
-
-
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -559,27 +441,6 @@ users.head(12)
 </table>
 </div>
 
-
-
-
-```python
-%%nose
-
-def test_example():
-    assert users['password'].isin(common_passwords).sum() == users['common_password'].sum(), \
-    "users['common_password'] should be True for each row with a password that is also in common_passwords."
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
-
 ## 5. Passwords should not be common words
 <p>Ay ay ay! It turns out many of our users use common passwords, and of the first 12 users there are already two. However, as most common passwords also tend to be short, they were already flagged as being too short. What is the next thing we should check?</p>
 <blockquote>
@@ -605,24 +466,7 @@ users.head(12)
 
     137
 
-
-
-
-
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -761,33 +605,6 @@ users.head(12)
 </table>
 </div>
 
-
-
-
-```python
-%%nose
-
-def test_words_correct():
-    correct_words = pd.read_csv("datasets/google-10000-english.txt",
-                    header=None, squeeze=True)
-    assert correct_words.equals(words), \
-    'datasets/google-10000-english.txt should be read in as a Series and put into words.'
-    
-def test_common_words_correct():
-    assert users['password'].str.lower().isin(words).sum() == users['common_word'].sum() , \
-    "users['common_word'] should be True for each row with a password that is also in words."
-```
-
-
-
-
-
-
-    2/2 tests passed
-
-
-
-
 ## 6. Passwords should not be your name
 <p>It turns out many of our passwords were common English words too! Next up on the NIST list:</p>
 <blockquote>
@@ -813,24 +630,7 @@ users.head(12)
 
     50
 
-
-
-
-
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1009,34 +809,6 @@ users.head(12)
 </div>
 
 
-
-
-```python
-%%nose
-
-def test_not_same_as_name():
-    correct_first_name = users['user_name'].str.extract(r'(^\w+)', expand = False)
-    correct_last_name = users['user_name'].str.extract(r'(\w+$)', expand = False)
-
-    # Flagging the users with passwords that matches their names
-    correct_uses_name = (
-        (users['password'].str.lower() == users['first_name']) |
-        (users['password'].str.lower() == users['last_name']))
-    
-    assert correct_uses_name.sum() == users['uses_name'].sum(), \
-    "users['uses_name'] should be True for each row with a password which is also the first or last name."
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
-
 ## 7. Passwords should not be repetitive
 <p>Milford Hubbard (user number 12 above), what where you thinking!? Ok, so the last thing we are going to check is a bit tricky:</p>
 <blockquote>
@@ -1057,19 +829,6 @@ users[users['too_many_repeats'] == True]
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1177,26 +936,6 @@ users[users['too_many_repeats'] == True]
 </div>
 
 
-
-
-```python
-%%nose
-
-def test_too_many_repeats():
-    assert users['password'].str.contains(r'(.)\1\1\1').sum() == users['too_many_repeats'].sum(), \
-    "users['too_many_repeats'] should be True for each row with a password with 4 or more repeats."
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
-
 ## 8. All together now!
 <p>Now we have implemented all the basic tests for bad passwords suggested by NIST Special Publication 800-63B! What's left is just to flag all bad passwords and maybe to send these users an e-mail that strongly suggests they change their password.</p>
 
@@ -1214,24 +953,7 @@ users.head(25)
 
     424
 
-
-
-
-
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1630,33 +1352,6 @@ users.head(25)
 </table>
 </div>
 
-
-
-
-```python
-%%nose
-
-def test_all_nist_rules():
-    correct_bad_password = ( 
-        users['too_short'] | 
-        users['common_password'] |
-        users['common_word'] |
-        users['uses_name'] |
-        users['too_many_repeats'] )
-    assert correct_bad_password.sum() == users['bad_password'].sum(), \
-    "All rows with passwords that should be flagged as bad should have users['bad_password'] set to True."
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
-
 ## 9. Otherwise, the password should be up to the user
 <p>In this notebook, we've implemented the password checks recommended by the NIST Special Publication 800-63B. It's certainly possible to better implement these checks, for example, by using a longer list of common passwords. Also note that the NIST checks in no way guarantee that a chosen password is good, just that it's not obviously bad.</p>
 <p>Apart from the checks we've implemented above the NIST is also clear with what password rules should <em>not</em> be imposed:</p>
@@ -1671,34 +1366,5 @@ def test_all_nist_rules():
 # PLEASE DO NOT USE AN EXISTING PASSWORD HERE
 new_password = "ythl9876"
 ```
-
-
-```python
-%%nose
-
-def test_not_bad_password():
-    temp_new_password = pd.Series(new_password)
-    temp_common_passwords = pd.read_csv("datasets/10_million_password_list_top_10000.txt",
-                                   header=None, squeeze=True)
-    temp_words = pd.read_csv("datasets/google-10000-english.txt",
-                        header=None, squeeze=True)
-
-    is_bad = (
-        (temp_new_password.str.len() < 8) |
-        (temp_new_password.isin(temp_common_passwords)) |
-        (temp_new_password.str.lower().isin(temp_words)) |
-        (temp_new_password.str.contains(r'(.)\1\1\1'))
-    ).all()
-    assert not is_bad, \
-    'This password does not fulfill the NIST requirements.'
-```
-
-
-
-
-
-
-    1/1 tests passed
-
 
 
