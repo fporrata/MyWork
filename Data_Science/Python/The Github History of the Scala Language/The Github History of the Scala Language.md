@@ -18,34 +18,6 @@ import pandas as pd
 pulls = pd.read_csv('datasets/pulls.csv')
 pull_files = pd.read_csv('datasets/pull_files.csv')
 ```
-
-
-```python
-%%nose
-
-import pandas as pd
-
-def test_pulls():
-    correct_pulls = pd.read_csv('datasets/pulls.csv')
-    assert correct_pulls.equals(pulls), \
-    'Read in pulls.csv using read_csv().'
-    
-def test_pull_files():
-    correct_pull_files = pd.read_csv('datasets/pull_files.csv')
-    assert correct_pull_files.equals(pull_files), \
-    'Read in pull_files.csv using read_csv().'
-```
-
-
-
-
-
-
-    2/2 tests passed
-
-
-
-
 ## 2. Cleaning the data
 <p>The raw data extracted from GitHub contains dates in the ISO8601 format. However, <code>pandas</code> imports them as regular strings. To make our analysis easier, we need to convert the strings into Python's <code>DateTime</code> objects. <code>DateTime</code> objects have the important property that they can be compared and sorted.</p>
 <p>The pull request times are all in UTC (also known as Coordinated Universal Time). The commit times, however, are in the local time of the author with time zone information (number of hours difference from UTC). To make comparisons easy, we should convert all times to UTC.</p>
@@ -57,29 +29,6 @@ pulls['date'] = pd.to_datetime(pulls['date'],utc = True)
 ```
 
 
-```python
-%%nose
-
-# one or more tests of the students code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-
-def test_pulls_type():
-    assert pulls['date'].dtype.type is pd.core.dtypes.dtypes.DatetimeTZDtypeType, \
-    'The date for the pull requests is not the correct type.'
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
-
 ## 3. Merging the DataFrames
 <p>The data extracted comes in two separate files. Merging the two DataFrames will make it easier for us to analyze the data in the future tasks.</p>
 
@@ -88,37 +37,6 @@ def test_pulls_type():
 # Merge the two DataFrames
 data = pd.merge(pulls, pull_files, on='pid')
 ```
-
-
-```python
-%%nose
-
-# one or more tests of the students code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-
-def test_merge():
-    assert len(data) == 85588, \
-    'The merged DataFrame does not have the correct number of rows.'
-
-def test_merge_dataframes():
-    correct_data = pulls.merge(pull_files, on='pid')
-    also_correct_data = pull_files.merge(pulls, on='pid')
-    assert correct_data.equals(data) or \
-        also_correct_data.equals(data), \
-        "The DataFrames are not merged correctly."        
-```
-
-
-
-
-
-
-    2/2 tests passed
-
-
-
 
 ## 4. Is the project still actively maintained?
 <p>The activity in an open source project is not very consistent. Some projects might be active for many years after the initial release, while others can slowly taper out into oblivion. Before committing to contributing to a project, it is important to understand the state of the project. Is development going steadily, or is there a drop? Has the project been abandoned altogether?</p>
@@ -145,29 +63,6 @@ plt.show()
 ![png](output_10_0.png)
 
 
-
-```python
-%%nose
-    
-def test_month_year_column():
-    assert 'month_year' in pulls, \
-    "You did not create the composite column."
-    
-def test_group_and_count():
-    assert len(counts) == 74, \
-    "The data was not grouped correctly. The history only spans 74 months."
-```
-
-
-
-
-
-
-    2/2 tests passed
-
-
-
-
 ## 5. Is there camaraderie in the project?
 <p>The organizational structure varies from one project to another, and it can influence your success as a contributor. A project that has a very small community might not be the best one to start working on. The small community might indicate a high barrier of entry. This can be caused by several factors, including a community that is reluctant to accept pull requests from "outsiders," that the code base is hard to work with, etc. However, a large community can serve as an indicator that the project is regularly accepting pull requests from new contributors. Such a project would be a good place to start.</p>
 <p>In order to evaluate the dynamics of the community, we will plot a histogram of the number of pull requests submitted by each user. A distribution that shows that there are few people that only contribute a small number of pull requests can be used as in indicator that the project is not welcoming of new contributors. </p>
@@ -190,30 +85,6 @@ plt.show()
 
 
 ![png](output_13_0.png)
-
-
-
-```python
-%%nose
-
-# one or more tests of the students code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-
-def test_by_user():
-    assert len(by_user) == 467, \
-    'The grouping by user is not correct'
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
 
 
 ## 6. What files were changed in the last ten pull requests?
@@ -275,37 +146,6 @@ files
 
 
 
-```python
-%%nose
-
-# one or more tests of the students code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-
-def test_last_10():
-    assert len(last_10) == 10, \
-    'You need to select the last 10 pull requests.'
-
-def test_join():
-    assert len(joined_pr) == 34, \
-    'The join was not done correctly. You lost some pull requests in the process.'
-    
-def test_no_files():
-    assert len(files) == 34, \
-    'You did not select the right number of pull requests.'
-```
-
-
-
-
-
-
-    3/3 tests passed
-
-
-
-
 ## 7. Who made the most pull requests to a given file?
 <p>When contributing to a project, we might need some guidance. We might find ourselves needing some information regarding the codebase. It is important direct any questions to the right person. Contributors to open source projects generally have other day jobs, so their time is limited. It is important to address our questions to the right people. One way to identify the right target for our inquiries is by using their contribution history.</p>
 <p>We identified <code>src/compiler/scala/reflect/reify/phases/Calculate.scala</code> as being recently changed. We are interested in the top 3 developers who changed that file. Those developers are the ones most likely to have the best understanding of the code.</p>
@@ -325,42 +165,11 @@ author_counts = file_pr.groupby('user').size()
 author_counts.nlargest(3)
 ```
 
-
-
-
     user
     xeno-by     11
     retronym     5
     soc          4
     dtype: int64
-
-
-
-
-```python
-%%nose
-
-# one or more tests of the students code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-
-def test_selecting_commits():
-    assert len(file_pr) == 30, \
-    'You did not filter the data on the right file.'
-    
-def test_author_counts():
-    assert len(author_counts) == 11, \
-    'The number of authors is not correct.'
-```
-
-
-
-
-
-
-    2/2 tests passed
-
 
 
 
@@ -385,44 +194,7 @@ users_last_10 = set(joined_pr.sort_values(by='date', ascending=False).head(10).u
 users_last_10
 ```
 
-
-
-
     {'bjornregnell', 'retronym', 'soc', 'starblood', 'xeno-by', 'zuvizudar'}
-
-
-
-
-```python
-%%nose
-
-# one or more tests of the students code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-
-def test_join():
-    assert len(joined_pr) == len(file_pr), \
-    'The join was not done correctly. You lost some pull requests in the process.'
-    
-def test_file_pr():
-    assert len(joined_pr) == 30, \
-    'The file does not have the correct number of pull requests.'
-    
-def test_last_10():
-    assert len(users_last_10) == 6, \
-    'You did not select the right number of pull requests.'
-```
-
-
-
-
-
-
-    3/3 tests passed
-
-
-
 
 ## 9. The pull requests of two special developers
 <p>Now that we have identified two potential contacts in the projects, we need to find the person who was most involved in the project in recent times. That person is most likely to answer our questions. For each calendar year, we are interested in understanding the number of pull requests the authors submitted. This will give us a high-level image of their contribution trend to the project.</p>
@@ -448,42 +220,7 @@ counts_wide.plot()
 ```
 
 
-
-
-    <matplotlib.axes._subplots.AxesSubplot at 0x7fad44b9fc18>
-
-
-
-
 ![png](output_25_1.png)
-
-
-
-```python
-%%nose
-
-# one or more tests of the students code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-
-def test_author_pr():
-    assert len(by_author) == 715, \
-    "The wrong number of pull requests have been selected."
-    
-def test_counts():
-    assert len(counts) == 11, \
-    'The data should span 6 years.'
-```
-
-
-
-
-
-
-    2/2 tests passed
-
-
 
 
 ## 10. Visualizing the contributions of each developer
@@ -512,48 +249,5 @@ by_file_wide.plot(kind='bar')
 ```
 
 
-
-
-    <matplotlib.axes._subplots.AxesSubplot at 0x7fad447b5e10>
-
-
-
-
 ![png](output_28_1.png)
-
-
-
-```python
-%%nose
-
-# one or more tests of the students code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-
-def test_by_author():
-    assert len(by_author) == 16999, \
-    'Selecting by author did not produce the expected results.'
-    
-def test_by_file():
-    assert len(by_file) == 15, \
-    'Selecting by file did not produce the expected results.'
-    
-# def test_grouped():
-#     assert len(grouped) == 4, \
-#     'There should be only 3 years that matches our data.'
-    
-def test_by_file_wide():
-    assert len(by_file_wide) == 3, \
-    'There should be only 3 years that matches our data.'
-```
-
-
-
-
-
-
-    3/3 tests passed
-
-
 
