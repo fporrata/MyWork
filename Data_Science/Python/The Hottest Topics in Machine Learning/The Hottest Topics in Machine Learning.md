@@ -1,7 +1,9 @@
 
 ## 1. Loading the NIPS papers
-<p>The NIPS conference (Neural Information Processing Systems) is one of the most prestigious yearly events in the machine learning community. At each NIPS conference, a large number of research papers are published. Over 50,000 PDF files were automatically downloaded and processed to obtain a dataset on various machine learning techniques. These NIPS papers are stored in <code>datasets/papers.csv</code>. The CSV file contains information on the different NIPS papers that were published from 1987 until 2017 (30 years!). These papers discuss a wide variety of topics in machine learning, from neural networks to optimization methods and many more.
-<img src="https://s3.amazonaws.com/assets.datacamp.com/production/project_158/img/nips_logo.png" alt="The logo of NIPS (Neural Information Processing Systems)"></p>
+<p>The NIPS conference (Neural Information Processing Systems) is one of the most prestigious yearly events in the machine learning community. At each NIPS conference, a large number of research papers are published. Over 50,000 PDF files were automatically downloaded and processed to obtain a dataset on various machine learning techniques. These NIPS papers are stored in <code>datasets/papers.csv</code>. The CSV file contains information on the different NIPS papers that were published from 1987 until 2017 (30 years!). These papers discuss a wide variety of topics in machine learning, from neural networks to optimization methods and many more.</p>
+
+![png(0.PNG)
+
 <p>First, we will explore the CSV file to determine what type of data we can use for the analysis and how it is structured. A research paper typically consists of a title, an abstract and the main text. Other data such as figures and tables were not extracted from the PDF files. Each paper discusses a novel technique or improvement. In this analysis, we will focus on analyzing these papers with natural language processing methods.</p>
 
 
@@ -20,19 +22,6 @@ papers.head()
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -104,30 +93,6 @@ papers.head()
 
 
 
-```python
-%%nose
-
-import pandas as pd
-
-def test_papers_exists():
-    assert "papers" in globals(), \
-        "The variable papers should be defined."
-        
-def test_papers_correctly_loaded():
-    correct_papers = pd.read_csv("datasets/papers.csv")
-    assert correct_papers.equals(papers), "The variable papers should contain the data in papers.csv"
-```
-
-
-
-
-
-
-    2/2 tests passed
-
-
-
-
 ## 2. Preparing the data for analysis
 <p>For the analysis of the papers, we are only interested in the text data associated with the paper as well as the year the paper was published in.</p>
 <p>We will analyze this text data using natural language processing.  Since the file contains some metadata such as id's and filenames, it is necessary to remove all the columns that do not contain useful text information.</p>
@@ -145,19 +110,6 @@ papers.head()
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -209,32 +161,6 @@ papers.head()
 </div>
 
 
-
-
-```python
-%%nose
-
-import pandas as pd
-
-def test_papers_exists():
-    assert "papers" in globals(), \
-        "The variable `papers` should be defined."
-        
-def test_papers_columns():
-    assert papers.columns.size==4, \
-        "The variable `papers` does not contain the right amount of columns."
-```
-
-
-
-
-
-
-    2/2 tests passed
-
-
-
-
 ## 3. Plotting how machine learning has evolved over time
 <p>In order to understand how the machine learning field has recently exploded in popularity, we will begin by visualizing the number of publications per year. </p>
 <p>By looking at the number of published papers per year,  we can understand the extent of the machine learning 'revolution'! Typically, this significant increase in popularity is attributed to the large amounts of compute power, data and improvements in algorithms.</p>
@@ -255,44 +181,7 @@ counts.plot(kind='bar')
 
 
 
-
-    <matplotlib.axes._subplots.AxesSubplot at 0x7fd096c5f1d0>
-
-
-
-
 ![png](output_7_1.png)
-
-
-
-```python
-%%nose
-
-# one or more tests of the students code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-
-def test_vars_exists():
-    assert "groups" in globals(), \
-        "The variable groups should be defined."
-    assert "counts" in globals(), \
-        "The variable counts should be defined."
-        
-def test_vars_columns():
-    correct_groups = papers.groupby('year')
-    correct_counts = correct_groups.size()
-    assert correct_counts.equals(counts), "The variable counts is not correctly defined."
-```
-
-
-
-
-
-
-    2/2 tests passed
-
-
 
 
 ## 4. Preprocessing the text data
@@ -337,32 +226,6 @@ papers['title_processed'].head()
 
 
 
-```python
-%%nose
-
-# one or more tests of the students code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-
-def test_processed_title_column():
-    tmp = papers['title'].map(lambda x: re.sub('[,\.!?]', '', x))
-    # Convert the titles to lowercase
-    tmp = tmp.map(lambda x: x.lower())
-    tmp.name = 'title_processed'
-    assert tmp.equals(papers['title_processed']), "The column of processed titles is not correctly defined."
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
-
 ## 5.  A word cloud to visualize the preprocessed text data
 <p>In order to verify whether the preprocessing happened correctly, we can make a word cloud of the titles of the research papers. This will give us a visual representation of the most common words. Visualisation is key to understanding whether we are still on the right track! In addition, it allows us to verify whether we need additional preprocessing before further analyzing the text data.</p>
 <p>Python has a massive number of open libraries! Instead of trying to develop a method to create word clouds ourselves, we'll use Andreas Mueller's <a href="http://amueller.github.io/word_cloud/">wordcloud library</a>.</p>
@@ -389,31 +252,6 @@ wordcloud.to_image()
 
 
 ![png](output_13_0.png)
-
-
-
-
-```python
-%%nose
-
-# one or more tests of the students code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-
-def test_example():
-    assert long_string == ' '.join(papers['title_processed']), \
-    'The titles were not parsed correctly to a single long string.'
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
 
 
 ## 6.  Prepare the text for LDA analysis
@@ -462,30 +300,6 @@ plot_10_most_common_words(count_data, count_vectorizer)
 ![png](output_16_0.png)
 
 
-
-```python
-%%nose
-
-# one or more tests of the students code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-
-def test_count_data():
-    assert "count_data" in globals(), \
-        "The variable count_data should be defined."
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
-
 ## 7. Analysing trends with LDA
 <p>Finally, the research titles will be analyzed using LDA. Note that in order to process a new set of documents (e.g. news articles), a similar set of steps will be required to preprocess the data. The flow that was constructed here can thus easily be exported for a new text dataset.</p>
 <p>The only parameter we will tweak is the number of topics in the LDA algorithm. Typically, one would calculate the 'perplexity' metric to determine which number of topics is best and iterate over different amounts of topics until the lowest 'perplexity' is found. For now, let's play around with a different number of topics. From there, we can distinguish what each topic is about ('neural networks', 'reinforcement learning', 'kernel methods', 'gaussian processes', etc.).</p>
@@ -532,25 +346,6 @@ print_topics(lda, count_vectorizer, number_words)
 
 
 
-```python
-%%nose
-
-# No standard testing procedure exists for printing at the moment
-
-def test_nothing():
-    assert True, "Nothing to test"
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
-
 ## 8. The future of machine learning
 <p>Machine learning has become increasingly popular over the past years. The number of NIPS conference papers has risen exponentially, and people are continuously looking for ways on how they can incorporate machine learning into their products and services.</p>
 <p>Although this analysis focused on analyzing machine learning trends in research, a lot of these techniques are rapidly being adopted in industry. Following the latest machine learning trends is a critical skill for a data scientist, and it is recommended to continuously keep learning by going through blogs, tutorials, and courses.</p>
@@ -560,27 +355,5 @@ def test_nothing():
 # The historical data indicates that:
 more_papers_published_in_2018 = True
 ```
-
-
-```python
-%%nose
-
-# one or more tests of the students code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-
-def test():
-        assert more_papers_published_in_2018 == True, \
-    'The number published papers has been rising the past 10 years!'
-```
-
-
-
-
-
-
-    1/1 tests passed
-
 
 
