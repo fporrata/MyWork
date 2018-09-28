@@ -76,42 +76,7 @@ words = ['buy', 'price', 'discount', 'promotion', 'promo', 'shop']
 words
 ```
 
-
-
-
     ['buy', 'price', 'discount', 'promotion', 'promo', 'shop']
-
-
-
-
-```python
-%%nose
-
-def test_words_in_long_word_list_task_1():
-    correct_words = ['buy', 'price', 'discount', 'promotion', 'promo', 'shop', 
-                     'buying', 'prices', 'pricing', 'shopping', 'discounts', 
-                     'promos', 'ecommerce', 'e commerce', 'buy online', 
-                     'shop online', 'cheap', 'best price', 'lowest price', 
-                     'cheapest', 'best value', 'offer', 'offers', 'promotions',
-                     'purchase', 'sale', 'bargain', 'affordable',
-                     'cheap', 'low', 'budget', 'inexpensive', 'economical',]
-    assert all([word in correct_words for word in words]), \
-    'The variable `words` should contain relevant words to the products in the brief.'
-
-def test_len_words_task_1():
-    assert 6 <= len(set(words)) <= 10, \
-    "There should be six to ten brief-related words in the list `words`."
-```
-
-
-
-
-
-
-    2/2 tests passed
-
-
-
 
 ## 2. Combine the words with the product names
 <p>Imagining all the possible combinations of keywords can be stressful! But not for us, because we are keyword ninjas! We know how to translate campaign briefs into Python data structures and can imagine the resulting DataFrames that we need to create.</p>
@@ -206,35 +171,6 @@ pprint(keywords_list)
      ['sofa beds', 'shop sofa beds']]
 
 
-
-```python
-%%nose
-
-def test_list_task_2():
-    assert isinstance(keywords_list, list), 'The variable `keywords_list` is not a Python list.'
-
-def test_keywords_list_created_correctly_task_2():
-    test_keywords_list = []
-
-    for product in products:
-        for word in words:
-            test_keywords_list.append([product, word + ' ' + product])
-            test_keywords_list.append([product, product + ' ' + word])
-
-    assert all([kl in test_keywords_list for kl in keywords_list]), \
-     'Make sure you have \'product word\' or \'word product\' as the second element in each sublist.'
-```
-
-
-
-
-
-
-    2/2 tests passed
-
-
-
-
 ## 3. Convert the list of lists into a DataFrame
 <p>Now we want to convert this list of lists into a DataFrame so we can easily manipulate it and manage the final output.</p>
 
@@ -254,19 +190,6 @@ keywords_df.head()
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -308,39 +231,6 @@ keywords_df.head()
 
 
 
-```python
-%%nose
-
-def test_pandas_loaded_task_3():
-    assert 'pd' in globals(), \
-    'Did you forget to import pandas aliased as pd?'
-
-def test_keywords_df_created_correctly_task_3():
-    import pandas as pd
-    correct_keywords_df = pd.DataFrame.from_records(keywords_list)
-    assert correct_keywords_df.equals(keywords_df), "The contents of `keywords_df` doesn't appear to be correct. Don't specify column names yet!"
-    
-#     correct_keywords_df = pd.DataFrame.from_records(keywords_list)
-    
-#     assert (correct_keywords_df
-#             .sort_values(list(sorted(correct_keywords_df.columns.values)))
-#             .reset_index(drop=True)
-#             .equals(keywords_df
-#                     .sort_values(list(sorted(keywords_df.columns.values)))
-#                     .reset_index(drop=True))) , \
-#     'The DataFrame you created doesn\'t seem to be the right one.'
-```
-
-
-
-
-
-
-    2/2 tests passed
-
-
-
-
 ## 4. Rename the columns of the DataFrame
 <p>Before we can upload this table of keywords, we will need to give the columns meaningful names. If we inspect the DataFrame we just created above, we can see that the columns are currently named <code>0</code> and <code>1</code>. <code>Ad Group</code> (example: "sofas") and <code>Keyword</code> (example: "sofas buy") are much more appropriate names.</p>
 
@@ -351,23 +241,8 @@ keywords_df = keywords_df.rename({0: 'Ad Group', 1: 'Keyword'}, axis='columns')
 keywords_df.head()
 ```
 
-
-
-
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -406,27 +281,6 @@ keywords_df.head()
 </table>
 </div>
 
-
-
-
-```python
-%%nose
-
-def test_df_columns_renamed_correctly_task_4():
-    assert 'Ad Group' in keywords_df.columns.values and 'Keyword' in keywords_df.columns.values , \
-    'Make sure you are using the proper names for the columns. Capitalization matters!'
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
-
 ## 5. Add a campaign column
 <p>Now we need to add some additional information to our DataFrame. 
 We need a new column called <code>Campaign</code> for the campaign name. We want campaign names to be descriptive of our group of keywords and products, so let's call this campaign 'SEM_Sofas'.</p>
@@ -436,29 +290,6 @@ We need a new column called <code>Campaign</code> for the campaign name. We want
 # Add a campaign column
 keywords_df['Campaign'] = 'SEM_Sofas'
 ```
-
-
-```python
-%%nose
-
-def test_campaign_column_created_task_5():
-    assert 'Campaign' in keywords_df.columns.values, \
-    "`Campaign` needs to be the name of the new column. Capitalization matters!"
-    
-def test_campaign_name_task_5():
-    assert len(set(keywords_df['Campaign'])) == 1 and set(keywords_df['Campaign']).pop() == 'SEM_Sofas', \
-    "Is 'SEM_Sofas' the campaign name in every row of the `Campaign` column?"
-```
-
-
-
-
-
-
-    2/2 tests passed
-
-
-
 
 ## 6. Create the match type column
 <p>There are different keyword match types. One is exact match, which is for matching the exact term or are close variations of that exact term. Another match type is broad match, which means ads may show on searches that include misspellings, synonyms, related searches, and other relevant variations.</p>
@@ -473,29 +304,6 @@ def test_campaign_name_task_5():
 # Add a criterion type column
 keywords_df['Criterion Type'] = 'Exact'
 ```
-
-
-```python
-%%nose
-
-def test_criterion_type_column_created_task_6():
-    assert 'Criterion Type' in keywords_df.columns.values, \
-    "`Criterion Type` needs to be the name of the new column. Capitalization matters!"
-    
-def test_criterion_type_task_6():
-    assert len(set(keywords_df['Criterion Type'])) == 1 and set(keywords_df['Criterion Type']).pop() == 'Exact', \
-    "Is 'Exact' the campaign name in every row of the `Criterion Type` column?"
-```
-
-
-
-
-
-
-    2/2 tests passed
-
-
-
 
 ## 7. Duplicate all the keywords into 'phrase' match
 <p>The great thing about exact match is that it is very specific, and we can control the process very well. The tradeoff, however, is that:  </p>
@@ -523,19 +331,6 @@ keywords_df_final.head()
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -585,31 +380,6 @@ keywords_df_final.head()
   </tbody>
 </table>
 </div>
-
-
-
-
-```python
-%%nose
-
-def test_criterion_type_task_7():
-    assert len(set(keywords_phrase['Criterion Type'])) == 1 and set(keywords_phrase['Criterion Type']).pop() == 'Phrase', \
-    "Is 'Phrase' the campaign name in every row of the `Criterion Type` column in `keyword_phrase`?"
-
-def test_phrase_df_created_task_7():
-    test_keywords_df_final = keywords_df.append(keywords_phrase)
-    assert test_keywords_df_final.equals(keywords_df_final), \
-    'The final DataFrame does not seem to be created correctly.'
-```
-
-
-
-
-
-
-    2/2 tests passed
-
-
 
 
 ## 8. Save and summarize!
@@ -662,7 +432,8 @@ def test_phrase_df_created_task_7():
 </tbody>
 </table>
 <p>Together, these tables get us the sample <strong>keywords -> ads -> landing pages</strong> mapping shown in the diagram below.</p>
-<p><img src="https://s3.amazonaws.com/assets.datacamp.com/production/project_400/img/kwds_ads_lpages.png" alt="Keywords-Ads-Landing pages flow"></p>
+
+![png](0.PNG)
 
 
 ```python
@@ -686,34 +457,5 @@ print(summary)
     sofas              Exact             12
                        Phrase            12
     Name: Keyword, dtype: int64
-
-
-
-```python
-%%nose
-import os
-
-# def test_df_saved_to_csv_task_8():
-#     test_keywords_df = pd.read_csv('keywords.csv')
-#     assert keywords_df_final.equals(test_keywords_df), \
-#     'The \'keywords.csv\' file isn\'t saved correctly.'
-
-def test_file_exists_task_8():
-    assert os.path.exists("keywords.csv"), \
-    'Did you save the `keywords_df_final` DataFrame to \'keywords.csv\'?'
-    
-def test_index_excluded_task_8():
-    test_keywords_csv = pd.read_csv('keywords.csv')
-    assert len(pd.read_csv('keywords.csv').columns) == 4, \
-    'Did you exclude the DataFrame index in \'keywords.csv\' using `index=False`?'
-```
-
-
-
-
-
-
-    2/2 tests passed
-
 
 
