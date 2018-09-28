@@ -1,6 +1,8 @@
 
 ## 1. The Statcast revolution
-<p><img style="float: left;margin:5px 20px 5px 1px" src="https://s3.amazonaws.com/assets.datacamp.com/production/project_250/img/judge_wide.jpg"></p>
+
+![png](0.PNG)
+
 <p>This is Aaron Judge. Judge is one of the physically largest players in Major League Baseball standing 6 feet 7 inches (2.01 m) tall and weighing 282 pounds (128 kg). He also hit the <a href="https://www.mlb.com/news/aaron-judge-sets-statcast-exit-velocity-record/c-235640846">hardest home run</a> ever recorded. How do we know this? <strong>Statcast</strong>.</p>
 <p>Statcast is a state-of-the-art tracking system that uses high-resolution cameras and radar equipment to measure the precise location and movement of baseballs and baseball players. Introduced in 2015 to all 30 major league ballparks, Statcast data is revolutionizing the game. Teams are engaging in an "arms race" of data analysis, hiring analysts left and right in an attempt to gain an edge over their competition. This <a href="https://www.youtube.com/watch?v=9rOKGKhQe8U">video</a> describing the system is incredible.</p>
 <p><strong>In this notebook</strong>, we're going to wrangle, analyze, and visualize Statcast data to compare Mr. Judge and another (extremely large) teammate of his. Let's start by loading the data into our Notebook. There are two CSV files, <code>judge.csv</code> and <code>stanton.csv</code>, both of which contain Statcast data for 2015-2017. We'll use pandas DataFrames to store this data. Let's also load our data visualization libraries, matplotlib and seaborn.</p>
@@ -19,31 +21,6 @@ judge = pd.read_csv("datasets/judge.csv")
 stanton = pd.read_csv("datasets/stanton.csv")
 ```
 
-
-```python
-%%nose
-    
-import pandas as pd
-
-def test_judge_correctly_loaded():
-    correct_judge = pd.read_csv("datasets/judge.csv")
-    assert correct_judge.equals(judge), "The variable `judge` should contain the data in `judge.csv`"
-
-def test_stanton_correctly_loaded():
-    correct_stanton = pd.read_csv("datasets/stanton.csv")
-    assert correct_stanton.equals(stanton), "The variable `stanton` should contain the data in `stanton.csv`"
-```
-
-
-
-
-
-
-    2/2 tests passed
-
-
-
-
 ## 2. What can Statcast measure?
 <p>The better question might be, what can't Statcast measure?</p>
 <blockquote>
@@ -61,23 +38,7 @@ pd.set_option('display.max_columns', None)
 judge.tail()
 ```
 
-
-
-
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -573,29 +534,10 @@ judge.tail()
 </div>
 
 
-
-
-```python
-%%nose
-
-# No standard testing procedure exists for printing at the moment
-
-def test_nothing():
-    assert True, "Nothing to test"
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
-
 ## 3. Aaron Judge and Giancarlo Stanton, prolific sluggers
-<p><img style="float: left;margin:5px 20px 5px 1px" src="https://s3.amazonaws.com/assets.datacamp.com/production/project_250/img/stanton_wide.jpg"></p>
+
+![png](1.PNG)
+
 <p>This is Giancarlo Stanton. He is also a very large human being, standing 6 feet 6 inches tall and weighing 245 pounds. Despite not wearing the same jersey as Judge in the pictures provided, in 2018 they will be teammates on the New York Yankees. They are similar in a lot of ways, one being that they hit a lot of home runs. Stanton and Judge led baseball in home runs in 2017, with <a href="https://www.youtube.com/watch?v=tJ6Bz5P6dg4">59</a> and <a href="https://www.youtube.com/watch?v=Gw3pFHMM9fk">52</a>, respectively. These are exceptional totals - the player in third "only" had 45 home runs.</p>
 <p>Stanton and Judge are also different in many ways. One is <a href="http://m.mlb.com/glossary/statcast/batted-ball-event">batted ball events</a>, which is any batted ball that produces a result. This includes outs, hits, and errors. Next, you'll find the counts of batted ball events for each player in 2017. The frequencies of other events are quite different.</p>
 
@@ -649,29 +591,6 @@ print(stanton_events_2017.value_counts())
     Name: events, dtype: int64
 
 
-
-```python
-%%nose
-
-def test_judge_events_2017_correct():
-    correct_judge_events_2017 = judge.loc[judge['game_year'] == 2017].events
-    assert correct_judge_events_2017.equals(judge_events_2017), "The variable `judge_events_2017` should contain the `events` column from the `judge` DataFrame after filtering for all pitches that occurred in 2017"
-
-def test_stanton_events_2017_correct():
-    correct_stanton_events_2017 = stanton.loc[stanton['game_year'] == 2017].events
-    assert correct_stanton_events_2017.equals(stanton_events_2017), "The variable `stanton_events_2017` should contain the `events` column from the `stanton` DataFrame after filtering for all pitches that occurred in 2017"
-```
-
-
-
-
-
-
-    2/2 tests passed
-
-
-
-
 ## 4. Analyzing home runs with Statcast data
 <p>So Judge walks and strikes out more than Stanton. Stanton flies out more than Judge. But let's get into their hitting profiles in more detail. Two of the most groundbreaking Statcast metrics are launch angle and exit velocity:</p>
 <ul>
@@ -701,9 +620,6 @@ sns.kdeplot(judge_hr.launch_angle, judge_hr.launch_speed, cmap="Blues", shade=Tr
 sns.kdeplot(stanton_hr.launch_angle, stanton_hr.launch_speed, cmap="Blues", shade=True, shade_lowest=False, ax=axs2[1]).set_title('Giancarlo Stanton\nHome Runs, 2015-2017')
 ```
 
-
-
-
     Text(0.5,1,'Giancarlo Stanton\nHome Runs, 2015-2017')
 
 
@@ -714,31 +630,6 @@ sns.kdeplot(stanton_hr.launch_angle, stanton_hr.launch_speed, cmap="Blues", shad
 
 
 ![png](output_10_2.png)
-
-
-
-```python
-%%nose
-    
-import pandas as pd
-
-def test_judge_hr_correct():
-    correct_judge_hr = judge.loc[judge['events'] == 'home_run']
-    assert correct_judge_hr.equals(judge_hr), "The variable `judge_hr` should contain all pitches in `judge` that resulted in a home run"
-
-def test_stanton_hr_correct():
-    correct_stanton_hr = stanton.loc[stanton['events'] == 'home_run']
-    assert correct_stanton_hr.equals(stanton_hr), "The variable `stanton_hr` should contain all pitches in `stanton` that resulted in a home run"
-    
-# No standard testing procedure exists for plots at the moment
-```
-
-
-
-
-
-
-    2/2 tests passed
 
 
 
@@ -756,9 +647,6 @@ judge_stanton_hr = pd.concat([judge_hr, stanton_hr])
 sns.boxplot(x = 'player_name', y = 'release_speed' , data = judge_stanton_hr, color = 'tab:blue').set_title('Home Runs, 2015-2017')
 ```
 
-
-
-
     Text(0.5,1,'Home Runs, 2015-2017')
 
 
@@ -768,32 +656,11 @@ sns.boxplot(x = 'player_name', y = 'release_speed' , data = judge_stanton_hr, co
 
 
 
-```python
-%%nose
-
-def test_judge_stanton_hr_correct():
-    correct_judge_stanton_hr = pd.concat([judge_hr, stanton_hr])
-    also_correct_judge_stanton_hr = pd.concat([stanton_hr, judge_hr])
-    assert correct_judge_stanton_hr.equals(judge_stanton_hr) or \
-        also_correct_judge_stanton_hr.equals(judge_stanton_hr), \
-        "The variable `judge_stanton_hr` should be the concatenation of `judge_hr` and `stanton_hr`"        
-
-# No standard testing procedure exists for plots at the moment
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
-
 ## 6. Home runs by pitch location (I)
 <p>So Judge appears to hit his home runs off of faster pitches than Stanton. We might call Judge a fastball hitter. Stanton appears agnostic to pitch speed and likely pitch movement since slower pitches (e.g. curveballs, sliders, and changeups) tend to have more break. Statcast <em>does</em> track pitch movement and type but let's move on to something else: <strong>pitch location</strong>. Statcast tracks the zone the pitch is in when it crosses the plate. The zone numbering looks like this (from the catcher's point of view):</p>
-<p><img style="margin:5px 20px 5px 1px; width:20%;" src="https://s3.amazonaws.com/assets.datacamp.com/production/project_250/img/zone.png"></p>
+
+![png](3.PNG) 
+
 <p>We can plot this using a 2D histogram. For simplicity, let's only look at strikes, which gives us a 9x9 grid. We can view each zone as coordinates on a 2D plot, the bottom left corner being (1,1) and the top right corner being (3,3). Let's set up a function to assign x-coordinates to each pitch.</p>
 
 
@@ -813,47 +680,6 @@ def assign_x_coord(row):
     if row.zone in [3, 6, 9]:
          return 3
 ```
-
-
-```python
-%%nose
-
-def test_assign_x_coord():
-    dummy_zone_x = [{'zone': 1},
-                    {'zone': 2},
-                    {'zone': 3},
-                    {'zone': 4},
-                    {'zone': 5},
-                    {'zone': 6},
-                    {'zone': 7},
-                    {'zone': 8},
-                    {'zone': 9}]
-    df_dummy_zone_x = pd.DataFrame(dummy_zone_x)
-    df_dummy_zone_x['zone_x'] = df_dummy_zone_x.apply(assign_x_coord, axis=1)
-    
-    correct_zone_x = [{'zone': 1, 'zone_x': 1},
-                      {'zone': 2, 'zone_x': 2},
-                      {'zone': 3, 'zone_x': 3},
-                      {'zone': 4, 'zone_x': 1},
-                      {'zone': 5, 'zone_x': 2},
-                      {'zone': 6, 'zone_x': 3},
-                      {'zone': 7, 'zone_x': 1},
-                      {'zone': 8, 'zone_x': 2},
-                      {'zone': 9, 'zone_x': 3}]
-    df_correct_zone_x = pd.DataFrame(correct_zone_x)
-    
-    assert df_correct_zone_x.equals(df_dummy_zone_x), "At least one of the zone's assigned x-coordinates are incorrect"
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
 
 ## 7. Home runs by pitch location (II)
 <p>And let's do the same but for y-coordinates.</p>
@@ -875,47 +701,6 @@ def assign_y_coord(row):
     if row.zone in [7, 8, 9]:
         return 1
 ```
-
-
-```python
-%%nose
-
-def test_assign_y_coord():
-    dummy_zone_y = [{'zone': 1},
-                    {'zone': 2},
-                    {'zone': 3},
-                    {'zone': 4},
-                    {'zone': 5},
-                    {'zone': 6},
-                    {'zone': 7},
-                    {'zone': 8},
-                    {'zone': 9}]
-    df_dummy_zone_y = pd.DataFrame(dummy_zone_y)
-    df_dummy_zone_y['zone_y'] = df_dummy_zone_y.apply(assign_y_coord, axis=1)
-    
-    correct_zone_y = [{'zone': 1, 'zone_y': 3},
-                      {'zone': 2, 'zone_y': 3},
-                      {'zone': 3, 'zone_y': 3},
-                      {'zone': 4, 'zone_y': 2},
-                      {'zone': 5, 'zone_y': 2},
-                      {'zone': 6, 'zone_y': 2},
-                      {'zone': 7, 'zone_y': 1},
-                      {'zone': 8, 'zone_y': 1},
-                      {'zone': 9, 'zone_y': 1}]
-    df_correct_zone_y = pd.DataFrame(correct_zone_y)
-    
-    assert df_correct_zone_y.equals(df_dummy_zone_y), "At least one of the zone's assigned y-coordinates are incorrect"
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
 
 ## 8. Aaron Judge's home run zone
 <p>Now we can apply the functions we've created then construct our 2D histograms. First, for Aaron Judge (again, for pitches in the strike zone that resulted in home runs).</p>
@@ -941,28 +726,6 @@ cb.set_label('Counts in Bin')
 
 
 ![png](output_22_0.png)
-
-
-
-```python
-%%nose
-
-def test_judge_strike_hr_correct():
-    correct_judge_strike_hr = judge_hr.copy().loc[judge_hr.zone <= 9]
-    correct_judge_strike_hr['zone_x'] = correct_judge_strike_hr.apply(assign_x_coord, axis=1)
-    correct_judge_strike_hr['zone_y'] = correct_judge_strike_hr.apply(assign_y_coord, axis=1)
-    assert correct_judge_strike_hr.equals(judge_strike_hr), "The `zone_x` and `zone_y` columns of `judge_strike_hr` should contain each zone's Cartesian coordinates"
-
-# No standard testing procedure exists for plots at the moment
-```
-
-
-
-
-
-
-    1/1 tests passed
-
 
 
 
@@ -992,29 +755,6 @@ cb.set_label('Counts in Bin')
 ![png](output_25_0.png)
 
 
-
-```python
-%%nose
-
-def test_stanton_strike_hr_correct():
-    correct_stanton_strike_hr = stanton_hr.copy().loc[stanton_hr.zone <= 9]
-    correct_stanton_strike_hr['zone_x'] = correct_stanton_strike_hr.apply(assign_x_coord, axis=1)
-    correct_stanton_strike_hr['zone_y'] = correct_stanton_strike_hr.apply(assign_y_coord, axis=1)
-    assert correct_stanton_strike_hr.equals(stanton_strike_hr), "The `zone_x` and `zone_y` columns of `stanton_strike_hr` should contain each zone's Cartesian coordinates"
-
-# No standard testing procedure exists for plots at the moment
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
-
 ## 10. Should opposing pitchers be scared?
 <p>A few takeaways:</p>
 <ul>
@@ -1031,21 +771,4 @@ def test_stanton_strike_hr_correct():
 # Should opposing pitchers be wary of Aaron Judge and Giancarlo Stanton
 should_pitchers_be_scared = True
 ```
-
-
-```python
-%%nose
-
-def test_scared():
-    assert should_pitchers_be_scared == True, "Pitchers should be scared of Aaron Judge and Giancarlo Stanton! They are scary!"
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
 
