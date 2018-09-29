@@ -1,6 +1,8 @@
 
 ## 1. Import Python libraries
-<p><img src="https://s3.amazonaws.com/assets.datacamp.com/production/project_374/img/honey.jpg" alt="honey bee">
+
+![png](0.PNG)
+
 <em>A honey bee.</em></p>
 <p>The question at hand is: can a machine identify a bee as a honey bee or a bumble bee? These bees have different <a href="http://bumblebeeconservation.org/about-bees/faqs/honeybees-vs-bumblebees/">behaviors and appearances</a>, but given the variety of backgrounds, positions, and image resolutions it can be a challenge for machines to tell them apart.</p>
 <p>Being able to identify bee species from images is a task that ultimately would allow researchers to more quickly and effectively collect field data. Pollinating bees have critical roles in both ecology and agriculture, and diseases like <a href="http://news.harvard.edu/gazette/story/2015/07/pesticide-found-in-70-percent-of-massachusetts-honey-samples/">colony collapse disorder</a> threaten these species. Identifying different species of bees in the wild means that we can better understand the prevalence and growth of these important insects.</p>
@@ -33,44 +35,7 @@ plt.imshow(test_data)
 ```
 
 
-
-
-    <matplotlib.image.AxesImage at 0x7f02d0dacb00>
-
-
-
-
 ![png](output_1_1.png)
-
-
-
-```python
-%%nose
-
-import matplotlib as mpl
-
-def test_task1_0():
-    assert (test_data.shape == (100, 100, 3)), \
-    'The test_data you created is not the right shape! It should be 100, 100, 3'
-    
-def test_task_1():
-    assert '_' in globals() and isinstance(globals()['_'], mpl.image.AxesImage), \
-    'Did you forget to call `plt.imshow` on your test data?'
-    
-def test_task_2():
-    assert 'Image' in globals(), \
-    'Did you forget to import `Image` from `PIL`?'
-```
-
-
-
-
-
-
-    3/3 tests passed
-
-
-
 
 ## 2. Opening images with PIL
 <p>Now that we have all of our imports ready, it is time to work with some real images.</p>
@@ -94,35 +59,7 @@ img
     The image size is: (100, 100)
 
 
-
-
-
 ![png](output_4_1.png)
-
-
-
-
-```python
-%%nose
-import PIL
-
-def test_task2_0():
-    assert 'img' in globals() and isinstance(img, PIL.JpegImagePlugin.JpegImageFile), \
-    'Did you load the image using the `open` method and assign it to `img`?'
-
-def test_task2_1():
-    assert (img_size == (100, 100)), \
-    'Did you get the size from the image! It should be 100, 100'
-```
-
-
-
-
-
-
-    2/2 tests passed
-
-
 
 
 ## 3. Image manipulation with PIL
@@ -165,40 +102,9 @@ display(img_flipped)
 
 
 
-```python
-%%nose
-
-def test_task3_0():
-    assert img_cropped.size == (50, 50), \
-    'Did you crop `img` using the .crop() method?'
-
-def test_task3_1():
-    # top left pixel will be black
-    assert (np.array(img_rotated)[0, 0, :] == 0).all(), \
-    'Did you rotate `img` 45 degrees using the .rotate() method?'
-
-def test_task3_2():
-    # check the first column in the image is now the last
-    assert (np.array(img)[:, 0, :] == np.array(img_flipped)[:, -1, :]).all(), \
-    'Did you flip `img` using the .transpose() method?'
-
-    
-```
-
-
-
-
-
-
-    3/3 tests passed
-
-
-
-
 ## 4. Images as arrays of data
 <p>What is an image? So far, PIL has handled loading images and displaying them. However, if we're going to use images as data, we need to understand what that data looks like.</p>
 <p>Most image formats have three color <a href="https://en.wikipedia.org/wiki/RGB_color_model">"channels": red, green, and blue</a> (some images also have a fourth channel called "alpha" that controls transparency). For each pixel in an image, there is a value for every channel.</p>
-<p><img src="https://s3.amazonaws.com/assets.datacamp.com/production/project_374/img/AdditiveColor.png" alt="RGB Colors"></p>
 <p>The way this is represented as data is as a three-dimensional matrix. The width of the matrix is the width of the image, the height of the matrix is the height of the image, and the depth of the matrix is the number of channels. So, as we saw, the height and width of our image are both 100 pixels. This means that the underlying data is a matrix with the dimensions <code>100x100x3</code>.</p>
 
 
@@ -246,27 +152,6 @@ plt.show()
 
 ![png](output_10_4.png)
 
-
-
-```python
-%%nose
-import PIL
-
-def test_task4_0():
-    assert img_data_shape == (100, 100, 3), \
-    'Did you convert `img` to an array with `np.array` and then get the shape with `.shape`?'
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
-
 ## 5. Explore the color channels
 <p>Color channels can help provide more information about an image. A picture of the ocean will be more blue, whereas a picture of a field will be more green. This kind of information can be useful when building models or examining the differences between images.</p>
 <p>We'll look at the <a href="https://en.wikipedia.org/wiki/Kernel_density_estimation">kernel density estimate</a> for each of the color channels on the same plot so that we can understand how they differ.</p>
@@ -300,25 +185,6 @@ plot_rgb(img_data)
 ![png](output_13_0.png)
 
 
-
-```python
-%%nose
-
-def test_task5_0():
-    assert channels == ['r', 'g', 'b'], \
-    'Did you setup the `channels` variable properly?'
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
-
 ## 6. Honey bees and bumble bees (i)
 <p>Now we'll look at two different images and some of the differences between them. The first image is of a honey bee, and the second image is of a bumble bee.</p>
 <p>First, let's look at the honey bee.</p>
@@ -346,30 +212,6 @@ plot_rgb(honey_data)
 ![png](output_16_1.png)
 
 
-
-```python
-%%nose
-import PIL
-
-def test_task6_0():
-    assert 'honey' in globals() and isinstance(honey, PIL.JpegImagePlugin.JpegImageFile), \
-    'Did you load `datasets/bee_12.jpg` using the `open` method and assign it to `honey`?'
-    
-def test_task6_1():
-    assert 'honey_data' in globals() and (honey_data == np.array(honey)).all(), \
-    'Did you create `honey_data` from `honey` with `np.array`?'
-```
-
-
-
-
-
-
-    2/2 tests passed
-
-
-
-
 ## 7. Honey bees and bumble bees (ii)
 <p>Now let's look at the bumble bee.</p>
 <p>When one compares these images, it is clear how different the colors are. The honey bee image above, with a blue flower, has a strong peak on the right-hand side of the blue channel. The bumble bee image, which has a lot of yellow for the bee and the background, has almost perfect overlap between the red and green channels (which together make yellow).</p>
@@ -395,30 +237,6 @@ plot_rgb(bumble_data)
 
 
 ![png](output_19_1.png)
-
-
-
-```python
-%%nose
-import PIL
-
-def test_task7_0():
-    assert 'bumble' in globals() and isinstance(bumble, PIL.JpegImagePlugin.JpegImageFile), \
-    'Did you load `datasets/bee_3.jpg` using the `open` method and assign it to `bumble`?'
-    
-def test_task7_1():
-    assert 'bumble_data' in globals() and (bumble_data == np.array(bumble)).all(), \
-    'Did you create `bumble_data` from `bumble` with `np.array`?'
-```
-
-
-
-
-
-
-    2/2 tests passed
-
-
 
 
 ## 8. Simplify, simplify, simplify
@@ -460,34 +278,7 @@ plot_kde(honey_bw_arr, 'k')
 
 
 
-
-    <matplotlib.axes._subplots.AxesSubplot at 0x7f02c8ac7668>
-
-
-
-
 ![png](output_22_4.png)
-
-
-
-```python
-%%nose
-
-def test_task8_0():
-    assert honey_bw_arr.shape == (100, 100), \
-    'Did you convert `honey_bw` to an array with `np.array` and then get the shape with `.shape`?'
-    
-    assert honey_bw_arr_shape == (100, 100), \
-    'Did you convert `honey_bw` to an array with `np.array` and then get the shape with `.shape`?'
-```
-
-
-
-
-
-
-    1/1 tests passed
-
 
 
 
@@ -525,38 +316,6 @@ honey_bw_hc.save("saved_images/bw_hc.jpg")
 
 
 ![png](output_25_1.png)
-
-
-
-```python
-%%nose
-import os
-
-def test_task9_0():
-    assert 'honey_hc_arr' in globals() and (honey_hc_arr >= 100).all(), \
-    'Did you use np.maximum(honey_bw_arr, 100) to create a high contrast version?'
-
-def test_task9_1():
-    assert 'honey_bw_flip' in globals() and (np.array(honey_bw_flip)[:, 0] == honey_bw_arr[:, -1]).all(), \
-    'Did you use np.maximum(honey_bw_arr, 100) to create a high contrast version?'
-    
-def test_task9_2():
-    assert os.path.exists("saved_images/bw_flipped.jpg"), \
-    'Did you save the flipped image with `honey_bw_flip.save`?'
-    
-def test_task9_3():
-    assert os.path.exists("saved_images/bw_hc.jpg"), \
-    'Did you save the high contrast image with `honey_bw_hc.save`?'
-```
-
-
-
-
-
-
-    4/4 tests passed
-
-
 
 
 ## 10. Make a pipeline
@@ -653,19 +412,3 @@ for img_path in image_paths:
 ![png](output_28_15.png)
 
 
-
-```python
-%%nose
-import os
-
-def test_task10_0():
-    image_paths = ['datasets/bee_1.jpg', 'datasets/bee_12.jpg', 'datasets/bee_2.jpg', 'datasets/bee_3.jpg']
-    
-    for img in image_paths:
-        path = Path(img)
-        bw_path = "saved_images/bw_{}.jpg".format(path.stem)
-        rcz_path = "saved_images/rcz_{}.jpg".format(path.stem)
-        
-        assert os.path.exists(bw_path), "Did you save the file {}?".format(bw_path)
-        assert os.path.exists(rcz_path), "Did you save the file {}?".format(rcz_path)
-```
