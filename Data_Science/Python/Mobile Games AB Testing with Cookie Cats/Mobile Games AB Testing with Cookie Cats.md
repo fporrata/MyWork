@@ -1,9 +1,10 @@
 
 ## 1. Of cats and cookies
-<p><a href="https://www.facebook.com/cookiecatsgame">Cookie Cats</a> is a hugely popular mobile puzzle game developed by <a href="http://tactile.dk">Tactile Entertainment</a>. It's a classic "connect three"-style puzzle game where the player must connect tiles of the same color to clear the board and win the level. It also features singing cats. We're not kidding! Check out this short demo:</p>
-<p><a href="https://youtu.be/GaP5f0jVTWE"><img src="https://s3.amazonaws.com/assets.datacamp.com/production/project_184/img/cookie_cats_video.jpeg" style="width: 500px"></a></p>
+<p><a href="https://www.facebook.com/cookiecatsgame">Cookie Cats</a> is a hugely popular mobile puzzle game developed by <a href="http://tactile.dk">Tactile Entertainment</a>. It's a classic "connect three"-style puzzle game where the player must connect tiles of the same color to clear the board and win the level. It also features singing cats. 
 <p>As players progress through the levels of the game, they will occasionally encounter gates that force them to wait a non-trivial amount of time or make an in-app purchase to progress. In addition to driving in-app purchases, these gates serve the important purpose of giving players an enforced break from playing the game, hopefully resulting in that the player's enjoyment of the game being increased and prolonged.</p>
-<p><img src="https://s3.amazonaws.com/assets.datacamp.com/production/project_184/img/cc_gates.png" alt=""></p>
+
+![png](cc_gates.png)
+
 <p>But where should the gates be placed? Initially the first gate was placed at level 30, but in this notebook we're going to analyze an AB-test where we moved the first gate in Cookie Cats from level 30 to level 40. In particular, we will look at the impact on player retention. But before we get to that, a key step before undertaking any analysis is understanding the data. So let's load it in and take a look!</p>
 
 
@@ -20,21 +21,8 @@ df.head()
 
 
 
-
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -91,30 +79,6 @@ df.head()
 </table>
 </div>
 
-
-
-
-```python
-%%nose
-
-import pandas as pd
-        
-def test_yearly_correctly_loaded():
-    correct_df = pd.read_csv('datasets/cookie_cats.csv')
-    assert correct_df.equals(df), \
-        "The variable df should contain the data in datasets/cookie_cats.csv"
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
-
 ## 2. The AB-test data
 <p>The data we have is from 90,189 players that installed the game while the AB-test was running. The variables are:</p>
 <ul>
@@ -136,19 +100,6 @@ df.groupby('version').count()
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -186,28 +137,7 @@ df.groupby('version').count()
 </div>
 
 
-
-
-```python
-%%nose
-
-def test_nothing():
-    assert True, \
-    'Nothing to test here'
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
-
 ## 3. The distribution of game rounds
-<p><img src="https://s3.amazonaws.com/assets.datacamp.com/production/project_184/img/mr_waffles_smiling.png" style="width:200px; float:left"> </p>
 <p>It looks like there is roughly the same number of players in each group, nice!</p>
 <p>The focus of this analysis will be on how the gate placement affects player retention, but just for fun: Let's plot the distribution of the number of game rounds players played during their first week playing the game.</p>
 
@@ -224,39 +154,12 @@ ax.set_xlabel("Sum of Gamerounds")
 ax.set_ylabel("Userid")
 
 ```
-
-
-
-
     Text(0,0.5,'Userid')
 
 
 
 
 ![png](output_7_1.png)
-
-
-
-```python
-%%nose
-
-def test_y_axis():
-    assert ax.get_lines()[0].get_ydata().sum() == 77673, \
-    'The plot should be assigned to ax and have userid on the Y-axis'
-    
-def test_x_axis():
-    assert ax.get_lines()[0].get_xdata().sum() == 4950, \
-    'The plot should be assigned to ax and have sum_gamerounds on the X-axis'
-```
-
-
-
-
-
-
-    2/2 tests passed
-
-
 
 
 ## 4. Overall 1-day retention
@@ -269,35 +172,9 @@ def test_x_axis():
 # The % of users that came back the day after they installed
 df['retention_1'].mean()
 ```
-
-
-
-
     0.4452095044850259
 
-
-
-
-```python
-%%nose
-
-def test_nothing():
-    assert True, \
-    'Nothing to test here'
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
-
 ## 5. 1-day retention by AB-group
-<p><img src="https://s3.amazonaws.com/assets.datacamp.com/production/project_184/img/belle_cookie.png" style="width:200px; float:right"> </p>
 <p>So, a little less than half of the players come back one day after installing the game. Now that we have a benchmark, let's look at how 1-day retention differs between the two AB-groups.</p>
 
 
@@ -306,33 +183,10 @@ def test_nothing():
 df.groupby('version')['retention_1'].mean()
 ```
 
-
-
-
     version
     gate_30    0.448188
     gate_40    0.442283
     Name: retention_1, dtype: float64
-
-
-
-
-```python
-%%nose
-
-def test_nothing():
-    assert True, \
-    'Nothing to test here'
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
 
 
 ## 6. Should we be confident in the difference?
@@ -356,32 +210,7 @@ boot_1d.plot.kde()
 ```
 
 
-
-
-    <matplotlib.axes._subplots.AxesSubplot at 0x7f89e10ed9b0>
-
-
-
-
 ![png](output_16_1.png)
-
-
-
-```python
-%%nose
-
-def test_boot_1d():
-    assert isinstance(boot_1d, pd.DataFrame) and boot_1d.shape == (500, 2), \
-        'boot_1d should be a DataFrame with two columns and 500 rows with the bootstrapped 1-day retentions from both AB-groups.'
-```
-
-
-
-
-
-
-    1/1 tests passed
-
 
 
 
@@ -400,9 +229,6 @@ ax.set_xlabel("% difference in means for 1 day retention")
 
 ```
 
-
-
-
     Text(0.5,0,'% difference in means for 1 day retention')
 
 
@@ -411,28 +237,7 @@ ax.set_xlabel("% difference in means for 1 day retention")
 ![png](output_19_1.png)
 
 
-
-```python
-%%nose
-
-def test_diff():
-    correct_diff = (boot_1d['gate_30'] - boot_1d['gate_40']) /  boot_1d['gate_40'] * 100
-    assert correct_diff.equals(boot_1d['diff']), \
-    'Make sure that boot_1d["diff"] is calculated as (gate_30 - gate_40) / gate_40 * 100 .'
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
-
 ## 8. The probability of a difference
-<p><img src="https://s3.amazonaws.com/assets.datacamp.com/production/project_184/img/ziggy_smiling.png" style="width:200px; float:left"> </p>
 <p>From this chart, we can see that the most likely % difference is around 1% - 2%, and that most of the distribution is above 0%, in favor of a gate at level 30. But what is the <em>probability</em> that the difference is above 0%? Let's calculate that as well.</p>
 
 
@@ -445,27 +250,6 @@ print("%.1f%%" % (100 * prob))
 
     95.4%
 
-
-
-```python
-%%nose
-
-def test_prob():
-    correct_prob = (boot_1d['diff'] > 0).sum() / len(boot_1d)
-    assert correct_prob == prob, \
-    'prob should be the proportion of boot_1d["diff"] above zero'
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
-
 ## 9. 7-day retention by AB-group
 <p>The bootstrap analysis tells us that there is a high probability that 1-day retention is better when the gate is at level 30. However, since players have only been playing the game for one day, it is likely that most players haven't reached level 30 yet. That is, many players won't have been affected by the gate, even if it's as early as level 30. </p>
 <p>But after having played for a week, more players should have reached level 40, and therefore it makes sense to also look at 7-day retention. That is: What percentage of the people that installed the game also showed up a week later to play the game again.</p>
@@ -477,32 +261,10 @@ def test_prob():
 df.groupby('version')['retention_7'].mean()
 ```
 
-
-
-
     version
     gate_30    0.190201
     gate_40    0.182000
     Name: retention_7, dtype: float64
-
-
-
-
-```python
-%%nose
-
-def test_nothing():
-    assert True, \
-    'Nothing to test here'
-```
-
-
-
-
-
-
-    1/1 tests passed
-
 
 
 
@@ -544,32 +306,9 @@ print("%.1f%%" % (100 * prob))
 
 
 
-```python
-%%nose
-
-def test_boot_7d():
-    assert isinstance(boot_7d, pd.DataFrame) and boot_7d.shape == (500, 3), \
-        'boot_7d should be a DataFrame with three columns and 500 rows with the bootstrapped 7-day retentions from both AB-groups.'
-        
-def test_prob():
-    correct_prob = (boot_7d['diff'] > 0).sum() / len(boot_7d)
-    assert correct_prob == prob, \
-    'prob should be the proportion of boot_7d["diff"] above zero'
-```
-
-
-
-
-
-
-    2/2 tests passed
-
-
-
-
 ## 11.  The conclusion
 <p>The bootstrap result tells us that there is strong evidence that 7-day retention is higher when the gate is at level 30 than when it is at level 40. The conclusion is: If we want to keep retention high — both 1-day and 7-day retention — we should <strong>not</strong> move the gate from level 30 to level 40. There are, of course, other metrics we could look at, like the number of game rounds played or how much in-game purchases are made by the two AB-groups. But retention <em>is</em> one of the most important metrics. If we don't retain our player base, it doesn't matter how much money they spend in-game.</p>
-<p><img src="https://s3.amazonaws.com/assets.datacamp.com/production/project_184/img/cookie_yellow.png" style="width:100px; float:center"> </p>
+
 <p>So, why is retention higher when the gate is positioned earlier? One could expect the opposite: The later the obstacle, the longer people are going to engage with the game. But this is not what the data tells us. The theory of <em>hedonic adaptation</em> can give one explanation for this. In short, hedonic adaptation is the tendency for people to get less and less enjoyment out of a fun activity over time if that activity is undertaken continuously. By forcing players to take a break when they reach a gate, their enjoyment of the game is prolonged. But when the gate is moved to level 40, fewer players make it far enough, and they are more likely to quit the game because they simply got bored of it. </p>
 
 
@@ -578,22 +317,4 @@ def test_prob():
 # Should we move the gate from level 30 to level 40 ?
 move_to_level_40 = False
 ```
-
-
-```python
-%%nose
-
-def test_conclusion():
-    assert move_to_level_40 == False, \
-    'That is not a reasonable conclusion given the data and the analysis.'
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
 
