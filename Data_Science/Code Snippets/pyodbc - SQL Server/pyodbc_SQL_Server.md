@@ -30,7 +30,7 @@ employee1['Hire Date'] = employee1['Hire Date'].astype(object).where(employee1['
 employee1['Termination Date'] = employee1['Termination Date'].astype(object).where(employee1['Termination Date'].notnull(), None)
 employee1['Birth Date'] = employee1['Birth Date'].astype(object).where(employee1['Birth Date'].notnull(), None)
 
-connStr = pyodbc.connect('DRIVER={ODBC Driver 13 for SQL Server}; SERVER=us-mersql05; DATABASE=RIMS; Trusted_Connection=yes')
+connStr = pyodbc.connect('DRIVER={ODBC Driver 13 for SQL Server}; SERVER=*******; DATABASE=*******; Trusted_Connection=yes')
 cursor = connStr.cursor()
 i = 1
 for index,row in employee1.iterrows():
