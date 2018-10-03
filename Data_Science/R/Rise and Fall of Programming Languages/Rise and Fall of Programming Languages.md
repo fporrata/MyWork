@@ -3,7 +3,9 @@
 <p>How can we tell what programming languages and technologies are used by the most people? How about what languages are growing and which are shrinking, so that we can tell which are most worth investing time in?</p>
 <p>One excellent source of data is <a href="https://stackoverflow.com/">Stack Overflow</a>, a programming question and answer site with more than 16 million questions on programming topics. By measuring the number of questions about each technology, we can get an approximate sense of how many people are using it. We're going to use open data from the <a href="https://data.stackexchange.com/">Stack Exchange Data Explorer</a> to examine the relative popularity of languages like R, Python, Java and Javascript have changed over time.</p>
 <p>Each Stack Overflow question has a <strong>tag</strong>, which marks a question to describe its topic or technology. For instance, there's a tag for languages like <a href="https://stackoverflow.com/tags/r">R</a> or <a href="https://stackoverflow.com/tags/python">Python</a>, and for packages like <a href="https://stackoverflow.com/questions/tagged/ggplot2">ggplot2</a> or <a href="https://stackoverflow.com/questions/tagged/pandas">pandas</a>.</p>
-<p><img src="https://s3.amazonaws.com/assets.datacamp.com/production/project_435/img/tags.png" alt="Stack Overflow tags"></p>
+
+![png](0.PNG)
+
 <p>We'll be working with a dataset with one observation for each tag in each year. The dataset includes both the number of questions asked in that tag in that year, and the total number of questions asked in that year.</p>
 
 
@@ -18,16 +20,6 @@ by_tag_year <- read_csv("datasets/by_tag_year.csv")
 # Inspect the dataset
 by_tag_year
 ```
-
-    Parsed with column specification:
-    cols(
-      year = col_integer(),
-      tag = col_character(),
-      number = col_integer(),
-      year_total = col_integer()
-    )
-
-
 
 <table>
 <thead><tr><th scope=col>year</th><th scope=col>tag</th><th scope=col>number</th><th scope=col>year_total</th></tr></thead>
@@ -96,62 +88,6 @@ by_tag_year
 </tbody>
 </table>
 
-
-
-
-```R
-# These packages need to be loaded in the first `@tests` cell. 
-library(testthat) 
-library(IRkernel.testthat)
-
-# Then follows one or more tests of the students code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-run_tests({
-    test_that("the answer is correct", {
-    expect_true("readr" %in% .packages(), info = "Did you load the readr package?")
-    expect_true("dplyr" %in% .packages(), info = "Did you load the dplyr package?")
-    expect_is(by_tag_year, "tbl_df", 
-        info = "Did you read in by_tag_year with read_csv (not read.csv)?")
-    expect_equal(nrow(by_tag_year), 40518, 
-        info = "Did you read in by_tag_year with read_csv?")
-    })
-})
-
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 9.958 0.184 722.793 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 2. Now in fraction format
@@ -236,60 +172,6 @@ by_tag_year_fraction
 </table>
 
 
-
-
-```R
-# one or more tests of the students code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-run_tests({
-    test_that("the answer is correct", {
-    expect_is(by_tag_year_fraction, "tbl_df", 
-        info = "Did you create the by_tag_year_fraction object?")
-    expect_true("fraction" %in% colnames(by_tag_year_fraction), 
-        info = "Did you use mutate() to add a fraction column?")
-    expect_equal(by_tag_year_fraction$fraction,
-                 by_tag_year_fraction$number / by_tag_year_fraction$year_total,
-        info = "Check how you computed the fraction column: is it the number divided by that year's total?")
-    })
-    # You can have more than one test
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 10.158 0.184 722.993 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 3. Has R been growing or shrinking?
 <p>So far we've been learning and using the R programming language. Wouldn't we like to be sure it's a good investment for the future? Has it been keeping pace with other languages, or have people been switching out of it?</p>
 <p>Let's look at whether the fraction of Stack Overflow questions that are about R has been increasing or decreasing over time.</p>
@@ -323,58 +205,6 @@ r_over_time
 
 
 
-
-```R
-# one or more tests of the students code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-run_tests({
-    test_that("the answer is correct", {
-    expect_is(r_over_time, "tbl_df",
-        info = "Did you create an r_over_time object with filter()?")
-    expect_equal(nrow(r_over_time), 11,
-        info = "Did you filter just for the rows with the 'r' tag?")
-    expect_true(all(r_over_time$tag == "r"),
-        info = "Did you filter just for the rows with the 'r' tag?")
-    })
-    # You can have more than one test
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 10.2 0.188 723.038 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 4. Visualizing change over time
 <p>Rather than looking at the results in a table, we often want to create a visualization. Change over time is usually visualized with a line plot.</p>
 
@@ -392,71 +222,6 @@ ggplot(r_over_time, aes(x = year, y = fraction )) + geom_line()
 
 ![png](output_10_1.png)
 
-
-
-```R
-# one or more tests of the students code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-
-get_aesthetics <- function(p) {
-    unlist(c(list(p$mapping), purrr::map(p$layers, "mapping")))
-}
-
-run_tests({
-    test_that("the answer is correct", {
-        expect_true("ggplot2" %in% .packages(), info = "Did you load the ggplot2 package?")
-        # expect_true("scales" %in% .packages(), info = "Did you load the scales package?")
-
-        p <- last_plot()
-        expect_is(p, "ggplot", info = "Did you create a ggplot figure?")
-        expect_equal(length(p$layers), 1, info = "Did you create a plot with geom_line()?")
-        expect_is(p$layers[[1]]$geom, "GeomLine", info = "Did you create a plot with geom_line()?")
-
-        aesthetics <- get_aesthetics(p)
-        expect_equal(rlang::quo_name(aesthetics$x), "year",
-                     info = "Did you put year on the x-axis?")
-        expect_equal(rlang::quo_name(aesthetics$y), "fraction",
-                     info = "Did you put fraction on the y-axis?")
-        
-        # expect_equal(length(p$scales$scales), 1, info = "Did you add scale_y_continuous?")    
-        # expect_equal(p$scales$scales[[1]]$labels(.03), "3.00%", info = "Did you make the y-axis a percentage?")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 10.446 0.188 723.283 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 5. How about dplyr and ggplot2?
@@ -480,91 +245,6 @@ ggplot(selected_tags_over_time, aes(x = year, y = fraction, color = tag )) + geo
 
 
 ![png](output_13_1.png)
-
-
-
-```R
-# one or more tests of the students code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-
-get_aesthetics <- function(p) {
-    unlist(c(list(p$mapping), purrr::map(p$layers, "mapping")))
-}
-
-run_tests({
-    test_that("the answer is correct", {
-        expect_true("ggplot2" %in% .packages(), info = "Did you load the ggplot2 package?")
-        
-        expect_is(selected_tags_over_time, "tbl_df",
-                 info = "Did you create a selected_tags_over_time data frame?")
-
-        expect_equal(nrow(selected_tags_over_time), 28,
-                 info = "Did you filter for r, dplyr, and ggplot2 and save it to selected_tags_over_time?")
-
-        expect_equal(sort(unique(selected_tags_over_time$tag)), c("dplyr", "ggplot2", "r"),
-                 info = "Did you filter for r, dplyr, and ggplot2 and save it to selected_tags_over_time?")
-
-        p <- last_plot()
-        aesthetics <- get_aesthetics(p)
-        expect_is(p, "ggplot", info = "Did you create a ggplot figure?")
-        expect_equal(p$data, selected_tags_over_time, info = "Did you create your plot out of selected_tags_over_time?")
-        
-        expect_equal(length(p$layers), 1, info = "Did you create a plot with geom_line()?")
-        expect_is(p$layers[[1]]$geom, "GeomLine", info = "Did you create a plot with geom_line()?")
-
-        expect_true(!is.null(aesthetics$x), info = "Did you put year on the x-axis?")
-        expect_equal(rlang::quo_name(aesthetics$x), "year",
-                     info = "Did you put year on the x-axis?")
-
-        expect_true(!is.null(aesthetics$y), info = "Did you put fraction on the y-axis?")
-        expect_equal(rlang::quo_name(aesthetics$y), "fraction",
-                     info = "Did you put fraction on the y-axis?")
-
-        expect_true(!is.null(aesthetics$colour), info = "Did you put color on the x-axis?")
-        expect_equal(rlang::quo_name(aesthetics$colour), "tag",
-                     info = "Did you map the tag to the color?")
-
-        # expect_equal(length(p$scales$scales), 1, info = "Did you add scale_y_continuous?")    
-        # expect_equal(p$scales$scales[[1]]$labels(.03), "3.00%", info = "Did you make the y-axis a percentage?")
-    })
-    # You can have more than one test
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 10.787 0.192 723.627 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
 
 ## 6. What are the most asked-about tags?
 <p>It's sure been fun to visualize and compare tags over time. The dplyr and ggplot2 tags may not have as many questions as R, but we can tell they're both growing quickly as well.</p>
@@ -649,65 +329,6 @@ sorted_tags
 </tbody>
 </table>
 
-
-
-
-```R
-# one or more tests of the students code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-run_tests({
-    test_that("the answer is correct", {
-        expect_is(sorted_tags, "tbl_df",
-                 info = "Did you create a selected_tags_over_time data frame?")
-
-        expect_equal(colnames(sorted_tags), c("tag", "tag_total"),
-                 info = "Did you group by tag and summarize to create a tag_total column?")
-
-        expect_equal(nrow(sorted_tags), length(unique(by_tag_year$tag)),
-                 info = "Did you group by tag and summarize to create a tag_total column?")
-
-        expect_equal(sorted_tags$tag_total,
-                     sort(sorted_tags$tag_total, decreasing = TRUE),
-                     info = "Did you arrange in descending order of tag_total?")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 10.946 0.192 723.786 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 7. How have large programming languages changed over time?
 <p>We've looked at selected tags like R, ggplot2, and dplyr, and seen that they're each growing. What tags might be <em>shrinking</em>? A good place to start is to plot the tags that we just saw that were the most-asked about of all time, including JavaScript, Java and C#.</p>
 
@@ -727,78 +348,6 @@ ggplot(by_tag_subset, aes(x = year, y = fraction, color = tag )) + geom_line()
 
 
 ![png](output_19_1.png)
-
-
-
-```R
-# one or more tests of the students code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-get_aesthetics <- function(p) {
-    unlist(c(list(p$mapping), purrr::map(p$layers, "mapping")))
-}
-
-run_tests({
-    test_that("the answer is correct", {
-        expect_equal(sort(unique(by_tag_subset$tag)), sort(head(sorted_tags$tag, 6)),
-                   info = "Did you filter by_tag_year_fraction for only the 6 most asked-about tags, and save it as by_tag_subset?")
-
-        expect_equal(colnames(by_tag_subset), colnames(by_tag_year_fraction),
-                   info = "Did you filter by_tag_year_fraction for only the 6 most asked-about tags, and save it as by_tag_subset?")
-
-        p <- last_plot()
-        expect_is(p, "ggplot", info = "Did you create a ggplot figure?")
-        expect_equal(p$data, by_tag_subset, info = "Did you create your plot out of by_tag_subset?")
-        
-        expect_equal(length(p$layers), 1, info = "Did you create a plot with geom_line()?")
-        expect_is(p$layers[[1]]$geom, "GeomLine", info = "Did you create a plot with geom_line()?")
-
-        aesthetics <- get_aesthetics(p)
-        expect_equal(rlang::quo_name(aesthetics$x), "year",
-                     info = "Did you put year on the x-axis?")
-        expect_equal(rlang::quo_name(aesthetics$y), "fraction",
-                     info = "Did you put fraction on the y-axis?")
-        expect_equal(rlang::quo_name(aesthetics$colour), "tag",
-                     info = "Did you map the tag to the color?")
-
-        # expect_equal(length(p$scales$scales), 1, info = "Did you add scale_y_continuous?")    
-        # expect_equal(p$scales$scales[[1]]$labels(.03), "3.00%", info = "Did you make the y-axis a percentage?")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 11.328 0.192 724.168 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 8. Some more tags!
@@ -822,79 +371,4 @@ ggplot(by_tag_subset, aes(x = year, y = fraction, color = tag )) + geom_line()
 
 
 ![png](output_22_1.png)
-
-
-
-```R
-# one or more tests of the students code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-get_aesthetics <- function(p) {
-    unlist(c(list(p$mapping), purrr::map(p$layers, "mapping")))
-}
-
-run_tests({
-    test_that("the answer is correct", {
-        expect_equal(sort(my_tags), c("android", "ios", "windows-phone"),
-                    info = "Did you create a vector my_tags of just android, ios, and windows-phone?")
-        
-        expect_equal(sort(unique(by_tag_subset$tag)), c("android", "ios", "windows-phone"),
-                   info = "Did you filter by_tag_year_fraction for only ios, android, and windows-phone?")
-
-        expect_equal(colnames(by_tag_subset), colnames(by_tag_year_fraction),
-                   info = "Did you filter by_tag_year_fraction for only the three requested tags, and save it as by_tag_subset?")
-
-        p <- last_plot()
-        expect_is(p, "ggplot", info = "Did you create a ggplot figure?")
-        expect_equal(p$data, by_tag_subset, info = "Did you create your plot out of by_tag_subset?")
-        
-        expect_equal(length(p$layers), 1, info = "Did you create a plot with geom_line()?")
-        expect_is(p$layers[[1]]$geom, "GeomLine", info = "Did you create a plot with geom_line()?")
-
-        aesthetics <- get_aesthetics(p)
-        expect_equal(rlang::quo_name(aesthetics$x), "year",
-                     info = "Did you put year on the x-axis?")
-        expect_equal(rlang::quo_name(aesthetics$y), "fraction",
-                     info = "Did you put fraction on the y-axis?")
-        expect_equal(rlang::quo_name(aesthetics$colour), "tag",
-                     info = "Did you map the tag to the color?")
-
-        # expect_equal(length(p$scales$scales), 1, info = "Did you add scale_y_continuous?")    
-        # expect_equal(p$scales$scales[[1]]$labels(.03), "3.00%", info = "Did you make the y-axis a percentage?")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 11.68 0.192 724.519 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
