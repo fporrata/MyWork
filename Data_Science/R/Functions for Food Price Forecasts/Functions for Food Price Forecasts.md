@@ -64,7 +64,7 @@ glimpse(potato_prices)
     $ mp_price           <dbl> 157.0000, 133.3333, 96.5000, 97.0000, 107.8000, ...
     $ mp_commoditysource <chr> "MINAGRI", "MINAGRI", "MINAGRI", "MINAGRI", "MIN...
 
-## 2. Once more, with feeling
+## 2. Load certain columns
 <p>Many of the columns in the potato data aren't very useful for our analysis. For example, the <code>adm1_name</code> column is always <code>"Rwanda"</code>, and <code>cur_name</code> is always <code>"RWF"</code>. (This is short for Rwandan Franc; for context, 1000 RWF is a little over 1 USD.) Similarly, we don't really need any of the ID columns or the data source.</p>
 <p>Even the columns we do need have slightly obscure names. For example, <code>adm1_id</code> isn't as clear as <code>region</code>, and <code>mkt_name</code> isn't as clear as <code>market</code>. One of the most types of data analysis disaster is to misunderstand what a variable means, so naming variable clearly is a useful way to avoid this. One trick is that any variable that includes a unit should include that unit in the variable name. Here, the prices are given in Rwandan Francs, so <code>price_rwf</code> is a good name.</p>
 
@@ -103,7 +103,7 @@ glimpse(potato_prices_renamed)
     $ price_rwf    <dbl> 157.0000, 133.3333, 96.5000, 97.0000, 107.8000, 125.50...
 
 
-## 3. Spring cleaning
+## 3. Data cleaning
 <p>As is often the case in a data analysis, the data we are given isn't in quite the form we'd like it to be. For example, we may have noticed in the last task that the month and year given as integers. Since we'll be performing some time series analysis, it would be helpful if they were provided as dates. Before we can analyze the data, we need to spring clean it.</p>
 
 
@@ -195,7 +195,7 @@ ggplot(potato_prices_cleaned, aes(x = date, y= price_rwf, group = market )) + ge
 ![png](output_13_1.png)
 
 
-## 6. What a lotta plots
+## 6. Lots of plots
 <p>There is a bit of a trend in the potato prices, with them increasing until 2013, after which they level off. More striking though is the seasonality: the prices are lowest around December and January, and have a peak around August. Some years also show a second peak around April or May.</p>
 <p>Just as with the importing and cleaning code, if we want to make lots of similar plots, we need to wrap the plotting code into a function.</p>
 
@@ -260,7 +260,7 @@ glimpse(potato_time_series)
      Time-Series [1:96] from 2008 to 2016: 97.5 100 95 96.2 95 ...
 
 
-## 9. Another day, another function to write
+## 9. Write function
 <p>Those data preparation steps were tricky! Wouldn't it be really nice if we never had to write them again? Well, if we wrap that code into a function, then we won't have to.</p>
 
 
