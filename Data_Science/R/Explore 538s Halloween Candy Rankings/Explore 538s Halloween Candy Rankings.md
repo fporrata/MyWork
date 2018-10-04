@@ -1,6 +1,5 @@
 
 ## 1. Importing packages and data
-<p><img src="https://s3.amazonaws.com/assets.datacamp.com/production/project_458/img/candy.jpg" alt="Bowl of halloween candy"></p>
 <p>With Halloween just around the corner, it seems like everyone has candy on the brain! There's a great dataset from <a href="https://fivethirtyeight.com/">FiveThirtyEight</a> that includes all sorts of different information about different kinds of candy. For example, is it chocolaty? Is there nougat? How does the cost compare to other candies? How many people prefer this candy over another?</p>
 <p>We'll run through a whirlwind tour of this dataset and wrap up by trying some modeling techniques out on it! Specifically, we'll take a look at linear and logistic regression.</p>
 <p>First things first, let's get our packages and data loaded up and take a look at exactly what we're dealing with.</p>
@@ -32,71 +31,6 @@ head(candy_rankings)
 </tbody>
 </table>
 
-
-
-
-```R
-# These packages need to be loaded in the first @tests cell. 
-library(testthat) 
-library(IRkernel.testthat)
-
-# Then follows one or more tests of the student's code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-
-run_tests({
-    test_that("Packages are loaded.", {
-        expect_true("tidyverse" %in% .packages(),
-                   info = "Make sure you loaded `tidyverse`.")
-        expect_true("broom"  %in% .packages(),
-                   info = "Make sure you loaded `broom`.")
-        expect_true("corrplot" %in% .packages(),
-                   info = "Make sure you loaded `corrplot`.")
-        expect_true("fivethirtyeight" %in% .packages(),
-                   info = "Make sure you loaded `fivethirtyeight`.")
-    })
-    test_that("Data is loaded.", {
-        expect_equal(.GlobalEnv$candy_rankings, fivethirtyeight::candy_rankings,
-                        info = "Did you call `data(candy_rankings)`?")
-    })
-})
-
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 31.993 0.391 3020.23 0.006 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 2. Explore the distributions of categorical variables
 <p>Let's get started by taking a look at the distributions of each of these binary categorical variables. There are quite a few of them, so we'll have to do some data wrangling to get them in shape for plotting. We'll explore these by making a bar chart showing the breakdown of each column. This lets us get a sense of the proportion of <code>TRUE</code>s and <code>FALSE</code>s in each column. To do this you'll use the <code>gather()</code> function to get a dataset that looks something like this:</p>
 <pre><code>  competitorname sugarpercent pricepercent winpercent feature   value
@@ -115,69 +49,7 @@ candy_rankings_long <- candy_rankings %>% gather( key = feature, value = value, 
 candy_rankings_long %>% ggplot(aes(value)) + geom_bar() + facet_wrap(~feature) 
 ```
 
-
-
-
 ![png](output_4_1.png)
-
-
-
-```R
-# One or more tests of the student's code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-p <- last_plot()
-
-run_tests({
-    test_that("`candy_rankings_long` is correct", {
-        expect_equal(candy_rankings_long, gather(candy_rankings, "feature", "value", chocolate:pluribus),
-                        info = "Make sure you created `candy_features_long` by `gathering` the correct columns.")
-    })
-    test_that("The plot was created correctly", {
-        expect_equal(p$data, candy_rankings_long,
-                        info = "Make sure you passed `candy_rankings` as the `data` argument to `ggplot()`.")
-        expect_equal(p$mapping, aes(value),
-                    info = "Did you map the `value` column to the `x` aesthetic?")
-        expect_equal(p$layers, list(geom_bar()),
-                    info = "Did you call `geom_bar()` to create a bar chart?")
-        expect_equal(p$facet, facet_wrap(~feature),
-                    info = "Did you create facet for each `feature`?")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 32.848 0.395 3021.088 0.006 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 3. Taking a look at pricepercent
@@ -197,62 +69,6 @@ candy_rankings %>% ggplot(aes(x = reorder(competitorname, pricepercent), y = pri
 ![png](output_7_1.png)
 
 
-
-```R
-# One or more tests of the student's code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-p <- last_plot()
-
-run_tests({
-    test_that("The plot is correct", {
-        expect_equal(p$data, candy_rankings,
-                    info = "Make sure you passed `candy_rankings` as the `data` argument to `ggplot()`.")
-        expect_equal(p$mapping, aes(reorder(competitorname, pricepercent), pricepercent),
-                    info = "Did you pass the right aesthetics to `aes()`? Make sure to reorder `competitorname`.")
-        expect_equal(p$layers, list(geom_segment(aes(xend = reorder(competitorname, pricepercent), yend = 0)), geom_point()),
-                    info = "Something is wrong with your `geom`s. Double check the aesthetics in `geom_segment()`.")
-        expect_equal(p$coordinates, coord_flip(),
-                    info = "Did you flip the plot with `coord_flip()`?")
-    })
-    # You can have more than one test
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 33.212 0.395 3021.452 0.006 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 4. Exploring winpercent (part i)
 <p>Moving on, we'll take a look at another numerical variable in the dataset: <code>winpercent</code>. This variable records the percentage of people who prefer this candy over another randomly chosen candy from the dataset. We'll start with a histogram! The distribution of rankings looks pretty symmetrical, and seems to center on about 45%. </p>
 
@@ -263,62 +79,8 @@ candy_rankings %>% ggplot(aes(winpercent)) + geom_histogram()
 
 ```
 
-    `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
-
-
-
-
 
 ![png](output_10_2.png)
-
-
-
-```R
-p <- last_plot()
-
-run_tests({
-    test_that("The histogram is plotted correctly.",{
-        expect_equal(p$data, candy_rankings,
-                    info = "Make sure you used `candy_rankings` as the `data` argument in your `ggplot()`.")
-        expect_equal(p$mapping, aes(winpercent),
-                    info = "Make sure you assigned `winpercent` to the `x` aesthetic.")
-        expect_equal(p$layers, list(geom_histogram()),
-                    info = "Make sure you used `geom_histogram()` to make your plot.")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 33.514 0.403 3021.774 0.006 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 5. Exploring winpercent (part ii)
@@ -339,57 +101,6 @@ candy_rankings %>% ggplot(aes(x = reorder(competitorname, winpercent), y = winpe
 
 
 
-```R
-p <- last_plot()
-
-run_tests({
-    test_that("The plot is correct", {
-        expect_equal(p$data, candy_rankings,
-                    info = "Make sure you passed `candy_rankings` as the `data` argument to `ggplot()`.")
-        expect_equal(p$mapping, aes(reorder(competitorname, winpercent), winpercent),
-                    info = "Did you pass the right aesthetics to `aes()`? Make sure to reorder `competitorname`.")
-        expect_equal(p$layers, list(geom_segment(aes(xend = reorder(competitorname, winpercent), yend = 0)), geom_point()),
-                    info = "Something is wrong with your `geom`s. Double check the aesthetics in `geom_segment()`.")
-        expect_equal(p$coordinates, coord_flip(),
-                    info = "Did you flip the plot with `coord_flip()`?")
-    })
-    # You can have more than one test
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 33.958 0.407 3022.229 0.006 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 6. Exploring the correlation structure
 <p>Now that we've explored the dataset one variable at a time, we'll see how the variables interact with one another. This is important as we get ready to model the data because it gives us some intuition about which variables might be useful explanatory variables. We'll use the <code>corrplot</code> package to plot the correlation matrix. Taking a look at this plot, it looks like chocolaty candies are almost never fruity. I can certainly see why that's the case! This also allows us to check for possible <a href="https://en.wikipedia.org/wiki/Multicollinearity">multicollinearity</a>, which can be a problem for regression modeling. It looks like we're good though!</p>
 
@@ -406,124 +117,19 @@ candy_rankings %>%
 ![png](output_16_0.png)
 
 
-
-```R
-# One or more tests of the student's code.  
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-
-student_cor <- .Last.value
-good_cor <- candy_rankings %>%
-  select(-competitorname) %>% 
-  cor()
-run_tests({
-    test_that("The correlation matrix is created correctly", {
-        expect_equal(student_cor, good_cor,
-                    info = "Make sure you calculated the correlation matrix correctly.")
-    })
-    # You can have more than one test
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 34.15 0.411 3022.425 0.006 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 7. Fitting a linear model of winpercent
-<p><img src="https://s3.amazonaws.com/assets.datacamp.com/production/project_458/img/snickers.jpg" style="float: left;margin:5px 20px 5px 1px;max-width: 33%"></p>
+
+![png](7.PNG)
+
 <p>Let's dive into the deep end of modeling by creating a linear model of <code>winpercent</code> using all the other variables (except <code>competitorname</code>). Because this is a categorical variable with a unique value in every row of the dataset, it's actually mathematically impossible to fit a linear model with it. Moreover, this variable doesn't actually include any information that our model could use because these names don't actually relate to any of the attributes of the candy.</p>
 <p>Let's fit this model, then we can dive into exploring it shortly. Maybe this will give us an idea of why people tend to prefer one candy over another!</p>
 
-
-```R
-# Fit a linear model of winpercent explained by all variables 
-# except competitorname
-win_mod <- lm(winpercent ~ . -competitorname, data = candy_rankings)
-```
-
-
-```R
-# One or more tests of the student's code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-good_mod <- lm(winpercent ~ . -competitorname, data = candy_rankings)
-
-run_tests({
-    test_that("The model is correct.", {
-        expect_equal(good_mod$fitted.values, win_mod$fitted.values,
-                        info = "Make sure you created the model correctly.")
-    })
-    # You can have more than one test
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 34.209 0.411 3022.484 0.006 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 8. Evaluating the linear model
 <p>Let's see how we did! We'll take a look at the results of our linear model and run some basic diagnostics to make sure the output is reliable.</p>
 <p>Taking a look at the coefficients, we can make some conclusions about the factors that cause people to choose one candy over another. For example, it looks like people who took this survey really like peanut butter! There are a few other significant coefficients. Which ones are these?</p>
+<p>In a good linear model, the residuals should look like they're scattered around zero without much structure.</p>
 
 
 ```R
@@ -565,69 +171,14 @@ augment(win_mod) %>% ggplot(aes(x = .fitted, y = .resid)) + geom_point() +geom_h
     F-statistic: 7.797 on 11 and 73 DF,  p-value: 9.504e-09
 
 
-
-
-
-
 ![png](output_22_2.png)
 
 
 
-```R
-# One or more tests of the student's code.
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-p <- last_plot()
-
-run_tests({
-    test_that("The plot is correct.", {
-        expect_equal(p$data, augment(win_mod),
-                    info = "Make sure you called `ggplot()` on the `augment()`-ed `win_mod`.")
-        expect_equal(p$mapping, aes(.fitted, .resid),
-                    info = "Make sure you mapped `.fitted` to the `x` aesthetic and `.resid` to the `y` aesthetic.")
-        expect_equal(p$layers, list(geom_point(), geom_hline(yintercept = 0)),
-                    info = "Make sure you used `geom_point()` and `geom_hline()` to make your plot.")
-    })
-    # You can have more than one test
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 34.485 0.411 3022.759 0.006 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 9. Fit a logistic regression model of chocolate
-<p><img src="https://s3.amazonaws.com/assets.datacamp.com/production/project_458/img/chocolate.jpg" style="float: left;margin:5px 20px 5px 1px;max-width: 33%"></p>
+
+![png](9.PNG)
+
 <p>Now let's try out logistic regression! We'll be trying to predict if a candy is chocolaty or not based on all the other features in the dataset. A logistic regression is a great choice for this particular modeling task because the variable we're trying to predict is either <code>TRUE</code> or <code>FALSE</code>. The logistic regression model will output a probability that we can use to make our decision. This model outputs a warning because a few of the features (like <code>crispedricewafer</code>) are only ever true when a candy is chocolate. This means that we can't draw conclusions from the coefficients, but we can still use the model to make predictions just fine!</p>
 
 
@@ -635,62 +186,6 @@ run_tests({
 # Fit a glm() of chocolate
 choc_mod <- glm(chocolate ~ . -competitorname, data = candy_rankings, family ="binomial")
 ```
-
-    Warning message:
-    "glm.fit: fitted probabilities numerically 0 or 1 occurred"
-
-
-```R
-# One or more tests of the student's code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-good_mod <- glm(chocolate ~ . - competitorname, family = "binomial", data = candy_rankings)
-
-run_tests({
-    test_that("the model is correct.", {
-        expect_equal(good_mod$fitted.values, choc_mod$fitted.values,
-                        info = "Make sure you fit your logistic regression correctly.")
-    })
-    # You can have more than one test
-})
-```
-
-    Warning message:
-    "glm.fit: fitted probabilities numerically 0 or 1 occurred"
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 34.551 0.411 3022.824 0.006 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
 
 ## 10. Evaluate the logistic regression model
 <p>Let's take our logistic regression model out for a spin! We'll start by creating a data frame of predictions we can compare to the actual values. Then we'll evaluate the model by making a confusion matrix and calculating the accuracy.</p>
@@ -751,55 +246,4 @@ print(paste("Accuracy =", accuracy))
 
 
     [1] "Accuracy = 0.964705882352941"
-
-
-
-```R
-run_tests({
-    test_that("The predictions are correct.", {
-        expect_equal(augment(choc_mod, type.predict = "response") %>% mutate(prediction = .fitted > .5), preds,
-                        info = "Make sure you created your predictions correctly.")
-    })
-    test_that("The confusion matrix is correct.", {
-        expect_equivalent(preds %>% select(chocolate, prediction) %>% table(), conf_mat,
-                        info = "Make sure you created the cofusion matrix correctly.")
-    })
-    test_that("The accuracy is correct.", {
-        expect_equal(sum(diag(conf_mat))/sum(conf_mat), accuracy,
-                        info = "Make sure you calculated the accuracy correctly.")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 34.622 0.411 3022.895 0.006 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
