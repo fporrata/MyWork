@@ -125,6 +125,12 @@ candy_rankings %>%
 <p>Let's fit this model, then we can dive into exploring it shortly. Maybe this will give us an idea of why people tend to prefer one candy over another!</p>
 
 
+```R
+# Fit a linear model of winpercent explained by all variables 
+# except competitorname
+win_mod <- lm(winpercent ~ . -competitorname, data = candy_rankings)
+```
+
 
 ## 8. Evaluating the linear model
 <p>Let's see how we did! We'll take a look at the results of our linear model and run some basic diagnostics to make sure the output is reliable.</p>
