@@ -32,3 +32,48 @@ print("Averages List:", moving_window_average(x, 1)  )
     Expanded list to calculate average:  [0, 0, 10, 5, 3, 1, 5, 5]
     Averages List: [3.3333333333333335, 5.0, 6.0, 3.0, 3.0, 3.6666666666666665]
     
+
+Compute and store R=1000 random values from 0-1 as x.<br><br>
+
+Store x as well as each of these averages as consecutive lists in a list called Y
+
+
+```python
+R=1000
+
+def moving_window_average_no_print(x, n_neighbors=1):
+    n = len(x)
+    width = n_neighbors*2 + 1
+    x = [x[0]]*n_neighbors + x + [x[-1]]*n_neighbors
+    #print("Expanded list to calculate average: ", x)
+
+    l = []
+    # To complete the function,
+    # return a list of the mean of values from i to i+width for all values i from 0 to n-1.
+    for i in range(n):
+        l.append((x[i] + x[i+1] + x[i+2])/width)
+    return l
+
+
+
+
+
+x = [random.random() for i in range(R)]
+Y = [x] + [moving_window_average_no_print(x, i) for i in range(1, 10)]
+```
+
+ For each list in Y, calculate and store the range (the maximum minus the minimum) in a new list ranges.
+
+
+```python
+ranges = []
+for i in Y:
+    ranges.append(max(i) - min(i))
+
+print(ranges)
+```
+
+    [0.9981662758264479, 0.8705443729244259, 0.5223266237546554, 0.37309044553903964, 0.2901814576414753, 0.2374211926157525, 0.2008948552902521, 0.17410887458488516, 0.1536254775748987, 0.13745437467227778]
+    
+
+The range decreases, because the average smooths a larger number of neighbors. Because the numbers in the original list are just random, we expect the average of many of them to be roughly 1/2, and more averaging means more smoothness in this value.
