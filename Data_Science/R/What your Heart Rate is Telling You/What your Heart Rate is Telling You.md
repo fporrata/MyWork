@@ -1,7 +1,8 @@
 
 ## 1. Heart disease and potential risk factors
 <p>Millions of people are getting some sort of heart disease every year and heart disease is the biggest killer of both men and women in the United States and around the world. Statistical analysis has identified many risk factors associated with heart disease such as age, blood pressure, total cholesterol, diabetes, hypertension, family history of heart disease, obesity, lack of physical exercise, etc. In this notebook, we're going to run statistical testings and regression models using the Cleveland heart disease dataset to assess one particular factor -- maximum heart rate one can achieve during exercise and how it is associated with a higher likelihood of getting heart disease.</p>
-<p><img src="https://s3.amazonaws.com/assets.datacamp.com/production/project_445/img/run31.png" height="300" width="300"></p>
+
+![png](0.PNG)
 
 
 ```R
@@ -25,76 +26,12 @@ head(hd_data, n=5)
 </table>
 
 
-
-
-```R
-last_value <- .Last.value
-
-# These packages need to be loaded in the first `@tests` cell. 
-library(testthat) 
-library(IRkernel.testthat)
-
-# Then follows one or more tests of the students code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-
-hd_temp <- read.csv("datasets/Cleveland_hd.csv")
-
-
-run_tests({
-
-    test_that("Read in data correctly.", { 
-        expect_equivalent(hd_data, hd_temp, 
-            info = 'hd_data should contain the data in "datasets/Cleveland_hd.csv".')
-    })
-    
-    test_that("Show the top 5 rows of data correctly", {
-    expect_equal(dim(last_value)[1], 5, 
-        info = "There should be 5 rows of data being printed out")
-    })
-    
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 13.194 0.215 2031.635 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 2. Converting diagnosis class into outcome variable
 <p>We noticed that the outcome variable <code>class</code> has more than two levels. According to the codebook, any non-zero values can be coded as an "event." Let's create a new variable called <code>hd</code> to represent a binary 1/0 outcome.</p>
 <p>There are a few other categorical/discrete variables in the dataset. Let's also convert sex into 'factor' type for next step analysis. Otherwise, R will treat them as continuous by default.</p>
 <p>The full data dictionary is also displayed here.</p>
-<p><img src="https://s3.amazonaws.com/assets.datacamp.com/production/project_445/img/datadict.png" height="500" width="500"></p>
+
+![png](1.PNG)
 
 
 ```R
@@ -107,71 +44,6 @@ hd_data %>% mutate(hd = ifelse(class > 0, 1, 0))-> hd_data
 # recode sex using mutate function and save as hd_data
 hd_data %>% mutate(sex = factor(sex, levels = c(0,1), labels = c("Female", "Male")))-> hd_data
 ```
-
-
-```R
-# one or more tests of the students code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-last_value <- .Last.value
-
-correct_data <- hd_temp %>% mutate(hd = ifelse(class > 0, 1, 0),sex = factor(sex, levels = 0:1, labels = c("Female","Male"))) -> hd_data
-
-run_tests({
-    
-    test_that("Test that tidyverse is loaded", {
-    expect_true( "package:tidyverse" %in% search(), 
-        info = "The tidyverse package should be loaded using library().")
-    })
-    
-    test_that("hd is created correctly", {
-    expect_equivalent(last_value$hd, correct_data$hd ,
-        info = "hd should have value 1 if class>0.")
-    })
-    
-    test_that("sex is recoded as factor correct", {
-    expect_true(is.factor(last_value$sex),
-        info = "Sex should be recoded into factor using factor().")
-    expect_equivalent(last_value$sex, correct_data$sex ,
-        info = "0=Female; 1=Male ")
-    })
-    
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 13.244 0.215 2031.685 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
 
 ## 3. Identifying important clinical variables
 <p>Now, let's use statistical tests to see which ones are related to heart disease. We can explore the associations for each variable in the dataset. Depending on the type of the data (i.e., continuous or categorical), we use t-test or chi-squared test to calculate the p-values.</p>
@@ -225,65 +97,6 @@ print(hd_heartrate)
     mean in group 0 mean in group 1 
             158.378         139.259 
     
-
-
-
-```R
-hd_sex_correct <- chisq.test(hd_data$sex, hd_data$hd)
-hd_age_correct <- t.test(hd_data$age ~ hd_data$hd)
-hd_heartrate_correct <- t.test(hd_data$thalach ~hd_data$hd)
-
-run_tests({
-    test_that("chi2 test is calculated correctly", {
-    expect_equivalent(hd_sex$p, hd_sex_correct$p, 
-        info = "Chi-squared test should be used to test the association between hd and sex.")
-    })
-    
-    test_that("t.test is calculated correctly", {
-    expect_equivalent(hd_age$p.value, hd_age_correct$p.value, 
-        info = "t.test(y~x) is the correct structure (not t.test(y,x)).")
-    })
-    
-    test_that("t.test is calculated correctly", {
-    expect_equivalent(hd_heartrate$statistic, hd_heartrate_correct$statistic, 
-        info = "t.test(y~x) should be used to test the association between hd and thalach")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 13.303 0.215 2031.743 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 4. Explore the associations graphically (i)
 <p>A good picture is worth a thousand words. In addition to p-values from statistical tests, we can plot the age, sex, and maximum heart rate distributions with respect to our outcome variable. This will give us a sense of both the direction and magnitude of the relationship.</p>
 <p>First, let's plot age using a boxplot since it is a continuous variable.</p>
@@ -297,58 +110,7 @@ hd_data%>% mutate(hd_labelled = ifelse(hd == 0, "No Disease", "Disease")) -> hd_
 ggplot(data = hd_data, aes(x =hd_labelled,y = age)) + geom_boxplot()
 ```
 
-
-
-
 ![png](output_10_1.png)
-
-
-
-```R
-p <- last_plot()
-hd_data_correct <- mutate(hd_data, hd_labelled = ifelse(hd==0, "No disease", "Disease"))
-#p_correct <- ggplot(data = hd_data_correct, aes(x = hd_labelled,y = age)) + geom_boxplot()
-
-run_tests({
-    test_that("correct columns are plotted", {
-        mappings <- str_replace(as.character(p$mapping), "~", "")
-        expect_true(all(c("hd_labelled", "age") %in% mappings), 
-            info = "You should plot hd_labelled on the x-axis and age on the y-axis.")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 13.548 0.215 2031.986 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 5. Explore the associations graphically (ii)
@@ -359,70 +121,7 @@ run_tests({
 # sex vs hd
 ggplot(data = hd_data,aes(x = hd_labelled, fill= sex)) + geom_bar(position="fill") + ylab("Sex %")
 ```
-
-
-
-
 ![png](output_13_1.png)
-
-
-
-```R
-p <- last_plot()
-
-#p_correct <- ggplot(data=hd_data, aes(x=hd_labelled, fill=sex)) + geom_bar(position="fill") + ylab("Sex %")
-
-run_tests({
-    test_that("correct columns are plotted", {
-        mappings <- str_replace(as.character(p$mapping), "~", "")
-        expect_true(all(c("hd_labelled", "sex") %in% mappings), 
-            info = "You should plot hd_labelled on the x-axis and color fill the bar by sex.")
-    })
-    
-    test_that("Y-axis is labelled correctly", {
-    expect_equivalent(p$labels$y,"Sex %", 
-            info = "You should plot hd_labelled on the x-axis, color fill the bar by sex and label the y-axis as Sex %")
-    })
-    
-    test_that("Position is fill", {
-    expect_true(p$layers[[1]]$position$fill, 
-            info = "The position parameter should be 'fill'.")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 13.881 0.215 2032.319 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
 
 ## 6. Explore the associations graphically (iii)
 <p>And finally, let's plot thalach using a boxplot since it is a continuous variable.</p>
@@ -432,59 +131,7 @@ run_tests({
 # max heart rate vs hd
 ggplot(data = hd_data,aes(x = hd_labelled, y = thalach)) + geom_boxplot()
 ```
-
-
-
-
 ![png](output_16_1.png)
-
-
-
-```R
-p <- last_plot()
-# p_correct <- ggplot(data=hd_data,aes(x=hd_labelled,y=thalach))+geom_boxplot()
-
-run_tests({
-    test_that("correct columns are plotted", {
-        mappings <- str_replace(as.character(p$mapping), "~", "")
-        expect_true(all(c("hd_labelled", "thalach") %in% mappings), 
-            info = "You should plot hd_labelled on the x-axis and thalach on the y-axis.")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 14.204 0.219 2032.646 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
 
 ## 7. Putting all three variables in one model
 <p>The plots and the statistical tests both confirmed that all the three variables are highly significantly associated with our outcome (p&lt;0.001 for all tests). </p>
@@ -526,65 +173,6 @@ summary(model)
     AIC: 340.85
     
     Number of Fisher Scoring iterations: 4
-
-
-
-
-```R
-lastvalue <-  .Last.value
-model_correct <- glm(data = hd_data, hd ~ age + sex + thalach, family = "binomial" )
-
-run_tests({
-    test_that("the model is a glm object", {
-    expect_is(model, "glm", 
-        info = "The model should be a glm object.")
-    })
-
-    test_that("the model family is binomial", {
-    expect_equivalent(model$family$family, "binomial", 
-        info = "The model family should be binomial.")
-    })
-    
-    
-    test_that("the model summary is printed correctly", {
-    expect_equivalent(lastvalue, summary(model_correct), 
-        info = "The model summary should be printed using the summary() function.")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 14.249 0.219 2032.69 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
 
 ## 8. Extracting useful information from the model output
 <p>It's common practice in medical research to report Odds Ratio (OR) to quantify how strongly the presence or absence of property A is associated with the presence or absence of the outcome. When the OR is greater than 1, we say A is positively associated with outcome B (increases the Odds of having B). Otherwise, we say A is negatively associated with B (decreases the Odds of having B).</p>
@@ -634,65 +222,6 @@ tidy_m
 </tbody>
 </table>
 
-
-
-
-```R
-tidy_m_correct <- tidy(model)
-tidy_m_correct$OR <- exp(tidy_m_correct$estimate)
-tidy_m_correct$upper_CI <- exp(tidy_m_correct$estimate + 1.96 * tidy_m_correct$std.error)
-
-run_tests({
-test_that("Test that broom is loaded", {
-    expect_true( "package:broom" %in% search(), 
-        info = "The broom package should be loaded using library().")
-    })
-    
-    test_that("OR is calculated correctly.", {
-        expect_equivalent(tidy_m$OR, tidy_m_correct$OR, 
-            info = 'OR=exp(model_table$estimate).')
-    })
-
-    test_that("upper CI is calculated correctly.", {
-        expect_equivalent(tidy_m$upper_CI, tidy_m_correct$upper_CI, 
-            info = 'upper_CI=exp(model_table$estimate+1.96*model_table$std.error).')
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 14.307 0.219 2032.747 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 9. Predicted probabilities from our model
 <p>So far, we have built a logistic regression model and examined the model coefficients/ORs. We may wonder how can we use this model we developed to predict a person's likelihood of having heart disease given his/her age, sex, and maximum heart rate. Furthermore, we'd like to translate the predicted probability into a decision rule for clinical use by defining a cutoff value on the probability scale. In practice, when an individual comes in for a health check-up, the doctor would like to know the predicted probability of heart disease, for specific values of the predictors: a 45-year-old female with a max heart rate of 150. To do that, we create a data frame called newdata, in which we include the desired values for our prediction.</p>
 
@@ -713,64 +242,6 @@ p_new
 
 
 <strong>1:</strong> 0.177300249223782
-
-
-
-```R
-pred_prob_correct <- predict(model, hd_data, type="response")
-hd_data$pred_hd_correct <- ifelse(pred_prob_correct >= 0.5, 1, 0)
-p_new_correct <- predict(model, newdata, type="response")
-
-run_tests({
-test_that("Test that pred_prob is calculated correctly", {
-    expect_equivalent(pred_prob, pred_prob_correct, 
-        info = "The predict() function should be used on the model object.")
-    })
-    
-    test_that("Predicted hd status is calculated correctly.", {
-        expect_equivalent(hd_data$pred_hd, hd_data$pred_hd_correct, 
-            info = 'pred_prob>0.5 should be coded as 1, and 0 otherwise.')
-    })
-
-    test_that("The new person's HD probability is calculated correctly.", {
-        expect_equivalent(p_new, p_new_correct, 
-            info = 'Apply the predict() function on the newdata.')
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 14.357 0.219 2032.797 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
 
 ## 10. Model performance metrics
 <p>Are the predictions accurate? How well does the model fit our data? We are going to use some common metrics to evaluate the model performance. The most straightforward one is Accuracy, which is the proportion of the total number of predictions that were correct. On the opposite, we can calculate the classification error rate using 1- accuracy. However, accuracy can be misleading when the response is rare (i.e., imbalanced response). Another popular metric, Area Under the ROC curve (AUC), has the advantage that it's independent of the change in the proportion of responders. AUC ranges from 0 to 1. The closer it gets to 1 the better the model performance. Lastly, a confusion matrix is an N X N matrix, where N is the level of outcome. For the problem at hand, we have N=2, and hence we get a 2 X 2 matrix. It cross-tabulates the predicted outcome levels against the true outcome levels.</p>
@@ -805,68 +276,3 @@ table(hd_data$hd,hd_data$pred_hd, dnn=c("True Status","Predicted Status")) # con
     True Status   0   1
               0 122  42
               1  46  93
-
-
-
-```R
-lastvalue <- .Last.value #table output
-auc_correct <- auc(hd_data$hd, hd_data$pred_hd) 
-accuracy_correct <- accuracy(hd_data$hd, hd_data$pred_hd)
-classification_error_correct <- ce(hd_data$hd, hd_data$pred_hd) 
-confusionmatrix <- table(hd_data$hd, hd_data$pred_hd, dnn=c("True Status","Predicted Status"))
-
-run_tests({
-    test_that("AUC is calculated correctly", {
-    expect_equal(auc,auc_correct, 
-        info = "The auc() function should be used.")
-    })
-    
-    test_that("Accuracy is calculated correctly.", {
-        expect_equal(accuracy, accuracy_correct, 
-            info = 'The accuracy() function should be used.')
-    })
-
-    test_that("Classification error is calculated correctly", {
-    expect_equal(classification_error,classification_error_correct, 
-        info = "The ce() function should be used.")
-    })
-    
-    test_that("Confusion matrix is calculated correctly.", {
-        expect_equivalent(lastvalue, confusionmatrix, 
-            info = 'The first argument should be the true status and the second should be your predicted status.')
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 14.431 0.223 2032.874 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
