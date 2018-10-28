@@ -2,7 +2,7 @@
 ## 1. Heart disease and potential risk factors
 <p>Millions of people are getting some sort of heart disease every year and heart disease is the biggest killer of both men and women in the United States and around the world. Statistical analysis has identified many risk factors associated with heart disease such as age, blood pressure, total cholesterol, diabetes, hypertension, family history of heart disease, obesity, lack of physical exercise, etc. In this notebook, we're going to run statistical testings and regression models using the Cleveland heart disease dataset to assess one particular factor -- maximum heart rate one can achieve during exercise and how it is associated with a higher likelihood of getting heart disease.</p>
 
-![png](0.PNG)
+![png](0.png)
 
 
 ```R
@@ -31,7 +31,7 @@ head(hd_data, n=5)
 <p>There are a few other categorical/discrete variables in the dataset. Let's also convert sex into 'factor' type for next step analysis. Otherwise, R will treat them as continuous by default.</p>
 <p>The full data dictionary is also displayed here.</p>
 
-![png](1.PNG)
+![png](1.png)
 
 
 ```R
