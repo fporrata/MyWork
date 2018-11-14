@@ -1,6 +1,6 @@
 
 ## 1. The raw data files and their format
-<p><img src="https://s3.amazonaws.com/assets.datacamp.com/production/project_462/img/car-accident.jpg" alt=""></p>
+
 <p>While the rate of fatal road accidents has been decreasing steadily since the 80s, the past ten years have seen a stagnation in this reduction. Coupled with the increase in number of miles driven in the nation, the total number of traffic related-fatalities has now reached a ten year high and is rapidly increasing.</p>
 <p>Per request of the US Department of Transportation, we are currently investigating how to derive a strategy to reduce the incidence of road accidents across the nation. By looking at the demographics of traﬃc accident victims for each US state, we find that there is a lot of variation between states. Now we want to understand if there are patterns in this variation in order to derive suggestions for a policy action plan. In particular, instead of implementing a costly nation-wide plan we want to focus on groups of  states with similar profiles. How can we find such groups in a statistically sound way and communicate the result effectively?</p>
 <p>To accomplish these tasks, we will make use of data wrangling, plotting, dimensionality reduction, and unsupervised clustering.</p>
@@ -56,42 +56,6 @@ accidents_head
 
 
 
-
-```python
-%%nose
-
-from pathlib import Path
-
-
-def test_current_dir():
-    assert current_dir == [str(Path.cwd())], \
-    'The current_dir variable was not correctly assigned.'
-    
-    
-def test_file_list():
-    assert sorted(file_list) == sorted([str(p) for p in list(Path('.').glob('[A-z]*'))]), \
-    'The file_list variable was not correctly assigned.'
-    
-    
-def test_accidents_head():
-    with open('datasets/road-accidents.csv') as f:
-        accidents_head_test = []
-        for i in range(20):
-            accidents_head_test.append(f.readline().rstrip())
-    assert accidents_head == accidents_head_test, \
-    'The accidents_head variable was not correctly assigned.'
-```
-
-
-
-
-
-
-    3/3 tests passed
-
-
-
-
 ## 2. Read in and get an overview of the data
 <p>Next, we will orient ourselves to get to know the data with which we are dealing.</p>
 
@@ -135,19 +99,6 @@ car_acc.tail()
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -205,46 +156,6 @@ car_acc.tail()
 </div>
 
 
-
-
-```python
-%%nose
-
-import sys
-
-def test_pandas_import():
-    assert 'pandas' in list(sys.modules.keys()), \
-        'The pandas module has not been imported correctly.'
-    
-
-def test_car_acc():
-    car_acc_test = pd.read_csv('datasets/road-accidents.csv', comment='#', sep='|')
-    try:
-        pd.testing.assert_frame_equal(car_acc, car_acc_test)
-    except AssertionError:
-        assert False, "The car_acc dataset was not read in correctly."
-        
-        
-def test_car_acc_shape():
-    assert rows_and_cols == (51, 5), \
-    'The number of rows and variables were not calculated correctly.'
-
-    
-def test_car_acc_info():
-    assert car_acc_information == car_acc.info(), \
-    'The overview does not appear to be have created properly using the info method.'
-```
-
-
-
-
-
-
-    4/4 tests passed
-
-
-
-
 ## 3. Create a textual and a graphical summary of the data
 <p>We now have an idea of what the dataset looks like. To further familiarize ourselves with this data, we will calculate summary statistics and produce a graphical overview of the data. The graphical overview is good to get a sense for the distribution of variables within the data and could consist of one histogram per column. It is often a good idea to also explore the pairwise relationship between all columns in the data set by using a using pairwise scatter plots (sometimes referred to as a "scatterplot matrix").</p>
 
@@ -284,48 +195,7 @@ sns.pairplot(sum_stat_car)
 
 
 
-
-
-    <seaborn.axisgrid.PairGrid at 0x7f1d5965fc50>
-
-
-
-
 ![png](output_7_2.png)
-
-
-
-```python
-%%nose
-
-last_value = _
-
-import sys
-
-def test_seaborn_import():
-    assert 'seaborn' in list(sys.modules.keys()), \
-        'The seaborn module has not been imported correctly.'
-    
-
-def test_car_desc():
-    try:
-        pd.testing.assert_frame_equal(sum_stat_car, car_acc.describe())
-    except AssertionError:
-        assert False, "The sum_stat_car variable was not created correctly."
-
-
-def test_pairplot_created():
-    assert type(last_value) == sns.axisgrid.PairGrid, \
-    'It does not appear that a Seaborn pairplot was the last output of the cell.'
-```
-
-
-
-
-
-
-    3/3 tests passed
-
 
 
 
@@ -350,19 +220,6 @@ corr_columns
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -407,28 +264,6 @@ corr_columns
 </div>
 
 
-
-
-```python
-%%nose
-
-def test_corr_columns():
-    try:
-        pd.testing.assert_frame_equal(corr_columns, car_acc.corr())
-    except AssertionError:
-        assert False, "The corr_columns variable was not created correctly."
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
-
 ## 5. Fit a multivariate linear regression
 <p>From the correlation table, we see that the amount of fatal accidents is most strongly correlated with alcohol consumption (first row). But in addition, we also see that some of the features are correlated with each other, for instance, speeding and alcohol consumption are positively correlated. We, therefore, want to compute the association of the target with each feature while adjusting for the effect of the remaining features. This can be done using multivariate linear regression.</p>
 <p>Both the multivariate regression and the correlation measure how strongly the features are associated with the outcome (fatal accidents). When comparing the regression coefficients with the correlation coefficients, we will see that they are slightly different. The reason for this is that the multiple regression computes the association of a feature with an outcome, given the association with all other features, which is not accounted for when calculating the correlation coefficients.</p>
@@ -453,52 +288,7 @@ reg.fit(features, target )
 fit_coef = reg.coef_
 fit_coef
 ```
-
-
-
-
     array([-0.04180041,  0.19086404,  0.02473301])
-
-
-
-
-```python
-%%nose
-
-import sys
-import numpy
-
-
-def test_sklearn_import():
-    assert 'sklearn' in list(sys.modules.keys()), \
-        'The seaborn module has not been imported correctly.'
-    
-    
-def test_features_df():
-    try:
-        pd.testing.assert_frame_equal(features, car_acc[['perc_fatl_speed', 'perc_fatl_alcohol', 'perc_fatl_1st_time']])
-    except AssertionError:
-        assert False, "The features DataFrame was not created correctly."
-
-        
-def test_target_df():
-    try:
-        pd.testing.assert_frame_equal(target.to_frame(), car_acc[['drvr_fatl_col_bmiles']])
-    except AssertionError:
-        assert False, "The target DataFrame variable was not created correctly."
-        
-        
-def test_lin_reg():
-    assert reg.coef_.round(3).tolist() == [-0.042,  0.191,  0.025], \
-     'The linear regression coefficients are not correct.'
-```
-
-
-
-
-
-
-    4/4 tests passed
 
 
 
@@ -542,39 +332,6 @@ print("The cumulative variance of the first two principal components is {}".form
 ![png](output_16_1.png)
 
 
-
-```python
-%%nose
-
-import sys
-import numpy
-
-
-def test_scaler():
-    assert scaler.fit_transform(features).round(3).tolist()[-1] == [1.077, 0.259, 0.185], \
-        'The scaled features were not calculated properly.'
-
-    
-def test_pca():
-    assert (pca.explained_variance_ratio_ == PCA().fit(features_scaled).explained_variance_ratio_).all(), \
-        'The explained variance ratio for the PCA was not correctly calculated.'
-    
-    
-def test_pc1_pc2():
-    assert two_first_comp_var_exp == PCA().fit(features_scaled).explained_variance_ratio_.cumsum()[1], \
-        'The cumulative sum for the explained variance of the two first principal components was not correctly calculated.'
-```
-
-
-
-
-
-
-    3/3 tests passed
-
-
-
-
 ## 7. Visualize the first two principal components
 <p>The first two principal components enable visualization of the data in two dimensions while capturing a high proportion of the variation (79%) from all three features: speeding, alcohol influence, and first-time accidents. This enables us to use our eyes to try to discern patterns in the data with the goal to find groups of similar states. Although clustering algorithms are becoming increasingly efficient, human pattern recognition is an easily accessible and very efficient method of assessing patterns in data.</p>
 <p>We will create a scatter plot of the first principle components and explore how the states cluster together in this visualization.</p>
@@ -594,43 +351,7 @@ plt.scatter(p_comp1, p_comp2)
 ```
 
 
-
-
-    <matplotlib.collections.PathCollection at 0x7f1d599dd7f0>
-
-
-
-
 ![png](output_19_1.png)
-
-
-
-```python
-%%nose
-
-def test_pca_trans():
-    assert (p_comps == PCA(n_components=2).fit_transform(features_scaled)).all(), \
-        'The PCA transformation was not performed correctly'
-    
-
-def test_pca_comp1():
-    assert (p_comp1 == p_comps[:, 0]).all(), \
-        'The first principal component was not assigned correctly.'
-    
-
-def test_pca_comp2():
-    assert (p_comp2 == p_comps[:, 1]).all(), \
-        'The second principal component was not assigned correctly.'
-```
-
-
-
-
-
-
-    3/3 tests passed
-
-
 
 
 ## 8. Find clusters of similar states in the data
@@ -657,39 +378,7 @@ plt.plot(ks, inertias, marker='o')
 ```
 
 
-
-
-    [<matplotlib.lines.Line2D at 0x7f1d597a77f0>]
-
-
-
-
 ![png](output_22_1.png)
-
-
-
-```python
-%%nose
-
-def test_inertias():
-    test_ins = [153.0, 101.591, 72.293, 57.791, 46.106, 39.213, 32.99, 29.381, 25.985]
-    assert [round(inertia, 3) for inertia in inertias] ==  test_ins, \
-        'The list of inertias was not properly constructed.'
-
-    
-def test_km():
-    assert (km.labels_ == KMeans(n_clusters=k, random_state=8).fit(features_scaled).labels_).all(), \
-        'The KMeans labels were not properly assigned.'
-```
-
-
-
-
-
-
-    2/2 tests passed
-
-
 
 
 ## 9. KMeans to visualize clusters in the PCA scatter plot
@@ -707,34 +396,7 @@ km.fit(features_scaled)
 plt.scatter(p_comp1, p_comp2, c=km.labels_)
 ```
 
-
-
-
-    <matplotlib.collections.PathCollection at 0x7f1d6e510320>
-
-
-
-
 ![png](output_25_1.png)
-
-
-
-```python
-%%nose
-
-def test_km_labels():
-    assert (km.labels_ == KMeans(n_clusters=3, random_state=8).fit(features_scaled).labels_).all(), \
-        'The KMeans labels were not properly assigned.'
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
 
 
 ## 10. Visualize the feature differences between the clusters
@@ -755,37 +417,7 @@ sns.violinplot(x ='percent',  y = 'measurement', hue = 'cluster', data = melt_ca
 ```
 
 
-
-
-    <matplotlib.axes._subplots.AxesSubplot at 0x7f1d59706a20>
-
-
-
-
 ![png](output_28_1.png)
-
-
-
-```python
-%%nose
-
-def test_melt():
-    test_melt = pd.melt(car_acc, id_vars='cluster', var_name='measurement', value_name='percent',
-       value_vars=['perc_fatl_speed', 'perc_fatl_alcohol', 'perc_fatl_1st_time'])
-    try:
-        pd.testing.assert_frame_equal(melt_car, test_melt)
-    except AssertionError:
-        assert False, "The melt_car DataFrame was not created correctly."
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
 
 
 ## 11. Compute the number of accidents within each cluster
@@ -814,19 +446,6 @@ count_mean_sum
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -871,52 +490,6 @@ count_mean_sum
 ![png](output_31_1.png)
 
 
-
-```python
-%%nose
-
-def test_miles_driven():
-    try:
-        pd.testing.assert_frame_equal(miles_driven, pd.read_csv('datasets/miles-driven.csv', sep='|'))
-    except AssertionError:
-        assert False, 'The miles_driven DataFrame was not read in correctly.'
-
-
-def test_merge_dfs():
-    try:
-        pd.testing.assert_frame_equal(car_acc_miles.drop(columns='num_drvr_fatl_col'), pd.merge(car_acc, miles_driven, on='state'))
-    except AssertionError:
-        assert False, 'The two DataFrames were not merged correctly.'
-        
-        
-def test_new_column():
-    new_col_df_test = car_acc_miles['drvr_fatl_col_bmiles'] * car_acc_miles['million_miles_annually'] / 1000
-    new_col_df_test.name = 'num_drvr_fatl_col'
-    try:
-        pd.testing.assert_series_equal(car_acc_miles['num_drvr_fatl_col'], new_col_df_test)
-    except AssertionError:
-        assert False, 'The new column "num_drvr_fatl_col" was not computed correctly.'
-        
-        
-def test_agg():
-    count_mean_sum_test = car_acc_miles.groupby('cluster')['num_drvr_fatl_col'].agg(['count', 'mean', 'sum'])
-    try:
-        pd.testing.assert_frame_equal(count_mean_sum, count_mean_sum_test)
-    except AssertionError:
-        assert False, ('The aggregation step was not performed correctly. '
-                       'Note that the order should be 1. "count", 2. "mean", and 3. "sum".')
-```
-
-
-
-
-
-
-    4/4 tests passed
-
-
-
-
 ## 12. Make a decision when there is no clear right choice
 <p>As we can see, there is no obvious correct choice regarding which cluster is the most important to focus on. Yet, we can still argue for a certain cluster and motivate this using our findings above. Which cluster do you think should be a focus for policy intervention and further investigation?</p>
 
@@ -927,32 +500,14 @@ cluster_num = 2
 ```
 
 
-```python
-%%nose --nocapture
 
-def test_cluster_choice():
-    assert cluster_num in range(3), \
-    'cluster_num must be either 0, 1, or 2'
-    print('Well done! Note that there is no definite correct answer here and there are a few ways to justify each cluster choice:'
-          '\n0 (Blue) = The lowest number of states and the highest number of people helped per state. Good for a focused pilot effort.'
-          '\n2 (Green) = The highest number of people helped in total and the most states. Good if we can mobilize many resources right away.'
-          '\n1 (Orange) = A good balance of the attributes from the two other clusters. This cluster also has the highest alcohol consumption'
-          '\nwhich was the strongest correlated to fatal accidents.')
-```
 
-    Well done! Note that there is no definite correct answer here and there are a few ways to justify each cluster choice:
+    Note that there is no definite correct answer here and there are a few ways to justify each cluster choice:
     0 (Blue) = The lowest number of states and the highest number of people helped per state. Good for a focused pilot effort.
     2 (Green) = The highest number of people helped in total and the most states. Good if we can mobilize many resources right away.
     1 (Orange) = A good balance of the attributes from the two other clusters. This cluster also has the highest alcohol consumption
     which was the strongest correlated to fatal accidents.
 
-
-
-
-
-
-
-    1/1 tests passed
 
 
 
