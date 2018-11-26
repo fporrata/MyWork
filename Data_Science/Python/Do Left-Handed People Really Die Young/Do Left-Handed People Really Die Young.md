@@ -1,6 +1,5 @@
 
 ## 1. Where are the old left-handed people?
-<p><img src="https://s3.amazonaws.com/assets.datacamp.com/production/project_479/img/Obama_signs_health_care-20100323.jpg" alt="Barack Obama signs the Patient Protection and Affordable Care Act at the White House, March 23, 2010"></p>
 <p>Barack Obama is left-handed. So are Bill Gates and Oprah Winfrey; so were Babe Ruth and Marie Curie. A <a href="https://www.nejm.org/doi/full/10.1056/NEJM199104043241418">1991 study</a> reported that left-handed people die on average nine years earlier than right-handed people. Nine years! Could this really be true? </p>
 <p>In this notebook, we will explore this phenomenon using age distribution data to see if we can reproduce a difference in average age at death purely from the changing rates of left-handedness over time, refuting the claim of early death for left-handers. This notebook uses <code>pandas</code> and Bayesian statistics to analyze the probability of being a certain age at death given that you are reported as left-handed or right-handed.</p>
 <p>A National Geographic survey in 1986 resulted in over a million responses that included age, sex, and hand preference for throwing and writing. Researchers Avery Gilbert and Charles Wysocki analyzed this data and noticed that rates of left-handedness were around 13% for people younger than 40 but decreased with age to about 5% by the age of 80. They concluded based on analysis of a subgroup of people who throw left-handed but write right-handed that this age-dependence was primarily due to changing social acceptability of left-handedness. This means that the rates aren't a factor of <em>age</em> specifically but rather of the <em>year you were born</em>, and if the same study was done today, we should expect a shifted version of the same distribution as a function of age. Ultimately, we'll see what effect this changing rate has on the apparent mean age of death of left-handed people, but let's start by plotting the rates of left-handedness as a function of age.</p>
@@ -27,45 +26,7 @@ ax.set_ylabel("Rate of Gender Lefthandedness")
 ```
 
 
-
-
-    Text(0,0.5,'Rate of Gender Lefthandedness')
-
-
-
-
 ![png](output_1_1.png)
-
-
-
-```python
-%%nose
-
-def test_data_shape():
-    assert (lefthanded_data.shape == (77, 3)), \
-    'The lefthanded_data you loaded is not the right shape. It should be 77, 3.'
-    
-def test_num_lines():
-    assert (len(ax.lines) == 2), \
-    'Did you plot lefthanded rates for both men and women?'
-    
-def test_plot_dimensions():
-     assert ((ax.get_yticks()[-1] < 20) and (ax.get_xticks()[-1] > 20)), \
-     'Did you plot "Female" vs. "Age" and "Male" vs. "Age"?'
-
-def test_plot_labels():
-    assert ax.get_xlabel() != '' and ax.get_ylabel() != '', \
-    'Please add x and y labels to your plot.'
-```
-
-
-
-
-
-
-    4/4 tests passed
-
-
 
 
 ## 2. Rates of left-handedness over time
@@ -87,52 +48,7 @@ ax.set_xlabel("Birth year") # set the x label for the plot
 ax.set_ylabel("Mean Male and Female Lefthandedness") # set the y label for the plot
 ```
 
-
-
-
-    Text(0,0.5,'Mean Male and Female Lefthandedness')
-
-
-
-
 ![png](output_4_1.png)
-
-
-
-```python
-%%nose
-
-def test_new_columns():
-    assert 'Birth_year' and 'Mean_lh' in lefthanded_data.columns, \
-    'Did you create two new columns called "Birth_year" and "Mean_lh"?'
-    
-def test_birth_year_column():
-    import numpy as np
-    assert np.all(lefthanded_data["Birth_year"] >= 1900), \
-    'The values in the "Birth_year" column should be years >= 1900.'
-    
-def test_mean_lh_column():
-    import numpy as np
-    assert not np.any(np.isnan(lefthanded_data["Mean_lh"])), \
-    'Make sure you calculate the mean lefthandedness for each row of the DataFrame.'
-
-def test_plot_contents():
-    assert (len(ax.lines) == 1), \
-    'Did you plot the mean lefthandedness data?'
-    
-def test_plot_labels():
-    assert ax.get_xlabel() != '' and ax.get_ylabel() != '', \
-    'Please add x and y labels to your plot.'
-```
-
-
-
-
-
-
-    5/5 tests passed
-
-
 
 
 ## 3. Applying Bayes' rule
@@ -175,44 +91,6 @@ def P_lh_given_A(ages_of_death, study_year = 1990):
     return P_return
 ```
 
-
-```python
-%%nose
-
-def test_output_type():
-    test_input = np.array([80])
-    assert (type(P_lh_given_A(test_input)) == float or 
-            type(P_lh_given_A(test_input)) == np.float64 or 
-            type(P_lh_given_A(test_input)) == np.ndarray), \
-    'Does the function P_lh_given_A return a number?'
-
-def test_late_1900s_rate():
-    assert round(float(P_lh_given_A(np.array([10]))), 2) == 0.13, \
-    'Did you calculate a left-handedness probability for the late 1900s?'
-
-def test_early_1900s_rate():
-    assert round(float(P_lh_given_A(np.array([95]))), 2) == 0.06, \
-    'Did you calculate a left-handedness probability for the early 1900s?'
-
-def test_middle_rate():
-    assert P_lh_given_A(np.array([80])) > 0.06 and P_lh_given_A(np.array([80])) < 0.13, \
-    'Make sure that P_lh_given_A returns the correct left-handedness rate as a fraction (< 1).'
-    
-def test_middle_rates_are_different():
-    assert np.any(P_lh_given_A(np.array([20])) != P_lh_given_A(np.array([50]))), \
-    'P_lh_given_A should return different rates for different ages between youngest_age and oldest_age.'
-```
-
-
-
-
-
-
-    5/5 tests passed
-
-
-
-
 ## 4. When do people normally die?
 <p>To estimate the probability of living to an age A, we can use data that gives the number of people who died in a given year and how old they were to create a distribution of ages of death. If we normalize the numbers to the total number of people who died, we can think of this data as a probability distribution that gives the probability of dying at age A. The data we'll use for this is from the entire US for the year 1999 - the closest I could find for the time range we're interested in. </p>
 <p>In this block, we'll load in the death distribution data and plot it. The first column is the age, and the other columns are the number of people who died at that age. </p>
@@ -236,49 +114,7 @@ ax.set_ylabel("Number of people who died")
 ```
 
 
-
-
-    Text(0,0.5,'Number of people who died')
-
-
-
-
 ![png](output_10_1.png)
-
-
-
-```python
-%%nose
-
-def test_skiprows(): 
-    assert death_distribution_data.loc[0]["Age"] == 0, \
-    'Make sure to include `skiprows=[1]` as an argument in `pd.read_csv`.'
-    
-def test_data_shape(): # this will also test if the dropna worked
-    assert (death_distribution_data.shape == (120, 4)), \
-    'Make sure you drop NaN values in the "Both Sexes" column only. The resulting DataFrame should have 120 rows.'
-    
-def test_plot_contents():
-    assert (len(ax.lines) == 1), \
-    'Did you plot the death distribution data?'
-    
-def test_plot_dimensions():
-    assert ((ax.get_xticks()[-1] < 200) and (ax.get_yticks()[-1] > 200)), \
-    'Did you plot "Both Sexes" vs. "Age"?'
-    
-def test_plot_labels():
-    assert ax.get_xlabel() != '' and ax.get_ylabel() != '', \
-    'Please add x and y labels to your plot.'
-```
-
-
-
-
-
-
-    5/5 tests passed
-
-
 
 
 ## 5. The overall probability of left-handedness
@@ -302,33 +138,6 @@ print(P_lh(death_distribution_data))
     0.07766387615350638
 
 
-
-```python
-%%nose
-
-def test_output_type():
-    assert type(P_lh(death_distribution_data)) == np.float64 or type(P_lh(death_distribution_data)) == float, \
-    'Have you defined a function called P_lh that returns the overall probability of left-handedness?'
-
-def test_study_year():
-    assert round(P_lh(death_distribution_data, 2018), 2) == 0.11, \
-    'Make sure to include `study_year` as the second argument for the function P_lh()'
-
-def test_P_lh():
-    assert round(P_lh(death_distribution_data), 2) == 0.08, \
-    'The overall probability of left-handedness should be approximately 0.08.'
-```
-
-
-
-
-
-
-    3/3 tests passed
-
-
-
-
 ## 6. Putting it all together: dying while left-handed (i)
 <p>Now we have the means of calculating all three quantities we need: P(A), P(LH), and P(LH | A). We can combine all three using Bayes' rule to get P(A | LH), the probability of being age A at death (in the study year) given that you're left-handed. To make this answer meaningful, though, we also want to compare it to P(A | RH), the probability of being age A at death given that you're right-handed. </p>
 <p>We're calculating the following quantity twice, once for left-handers and once for right-handers.</p>
@@ -346,41 +155,6 @@ def P_A_given_lh(ages_of_death, death_distribution_data, study_year = 1990):
     return P_lh_A*P_A/P_left
 ```
 
-
-```python
-%%nose
-
-def test_output_type():
-    test_input = np.array([60])
-    assert (type(P_A_given_lh(test_input, death_distribution_data)) == pd.core.series.Series), \
-    'Have you defined a function called P_A_given_lh that returns a pandas Series?'
-
-def test_output_is_probability():
-    test_input = np.array([60])
-    assert (P_A_given_lh(test_input, death_distribution_data) < 1).all(), \
-    'Make sure the function returns numbers that are less than 1.'
-
-def test_study_year():
-    test_input = np.array([45])
-    assert (P_A_given_lh(test_input, death_distribution_data) > 
-            P_A_given_lh(test_input, death_distribution_data, 2018)).all(), \
-    'Make sure to include `study_year` as the third argument for the function P_A_given_lh()'
-
-# def test_P_lh():
-#     assert round(P_lh(death_distribution_data), 2) == 0.08, \
-#     'The overall probability of left-handedness should be approximately 0.08.'
-```
-
-
-
-
-
-
-    3/3 tests passed
-
-
-
-
 ## 7. Putting it all together: dying while left-handed (ii)
 <p>And now for right-handers.</p>
 
@@ -393,46 +167,6 @@ def P_A_given_rh(age_of_death, death_distribution_data, study_year = 1990):
     P_rh_A = 1 - P_lh_given_A(age_of_death, study_year)
     return P_rh_A*P_A/P_right
 ```
-
-
-```python
-%%nose
-
-def test_output_type():
-    test_input = np.array([60])
-    assert (type(P_A_given_rh(test_input, death_distribution_data)) == pd.core.series.Series), \
-    'Have you defined a function called P_A_given_rh that returns a pandas Series?'
-
-def test_output_is_probability():
-    test_input = np.array([60])
-    assert (P_A_given_rh(test_input, death_distribution_data) < 1).all(), \
-    'Make sure the function returns numbers that are less than 1.'
-
-def test_correct_trend():
-    assert (P_A_given_lh(np.array([80]), death_distribution_data) < 
-    P_A_given_rh(np.array([80]), death_distribution_data)).all(), \
-    'Did you mix up any components of P_A_given_lh and P_A_given_rh?'
-
-def test_study_year():
-    test_input = np.array([45])
-    assert (P_A_given_rh(test_input, death_distribution_data) < 
-            P_A_given_rh(test_input, death_distribution_data, 2018)).all(), \
-    'Make sure to include `study_year` as the third argument for the function P_A_given_rh()'
-
-# def test_P_lh():
-#     assert round(P_lh(death_distribution_data), 2) == 0.08, \
-#     'The overall probability of left-handedness should be approximately 0.08.'
-```
-
-
-
-
-
-
-    4/4 tests passed
-
-
-
 
 ## 8. Plotting the distributions of conditional probabilities
 <p>Now that we have functions to calculate the probability of being age A at death given that you're left-handed or right-handed, let's plot these probabilities for a range of ages of death from 6 to 120. </p>
@@ -455,50 +189,7 @@ ax.set_xlabel("Age at death")
 ax.set_ylabel("Probability of being age A at death")
 ```
 
-
-
-
-    Text(0,0.5,'Probability of being age A at death')
-
-
-
-
 ![png](output_22_1.png)
-
-
-
-```python
-%%nose
-
-def test_list_length():
-    assert len(left_handed_probability) > 1 and len(right_handed_probability) > 1, \
-    'Make sure you append values to each list for every age A in ages.'
-    
-def test_list_values():
-    assert np.max(left_handed_probability) < 1 and np.max(right_handed_probability) < 1, \
-    'All the values in each list should be probabilities (less than 1)'
-
-def test_lists_are_different():
-    assert np.max(left_handed_probability) < np.max(right_handed_probability), \
-    'Did you calculate separate values for left- and right-handed probabilities?'
-    
-def test_num_lines():
-    assert (len(ax.lines) == 2), \
-    'Did you plot lefthanded rates for both men and women?'
-
-def test_plot_labels():
-    assert ax.get_xlabel() != '' and ax.get_ylabel() != '', \
-    'Please add x and y labels to your plot.'
-```
-
-
-
-
-
-
-    5/5 tests passed
-
-
 
 
 ## 9. Moment of truth: age of left and right-handers at death
@@ -525,30 +216,6 @@ print("The difference in average ages is " + str(round(average_rh_age - average_
     Average left handed age:  67.24503662801027
     Average right handed age:  72.79171936526477
     The difference in average ages is 5.5 years.
-
-
-
-```python
-%%nose
-
-def test_result_type():
-    assert ((type(average_lh_age) == np.float64 or type(average_lh_age) == float) and
-            (type(average_rh_age) == np.float64 or type(average_rh_age) == float)), \
-    'average_lh_age and average_rh age should each be a single number.'
-
-def test_average_ages():
-    assert average_lh_age < average_rh_age, \
-    'You should get a smaller number for average_lh_age than average_rh_age.'
-```
-
-
-
-
-
-
-    2/2 tests passed
-
-
 
 
 ## 10. Final comments
@@ -584,41 +251,5 @@ print("The difference in average ages is " +
     Average left handed age:  70.28773299940532
     Average right handed age:  72.62899693809848
     The difference in average ages is 2.3 years.
-
-
-
-```python
-%%nose
-
-# def test_current_year():
-#     import datetime
-#     now = datetime.datetime.now()
-#     assert current_year >= now.year, \
-#     'Did you set the "current_year" variable to the current year?'
-
-def test_list_length():
-    assert len(left_handed_probability_2018) > 1 and len(right_handed_probability_2018) > 1, \
-    'Make sure you append values to each list for every age A in ages.'
-    
-def test_list_values():
-    assert np.max(left_handed_probability_2018) < 1 and np.max(right_handed_probability_2018) < 1, \
-    'All the values in each list should be probabilities (less than 1).'
-
-def test_lists_are_different():
-    assert (left_handed_probability_2018 != right_handed_probability_2018).all(), \
-    'Did you calculate separate values for left and right-handed probabilities?'
-    
-def test_average_ages():
-    assert (average_rh_age_2018 - average_lh_age_2018 < 4), \
-    'The difference in ages between the left-handed and right-handed groups should be less than the value you calculated for the 1990 study.'
-```
-
-
-
-
-
-
-    4/4 tests passed
-
 
 
