@@ -53,10 +53,14 @@ ax.set_ylabel("Mean Male and Female Lefthandedness") # set the y label for the p
 
 ## 3. Applying Bayes' rule
 <p><strong>Bayes' rule</strong> or <strong>Bayes' theorem</strong> is a statement about conditional probability which allows us to update our beliefs after seeing evidence. The probability of outcome or event A, given that outcome or event B has happened (or is true) is not the same as the probability of outcome B given that outcome A has happened. We need to take into account the <strong>prior</strong> probability that A has happened (the probability that A has happened is written P(A)). Bayes' rule can be written as follows:</p>
-<p>$$P(A | B) = \frac{P(B|A) P(A)}{P(B)}$$</p>
+
+![png](1.PNG)
+
 <p>The quantity we ultimately want to calculate is the probability of dying at a particular age A, <em>given that</em> your family thinks you are left-handed. Let's write this in shorthand as P(A | LH). We also want the same quantity for right-handers: P(A | RH). As we go, we will figure out or approximate the other three quantities to find out what difference in age of death we might expect purely from the changing rates of left-handedness plotted above.</p>
 <p>Here's Bayes' rule in the context of our discussion:</p>
-<p>$$P(A | LH) = \frac{P(LH|A) P(A)}{P(LH)}$$</p>
+
+![png](2.PNG)
+
 <p>P(LH | A) is the probability that you are left-handed <em>given that</em> you died at age A. P(A) is the overall probability of dying at age A, and P(LH) is the overall probability of being left-handed. We will now calculate each of these three quantities, beginning with P(LH | A).</p>
 <p>To calculate P(LH | A) for ages that might fall outside the original data, we will need to extrapolate the data to earlier and later years. Since the rates flatten out in the early 1900s and late 1900s, we'll use a few points at each end and take the mean to extrapolate the rates on each end. The number of points used for this is arbitrary, but we'll pick 10 since the data looks flat-ish until about 1910. </p>
 
@@ -119,8 +123,8 @@ ax.set_ylabel("Number of people who died")
 
 ## 5. The overall probability of left-handedness
 <p>In the previous code block we loaded data to give us P(A), and now we need P(LH). P(LH) is the probability that a person who died in our particular study year is left-handed, assuming we know nothing else about them. This is the average left-handedness in the population of deceased people, and we can calculate it by summing up all of the left-handedness probabilities for each age, weighted with the number of deceased people at each age, then divided by the total number of deceased people to get a probability. In equation form, this is what we're calculating, where N(A) is the number of people who died at age A (given by the dataframe <code>death_distribution_data</code>):</p>
-<p><img src="https://i.imgur.com/gBIWykY.png" alt="equation" width="220"></p>
-<!--- $$P(LH) = \frac{\sum_{\text{A}} P(LH | A) N(A)}{\sum_{\text{A}} N(A)}$$ -->
+
+![png](3.PNG)
 
 
 ```python
@@ -141,7 +145,9 @@ print(P_lh(death_distribution_data))
 ## 6. Putting it all together: dying while left-handed (i)
 <p>Now we have the means of calculating all three quantities we need: P(A), P(LH), and P(LH | A). We can combine all three using Bayes' rule to get P(A | LH), the probability of being age A at death (in the study year) given that you're left-handed. To make this answer meaningful, though, we also want to compare it to P(A | RH), the probability of being age A at death given that you're right-handed. </p>
 <p>We're calculating the following quantity twice, once for left-handers and once for right-handers.</p>
-<p>$$P(A | LH) = \frac{P(LH|A) P(A)}{P(LH)}$$</p>
+
+![png](4.PNG)
+
 <p>First, for left-handers.</p>
 <!--Notice that I was careful not to call these "probability of dying at age A", since that's not actually what we're calculating: we use the exact same death distribution data for each. -->
 
@@ -194,8 +200,8 @@ ax.set_ylabel("Probability of being age A at death")
 
 ## 9. Moment of truth: age of left and right-handers at death
 <p>Finally, let's compare our results with the original study that found that left-handed people were nine years younger at death on average. We can do this by calculating the mean of these probability distributions in the same way we calculated P(LH) earlier, weighting the probability distribution by age and summing over the result.</p>
-<p>$$\text{Average age of left-handed people at death} = \sum_A A P(A | LH)$$</p>
-<p>$$\text{Average age of right-handed people at death} = \sum_A A P(A | RH)$$</p>
+
+![png](5.PNG)
 
 
 ```python
