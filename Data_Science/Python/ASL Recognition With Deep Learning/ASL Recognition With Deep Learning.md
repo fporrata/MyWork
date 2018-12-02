@@ -1,7 +1,9 @@
 
 ## 1. American Sign Language (ASL)
 <p>American Sign Language (ASL) is the primary language used by many deaf individuals in North America, and it is also used by hard-of-hearing and hearing individuals.  The language is as rich as spoken languages and employs signs made with the hand, along with facial gestures and bodily postures.</p>
-<p><img src="https://s3.amazonaws.com/assets.datacamp.com/production/project_509/img/asl.png" alt="american sign language"></p>
+
+![png](1.PNG)
+
 <p>A lot of recent progress has been made towards developing computer vision systems that translate sign language to spoken language.  This technology  often relies on complex neural network architectures that can detect subtle patterns in streaming video.  However, as a first step, towards understanding how to build a translation system, we can reduce the size of the problem by translating individual letters, instead of sentences.</p>
 <p><strong>In this notebook</strong>, we will train a convolutional neural network to classify images of American Sign Language (ASL) letters.  After loading, examining, and preprocessing the data, we will train the network and test its performance.</p>
 <p>In the code cell below, we load the training and test data. </p>
@@ -26,31 +28,6 @@ import matplotlib.pyplot as plt
 ```
 
 
-```python
-%%nose
-# This needs to be included at the beginning of every @tests cell.
-
-# One or more tests of the students code.
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-
-def test_task_1_0():
-    assert 'np' in globals() and np.random.get_state()[1][0] == 5 and \
-    x_train.shape==(1600, 50, 50, 3) and y_train.shape==(1600,), \
-    'Please run the code cell without making any changes.'
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
-
 ## 2. Visualize the training data
 <p>Now we'll begin by creating a list of string-valued labels containing the letters that appear in the dataset.  Then, we visualize the first several images in the training data, along with their corresponding labels.</p>
 
@@ -70,31 +47,6 @@ plt.show()
 
 
 ![png](output_4_0.png)
-
-
-
-```python
-%%nose
-# This needs to be included at the beginning of every @tests cell.
-
-# One or more tests of the students code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-
-def test_task_2_0():
-    assert labels == ['A', 'B', 'C'], \
-    'Did you forget to set labels to a Python list with items "A", "B", and "C"?'
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
 
 
 ## 3. Examine the dataset
@@ -131,52 +83,12 @@ print("\tA: {}, B: {}, C: {}".format(num_A_test, num_B_test, num_C_test))
     Test set:
     	A: 118, B: 144, C: 138
 
-
-
-```python
-%%nose
-# This needs to be included at the beginning of every @tests cell.
-
-# One or more tests of the students code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-
-def test_task_3_0():
-    assert num_A_train == 540 and num_A_test == 118, \
-    'Did you leave the values of num_A_train and num_A_test as provided?'
-    
-def test_task_3_1():
-    assert num_B_train == 528, \
-    'Did you set the value of num_B_train?'
-    
-def test_task_3_2():
-    assert num_C_train == 532, \
-    'Did you set the value of num_C_train?'
-    
-def test_task_3_3():
-    assert num_B_test == 144, \
-    'Did you set the value of num_B_test?'
-    
-def test_task_3_4():
-    assert num_C_test == 138, \
-    'Did you set the value of num_C_test?'
-```
-
-
-
-
-
-
-    5/5 tests passed
-
-
-
-
 ## 4. One-hot encode the data
 <p>Currently, our labels for each of the letters are encoded as categorical integers, where <code>'A'</code>, <code>'B'</code> and <code>'C'</code> are encoded as <code>0</code>, <code>1</code>, and <code>2</code>, respectively.  However, recall that Keras models do not accept labels in this format, and we must first one-hot encode the labels before supplying them to a Keras model.</p>
 <p>This conversion will turn the one-dimensional array of labels into a two-dimensional array.</p>
-<p><img src="https://s3.amazonaws.com/assets.datacamp.com/production/project_509/img/onehot.png" alt="one-hot encoding"></p>
+
+![png](2.PNG)
+
 <p>Each row in the two-dimensional array of one-hot encoded labels corresponds to a different image.  The row has a <code>1</code> in the column that corresponds to the correct label, and <code>0</code> elsewhere.  </p>
 <p>For instance, </p>
 <ul>
@@ -195,36 +107,6 @@ y_train_OH = np_utils.to_categorical(y_train)
 # One-hot encode the test labels
 y_test_OH = np_utils.to_categorical(y_test)
 ```
-
-
-```python
-%%nose
-# This needs to be included at the beginning of every @tests cell.
-
-# One or more tests of the students code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-
-def test_task_4_0():
-    assert np.all(y_train_OH == np_utils.to_categorical(y_train, 3)), \
-    'Did you use `np_utils.to_categorical` to obtain the one-hot training labels?'
-    
-def test_task_4_1():
-    assert np.all(y_test_OH == np_utils.to_categorical(y_test, 3)), \
-    'Did you use `np_utils.to_categorical` to obtain the one-hot test labels?'
-```
-
-
-
-
-
-
-    2/2 tests passed
-
-
-
-
 ## 5. Define the model
 <p>Now it's time to define a convolutional neural network to classify the data.</p>
 <p>This network accepts an image of an American Sign Language letter as input.  The output layer returns the network's predicted probabilities that the image belongs in each category.</p>
@@ -274,60 +156,6 @@ model.summary()
     _________________________________________________________________
 
 
-
-```python
-%%nose
-# This needs to be included at the beginning of every @tests cell.
-
-# One or more tests of the students code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-
-def test_task_5_0():
-    from keras.activations import relu
-    assert model.layers[0].filters == 5 and \
-    model.layers[0].kernel_size == (5, 5) and \
-    model.layers[0].padding == 'same' and \
-    model.layers[2].activation == relu, \
-    'Did you leave the first convolutional layer as provided in the code?'
-
-def test_task_5_1():
-    assert model.layers[1].pool_size == (4, 4), \
-    'Does the first pooling layer pool over windows of size 4x4?'
-    
-def test_task_5_2():
-    assert model.layers[2].filters == 15, \
-    'Does the second convolutional layer have 15 filters?'
-    
-def test_task_5_3():
-    assert model.layers[2].kernel_size == (5, 5), \
-    'Does the second convolutional layer have kernel size 5?'
-    
-def test_task_5_4():
-    assert model.layers[2].padding == 'same', \
-    'Does the second convolutional layer have "same" padding?'
-    
-def test_task_5_5():
-    from keras.activations import relu
-    assert model.layers[2].activation == relu, \
-    'Does the second convolutional layer have a "relu" activation function?'
-    
-def test_task_5_6():
-    assert model.layers[3].pool_size == (4, 4), \
-    'Does the second pooling layer pool over windows of size 4x4?'
-```
-
-
-
-
-
-
-    7/7 tests passed
-
-
-
-
 ## 6. Compile the model
 <p>After we have defined a neural network in Keras, the next step is to compile it! </p>
 
@@ -338,39 +166,6 @@ model.compile(optimizer='rmsprop',
               loss='categorical_crossentropy', 
               metrics=['accuracy'])
 ```
-
-
-```python
-%%nose
-# This needs to be included at the beginning of every @tests cell.
-
-# One or more tests of the students code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-
-def test_task_6_0():
-    from keras.optimizers import RMSprop
-    assert isinstance(model.optimizer, RMSprop), \
-    'Did you set the optimizer to `"rmsprop"`?'
-
-def test_task_6_1():
-    assert model.loss == 'categorical_crossentropy', \
-    'Did you set `"categorical_crossentropy" as the loss function?`'
-
-def test_task_6_2():
-    assert model.metrics == ['accuracy'], \
-    'Did you set accuracy as the only metric that is evaluated by the model during training?'
-```
-
-
-
-
-
-
-    3/3 tests passed
-
-
 
 
 ## 7. Train the model
@@ -388,36 +183,6 @@ hist = model.fit(x_train, y_train_OH, epochs = 2, validation_split=0.2, batch_si
     Epoch 2/2
     1280/1280 [==============================] - 3s 2ms/step - loss: 0.6153 - acc: 0.8852 - val_loss: 0.4721 - val_acc: 0.9094
 
-
-
-```python
-%%nose
-# This needs to be included at the beginning of every @tests cell.
-
-# One or more tests of the students code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-
-def test_task_7_0():
-    assert hist.epoch == [0,1], \
-    'Did you train the model for 2 epochs?'
-
-def test_task_7_1():
-    assert hist.history['acc'][1] > 0.8, \
-    'Did you use x_train and y_train_OH to train the model with a batch size of 32, and setting aside 20% of the data for validation?'
-```
-
-
-
-
-
-
-    2/2 tests passed
-
-
-
-
 ## 8. Test the model
 <p>To evaluate the model, we'll use the test dataset.  This will tell us how the network performs when classifying images it has never seen before!</p>
 <p>If the classification accuracy on the test dataset is similar to the training dataset, this is a good sign that the model did not overfit to the training data.  </p>
@@ -432,32 +197,6 @@ print('Test accuracy:', score[1])
 ```
 
     Test accuracy: 0.935
-
-
-
-```python
-%%nose
-# This needs to be included at the beginning of every @tests cell.
-
-# One or more tests of the students code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-
-def test_task_8_0():
-    assert score == model.evaluate(x=x_test, y=y_test_OH, verbose=0), \
-    'Did you use the data in x_test and the one-hot labels in y_test_OH to evaluate the test accuracy?'
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
 
 ## 9. Visualize mistakes
 <p>Hooray!  Our network gets very high accuracy on the test set!  </p>
@@ -485,37 +224,4 @@ for i, idx in enumerate(bad_test_idxs):
 
 
 ![png](output_25_0.png)
-
-
-
-```python
-%%nose
-# This needs to be included at the beginning of every @tests cell.
-
-# One or more tests of the students code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-
-def test_task_9_0():
-    assert np.all(y_probs == model.predict(x_test)), \
-    'Did you calculate the predicted probabilities for the test dataset?'
-    
-def test_task_9_1():
-    assert np.all(y_preds == np.argmax(y_probs, axis=1)), \
-    'Did you calculate the predicted labels for the test dataset?'
-    
-def test_task_9_2():
-    assert np.all(bad_test_idxs == np.where(y_preds!=y_test)[0]), \
-    'Did you find the indices corresponding to images in the test set that were incorrectly classified by the model?'
-```
-
-
-
-
-
-
-    3/3 tests passed
-
-
 
