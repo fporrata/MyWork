@@ -1,7 +1,6 @@
 
 ## 1. Targeting treatment for heart disease patients
 <p>Clustering algorithms are used to group together items that are similar to one another. There are many industries where it would be beneficial and insightful to use an unsupervised learning algorithm - retailers want to group similar customers for targeted ad campaigns, biologists want to find plants that share similar characteristics, and more. We are going to explore if it would be appropriate to use some clustering algorithms to group medical patients. </p>
-<p><img src="https://s3.amazonaws.com/assets.datacamp.com/production/project_552/img/images-3.jpeg" alt=""></p>
 <p>We are going to look at anonymized patients who have been diagnosed with heart disease. Patients with similar characteristics might respond to the same treatments, and doctors would benefit from learning about the outcomes of patients similar to those they are treating. The data we are analyzing comes from the V.A. Medical Center in Long Beach, CA. For more information, see <a href="http://archive.ics.uci.edu/ml/machine-learning-databases/heart-disease/heart-disease.names">here</a>. </p>
 <p>Before beginning a project, it is important to get an idea of what the patient data looks like. In addition, the clustering algorithms used below require that the data be numeric, so it is necessary to ensure the patient data doesn't need any transformations. You will also be brushing up on your base R skills for some analysis.</p>
 
@@ -64,55 +63,6 @@ lapply(heart_disease, class)
 		<dd>'integer'</dd>
 </dl>
 
-
-
-
-```R
-# These packages need to be loaded in the first @tests cell. 
-library(testthat) 
-library(IRkernel.testthat)
-
-soln_heart <- read.csv('datasets/heart_disease_patients.csv')
-
-run_tests({
-    test_that("heart disease data loaded correctly", {
-    expect_equal(heart_disease, soln_heart, info="heart_disease does not have right data, check the csv file name")
-    expect_identical(lapply(heart_disease, class)[1][[1]], 'integer', info="variables not all type numeric")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 0.876 0.047 18.499 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 2. Quantifying patient differences
@@ -181,56 +131,6 @@ summary(heart_disease)
      3rd Qu.:1.0000   3rd Qu.:1.60   3rd Qu.:2.000  
      Max.   :1.0000   Max.   :6.20   Max.   :3.000  
 
-
-
-```R
-no_id = heart_disease[ , !(names(heart_disease) %in% c("id"))]
-scaled_data = scale(no_id)
-
-run_tests({
-    test_that("remove correct column", {
-        expect_identical(colnames(no_id), colnames(heart_disease), info = "Did you remove the id column?")
-    })
-    
-    test_that("scaled data properly", {
-        expect_identical(scaled_data, scaled, info = "Did you scale the proper data set?")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 0.971 0.047 18.593 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 3. Let's start grouping patients
 <p>Once we've figured out if we need to modify the data and made any necessary changes, we can now start the clustering process. For the k-means algorithm, it is necessary to select the number of clusters in advance.</p>
 <p>It is also important to make sure that your results are reproducible when conducting a statistical analysis. This means that when someone runs your code on the same data, they will get the same results as you reported. Therefore, if you're conducting an analysis that has a random aspect, it is necessary to set a seed to ensure reproducibility.</p>
@@ -261,61 +161,6 @@ first_clust$size
 	<li>73</li>
 </ol>
 
-
-
-
-```R
-soln_seed_val = 10
-set.seed(soln_seed_val)
-soln_k = 5
-soln_first_clust = kmeans(heart_disease, centers = soln_k, nstart = 1)
-
-
-run_tests({
-    test_that("correct seed", {
-        expect_equal(soln_seed_val, seed_val, info = "Is the seed set to 10?")
-    })
-    
-    test_that("correct number of clusters", {
-        expect_equal(soln_k, k, info = "Are you using five clusters?")
-    })
-    test_that("correct implmentation of algorithm", {
-        expect_equal(soln_first_clust$size, first_clust$size, info = "What is your nstart value?")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 1.023 0.047 18.645 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 4. Another round of k-means
@@ -349,58 +194,6 @@ second_clust$size
 
 
 
-```R
-seed_val_2 = 38
-set.seed(seed_val_2)
-k_2 = 5
-soln_second_clust = kmeans(heart_disease, centers = k_2, nstart = 1)
-
-run_tests({
-    test_that("correct seed", {
-        expect_equal(seed_val_2, seed_val, info = "Is the seed set to 10?")
-    })
-    
-    test_that("correct number of clusters", {
-        expect_equal(k_2, k, info = "Are you using five clusters?")
-    })
-    test_that("correct implmentation of algorithm", {
-        expect_equal(soln_second_clust$size, second_clust$size, info = "What is your nstart value?")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 1.065 0.047 18.687 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
 
 ## 5. Comparing patient clusters
 <p>It is important that the clusters resulting from the k-means algorithm are stable. Even though the algorithm begins by randomly initializing the cluster centers, if the k-means algorithm is the right choice for the data, then different initializations of the algorithm will result in similar clusters.</p>
@@ -425,78 +218,11 @@ plot_two = ggplot(heart_disease, aes(x=age, y=chol, color=as.factor(second_clust
 plot_two
 ```
 
-
-
-
-
-
 ![png](output_13_2.png)
 
 
 
 ![png](output_13_3.png)
-
-
-
-```R
-soln_heart_disease = heart_disease
-soln_heart_disease['first_clust'] = soln_first_clust$cluster
-soln_heart_disease['second_clust'] = soln_second_clust$cluster
-
-# creating the correct graphs and getting fingerprints
-soln_plot_one = ggplot(soln_heart_disease, aes(x=age, y=chol, color=as.factor(first_clust))) + geom_point()
-soln_plot_two = ggplot(soln_heart_disease, aes(x=age, y=chol, color=as.factor(second_clust))) + geom_point()
-
-run_tests({
-    test_that("cluster assignments added", {
-        expect_identical(soln_heart_disease, heart_disease, info = "Did you add a column for both the first and second iteration?")
-    })
-    
-    test_that("ggplot2 loaded", {
-        expect_true('ggplot2' %in% .packages(), info = "Did you load ggplot2?")
-    })
-
-    test_that("first plot is correct", {
-        expect_identical(soln_plot_one$labels, plot_one$labels, info = "Do you have the correct variables on the axes and used to color code?")
-    })
-    
-    test_that("second plot is correct", {
-        expect_identical(soln_plot_two$labels, plot_two$labels, info = "Do you have the correct variables on the axes and used to color code?")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 3.047 0.075 20.735 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 6. Hierarchical clustering: another clustering approach
@@ -519,55 +245,6 @@ hc_1_assign <- cutree(hier_clust_1, 5)
 ![png](output_16_0.png)
 
 
-
-```R
-soln_hier_clust_1 = hclust(dist(heart_disease), method='complete')
-soln_hc_1_assign = cutree(hier_clust_1, 5)
-                          
-run_tests({
-    test_that("correctly implemented clustering algorithm", {
-        expect_identical(soln_hier_clust_1, hier_clust_1, info = "Did you make the distance matrix and use complete linkage?")   
-    })
-    
-    test_that("correct cutoff for cluster assignments", {
-        expect_identical(soln_hc_1_assign, hc_1_assign, info = "Did you select five clusters?")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 3.166 0.079 20.859 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 7. Hierarchical clustering round two
 <p>In hierarchical clustering, there are multiple ways to measure the dissimilarity between clusters of observations. Complete linkage records the largest dissimilarity between any two points in the two clusters being compared. On the other hand, single linkage is the smallest dissimilarity between any two points in the clusters. Different linkages will result in different clusters being formed. </p>
 <p>We want to explore different algorithms to group our heart disease patients. The best way to measure dissimilarity between patients could be to look at the smallest difference between patients and minimize that difference when grouping together clusters. It is always a good idea to explore different dissimilarity measures. Let's implement hierarchical clustering using a new linkage function. </p>
@@ -586,56 +263,6 @@ hc_2_assign <- cutree(hier_clust_2, 5)
 
 
 ![png](output_19_0.png)
-
-
-
-```R
-soln_hier_clust_2 = hclust(dist(heart_disease), method='single')
-soln_hc_2_assign = cutree(hier_clust_2, 5)
-                          
-run_tests({
-    test_that("correctly implemented clustering algorithm", {
-        expect_identical(soln_hier_clust_2, hier_clust_2, info = "Did you make the distance matrix and use complete linkage?")   
-    })
-    
-    test_that("correct cutoff for cluster assignments", {
-        expect_identical(soln_hc_2_assign, hc_2_assign, info = "Did you select five clusters?")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 3.342 0.083 21.038 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
 
 ## 8. Comparing clustering results
 <p>The doctors are interested in grouping similar patients together in order to determine appropriate treatments. Therefore, they want to have clusters with multiple patients to see different treatment options. While it is possible for a patient to be in a cluster by themselves, this means that the treatment they received might not be recommended for someone else in the group. </p>
@@ -666,64 +293,6 @@ clust_summary
 </tbody>
 </table>
 
-
-
-
-```R
-soln_heart_disease['hc_clust'] = soln_hc_1_assign
-
-soln_hd_simple = soln_heart_disease[, !(names(soln_heart_disease) %in% c("sex", "first_clust", "second_clust"))]
-
-soln_clust_summary = do.call(data.frame, aggregate(. ~hc_clust, data = soln_hd_simple, function(x) c(avg = mean(x), sd = sd(x))))
-
-
-run_tests({
-    test_that("selected first cluster assignments", {
-        expect_identical(soln_heart_disease['hc_clust'], heart_disease['hc_clust'], info = "You chose the incorrect hierarchical clustering assignments.")
-    })
-    
-    test_that("removed columns properly", {
-        expect_identical(soln_hd_simple, hd_simple, info = "Did you remove three columns?")
-    })
-    test_that("proper summary analysis", {
-        expect_identical(soln_clust_summary, clust_summary, info = "Did you find the mean and standard deviation?")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 3.411 0.083 21.106 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 9. Visualizing the cluster contents
 <p>In addition to looking at the distributions of variables in each of the hierarchical clustering run, we will make visualizations to evaluate the algorithms. Even though the data has more than two dimensions, we can get an idea of how the data clusters by looking at a scatterplot of two variables. We want to look for patterns that appear in the data and see what patients get clustered together. </p>
 
@@ -738,65 +307,11 @@ plot_two = ggplot(hd_simple, aes(x = oldpeak,y = trestbps, color=as.factor(hc_cl
 plot_two
 ```
 
-
-
-
-
-
 ![png](output_25_2.png)
 
 
 
 ![png](output_25_3.png)
-
-
-
-```R
-soln_plot_one = ggplot(soln_heart_disease, aes(x=age, y=chol, color=as.factor(hc_clust))) + geom_point()
-soln_plot_two = ggplot(heart_disease, aes(x=oldpeak, y=trestbps, color=as.factor(hc_clust))) + geom_point()
-run_tests({
-    test_that("plot one is correct", {
-        expect_identical(soln_plot_one$labels, plot_one$labels, info = "Check that you are using the correct variables for the first plot")
-    })
-    
-    test_that("plot two is correct", {
-        expect_identical(soln_plot_two$labels, plot_two$labels, info = "Check that you are using the correct variables for the second plot")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 4.126 0.083 21.82 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
 
 ## 10. Conclusion
 <p>Now that we've tried out multiple clustering algorithms, it is necessary to determine if we think any of them will work for clustering our patients. For the k-means algorithm, it is imperative that similar clusters are produced for each iteration of the algorithm. We want to make sure that the algorithm is clustering signal as opposed to noise. </p>
@@ -814,51 +329,4 @@ explore_hierarch_single = FALSE
 soln_1 = FALSE
 soln_2 = TRUE
 soln_3 = FALSE
-
-run_tests({
-    test_that("correct kmeans results", {
-        expect_identical(soln_1, explore_kmeans, info = "Are the clusters stable between kmeans iterations?")
-    })
-    
-    test_that("correct hierarchical with complete linkage results", {
-        expect_identical(soln_2, explore_hierarch_complete, info = "Would you want to explore this method further?")
-    })
-    
-    test_that("correct hierarchical with single linkage results", {
-        expect_identical(soln_3, explore_hierarch_single, info = "Is the number of patients in each cluster balanced?")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 4.165 0.083 21.858 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
