@@ -323,10 +323,3 @@ explore_kmeans = FALSE
 explore_hierarch_complete = TRUE
 explore_hierarch_single = FALSE
 ```
-
-
-```R
-soln_1 = FALSE
-soln_2 = TRUE
-soln_3 = FALSE
-
