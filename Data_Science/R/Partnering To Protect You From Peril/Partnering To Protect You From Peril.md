@@ -4,7 +4,8 @@
 <p>Health department size and service provision vary widely depending on the needs and size of its constituent population, which can range from a few hundred to a few million people. Every few years, the National Association of County and City Health Officials (NACCHO) surveys health departments about their resources and the services they provide to constituents. </p>
 <p>In 2016, the survey asked each health department to identify five health departments they connected to the most. Connections among health departments facilitate information sharing and coordination of services and are especially important during public health emergencies. The Ebola outbreak in 2014, Hurricane Harvey in 2017, and the California wildfires in 2018 are examples of national, regional, and state emergencies requiring coordination of public health services.</p>
 <p>To understand the partnerships underlying the public health response to emergencies, let's examine the network of local health departments and identify key health departments and gaps in the network at the national, regional, and state levels.  </p>
-<p><img src="https://s3.amazonaws.com/assets.datacamp.com/production/project_438/img/doh-pic.jpg" alt="City of St. Louis Department of Health"></p>
+
+![png](1.png)
 
 
 ```R
@@ -29,26 +30,6 @@ health.dep.net <- graph_from_data_frame(d = health.dep.edges,
 health.dep.net
 ```
 
-    Parsed with column specification:
-    cols(
-      from = col_character(),
-      to = col_character()
-    )
-    Parsed with column specification:
-    cols(
-      nacchoid = col_character(),
-      tobacco = col_double(),
-      nutrition = col_double(),
-      state = col_character(),
-      type = col_character(),
-      rurality = col_character(),
-      population = col_double(),
-      leader.tenure = col_double(),
-      fte = col_double()
-    )
-
-
-
     IGRAPH UN-B 2058 5818 -- 
     + attr: name (v/c), tobacco (v/n), nutrition (v/n), state (v/c), type
     | (v/c), rurality (v/c), population (v/n), leader.tenure (v/n), fte
@@ -61,92 +42,6 @@ health.dep.net
     [21] AR005--AR008 AR008--AR043 AR008--AR071 AR008--AR057 AR002--AR009
     [26] AR009--AR021 AR009--AR022 AR009--AR058 AR006--AR009 AR010--AR014
     + ... omitted several edges
-
-
-
-```R
-# These packages need to be loaded in the first `@tests` cell. 
-library(testthat) 
-library(IRkernel.testthat)
-
-# Import the edgelist from the naccho2016clean.csv file
-correct.health.dep.edges <- read_csv(file = "datasets/naccho2016clean.csv")
-
-# Import the attributes from the naccho2016att.csv file
-correct.health.dep.nodes <- read_csv(file = "datasets/naccho2016att.csv")
-
-correct.health.dep.net <- graph_from_data_frame(d = health.dep.edges, 
-                                                vertices = health.dep.nodes, 
-                                                directed = FALSE)
-
-run_tests({
-    test_that("Edges csv file is imported correctly", {
-        expect_true(compare(health.dep.edges, correct.health.dep.edges)$equal, 
-        info = "Did you read in 'naccho2016clean.csv' with `read_csv()`?")
-    })
-    test_that("Nodes csv file is imported correctly", {
-        expect_true(compare(health.dep.nodes, correct.health.dep.nodes)$equal, 
-        info = "Did you read in 'naccho2016att.csv' with `read_csv()`?")
-    })
-    test_that("health.dep.net is correct", {
-        expect_true(compare(V(health.dep.net)$name, health.dep.nodes$nacchoid)$equal, 
-        info = "Make sure the arguments in `graph_from_data_frame()` are correct. 
-                Example: d = health.dep.edges, vertices = health.dep.nodes, directed = FALSE")
-    })
-})
-```
-
-    Parsed with column specification:
-    cols(
-      from = col_character(),
-      to = col_character()
-    )
-    Parsed with column specification:
-    cols(
-      nacchoid = col_character(),
-      tobacco = col_double(),
-      nutrition = col_double(),
-      state = col_character(),
-      type = col_character(),
-      rurality = col_character(),
-      population = col_double(),
-      leader.tenure = col_double(),
-      fte = col_double()
-    )
-
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 28.599 0.355 2123.876 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
 
 ## 2. Cleaning up the network object
 <p>With more than 2,500 health departments in the US, the national network of partnerships may be large and complex. The first step in any analysis is to clean up the data. The health department network shows partnerships, which would logically be represented by a single link between any two health departments that partner. Local health departments do not typically partner with themselves, so there would be no loops in the network.</p>
@@ -168,58 +63,7 @@ is_simple(health.dep.net)
 
 FALSE
 
-
-
 TRUE
-
-
-
-```R
-correct.clean.health.dep.net <- igraph::simplify(health.dep.net, 
-                                                 remove.multiple = TRUE, 
-                                                 remove.loops = TRUE)
-
-run_tests({
-    test_that("loops and multiples are removed", {
-        expect_true(compare(as_ids(E(health.dep.net)), as_ids(E(correct.clean.health.dep.net)))$equal, 
-        info = "Be sure to use the `igraph::simplify()` command structure and include TRUE in 
-                all caps for `remove.multiple=` and `remove.loops=`")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 28.648 0.355 2123.924 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
 
 ## 3. Getting to know the network
 <p>After cleaning up the network object, the next step is some exploratory analysis to get to know the network. </p>
@@ -239,66 +83,9 @@ run_tests({
 
 2058
 
-
-
 4979
 
-
-
 0.00235229865263697
-
-
-
-```R
-correct.vcount <- vcount(graph = health.dep.net)
-correct.ecount <- ecount(graph = health.dep.net)
-correct.dens <- edge_density(graph = health.dep.net, loops = FALSE)
-
-run_tests({
-    test_that("The vcount command is correct", {
-        expect_true(compare(num.health.dep, correct.vcount)$equal, 
-        info = "Use the vcount command to find the number of health departments in the network.")})
-    test_that("The ecount command is correct", {
-        expect_true(compare(num.connections, correct.ecount)$equal,
-        info = "Use the ecount command to find the number of connections in the network.")})
-    test_that("The edge_density command is correct", {
-        expect_true(compare(net.density, correct.dens)$equal,
-        info = "Use the edge_density command to find the network density.")})
-})
-
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 28.696 0.355 2123.971 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 4. Connections facilitating coordination nationwide
@@ -455,53 +242,6 @@ arrange(health.dep.nodes, -health.dep.between)
 </tbody>
 </table>
 
-
-
-
-```R
-run_tests({
-    test_that("The degree command is correct", {
-        expect_true(compare(health.dep.nodes$health.dep.degree, as.numeric(degree(health.dep.net)))$equal, 
-        info = "Use the degree command to find the degree centrality for each health department.")})
-    test_that("The betweenness command is correct", {
-        expect_true(compare(health.dep.nodes$health.dep.between, as.numeric(betweenness(health.dep.net)))$equal,
-        info = "Use the betweenness command to find the betweenness centrality for each health department.")})
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 29.175 0.362 2124.458 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 5. Connections for regional coordination
 <p>Some disasters are more regional than national and would not require all health departments across the country to be involved. For example, in 2017, Hurricane Harvey poured between 10 and 50 inches of rain in a short period of time across parts of southeastern Texas and southwestern Louisiana. This resulted in widespread flooding across the region and tested the emergency preparedness of health departments and others. Let's use network methods to identify key players and gaps in the network across Texas and Louisiana that might suggest new connections to prepare for future events.</p>
 
@@ -528,73 +268,9 @@ lhd.net.theme
 
 47
 
-
-
 0.0971322849213691
 
-
-
-
-
 ![png](output_13_3.png)
-
-
-
-```R
-correct.region.net <- induced_subgraph(graph = health.dep.net, 
-                                       vids = which(V(health.dep.net)$state %in% c('LA', 'TX')))
-
-stud.plot<- last_plot()
-soln.plot <- ggraph(graph = region.net, layout = "with_kk") +
-  geom_edge_link() +
-  geom_node_point(aes(colour = state)) +
-  theme_graph()
-
-run_tests({
-    test_that("The subset worked correctly.", {
-        expect_true(compare(as_ids(E(region.net)), as_ids(E(correct.region.net)))$equal, 
-        info = "The vids argument for the induced_subgraph command should be completed like this: 
-                vids = which(V(health.dep.net)$state %in% c('LA', 'TX')).")
-    })
-    test_that("Graph was plotted corrctly.", { 
-        expect_identical(soln.plot$data$state,stud.plot$data$state,
-            info = "The colour aesthetic in `geom_node_point()` should be set by 'state'.") 
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 29.91 0.367 2125.196 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
 
 ## 6. Which health departments are central in Texas and Louisiana?
 <p>While collaboration between the states will be challenging with no existing connections, the health departments in each state are well connected to each other. We can use degree centrality and betweenness centrality to find the key health departments in each state should another disaster occur. </p>
@@ -688,76 +364,6 @@ region.net$between <- betweenness(region.net)
 		<dd>74.0285714285714</dd>
 </dl>
 
-
-
-
-```R
-correct.top.degree.LA <- head(sort(region.net$degree[V(region.net)$state == "LA"], 
-                                   decreasing = TRUE))
-correct.top.degree.TX <- head(sort(region.net$degree[V(region.net)$state == "TX"], 
-                                   decreasing = TRUE))
-correct.top.bet.LA <- head(sort(region.net$between[V(region.net)$state == "LA"], 
-                                decreasing = TRUE))
-correct.top.bet.TX <- head(sort(region.net$between[V(region.net)$state == "TX"], 
-                                decreasing = TRUE))
-
-run_tests({
-    test_that("The top health departments are incorrect.", {
-        expect_true(compare(top.degree.LA, correct.top.degree.LA)$equal, 
-        info = "For Louisiana top degree the code would be 
-                head(sort(region.net$degree[V(region.net)$state == \"LA\"], decreasing = TRUE)).")
-    })
-    test_that("The top health departments are incorrect.", {
-        expect_true(compare(top.degree.TX, correct.top.degree.TX)$equal, 
-        info = "For Louisiana top degree the code would be 
-                head(sort(region.net$degree[V(region.net)$state == \"TX\"], decreasing = TRUE)).")
-    })
-    test_that("The top health departments are incorrect.", {
-        expect_true(compare(top.bet.LA, correct.top.bet.LA)$equal, 
-        info = "For Louisiana top betweenness the code would be 
-                head(sort(region.net$between[V(region.net)$state == \"LA\"], decreasing = TRUE)).")
-    })
-    test_that("The top health departments are incorrect.", {
-        expect_true(compare(top.bet.TX, correct.top.bet.TX)$equal, 
-        info = "For Louisiana top betweenness the code would be 
-                head(sort(region.net$between[V(region.net)$state == \"TX\"], decreasing = TRUE)).")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 30 0.367 2125.284 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 7. Visualizing the central health departments
 <p>We just found several central health departments that were either highly connected (degree centrality) or were forming bridges between other health departments (betweenness centrality). Visualize these central health departments to get a better idea of their importance and place in the network.</p>
 
@@ -786,86 +392,10 @@ region.plot.between <- ggraph(graph = region.net, layout = "with_kk") +
 region.plot.between
 ```
 
-
-
-
-
-
 ![png](output_19_2.png)
-
-
 
 ![png](output_19_3.png)
 
-
-
-```R
-soln.region.plot.degree <- ggraph(graph = region.net, layout = "with_kk") +
-  geom_edge_link() +
-  geom_node_point(aes(colour = state, size = degree)) +
-  geom_node_text(aes(label = name, size = 1), nudge_y = .25) +
-  theme_graph()
-
-soln.region.plot.between <- ggraph(graph = region.net, layout = "with_kk") +
-  geom_edge_link() +
-  geom_node_point(aes(colour = state, size = between)) +
-  geom_node_text(aes(label = name, size = 1), nudge_y = .25) +
-  theme_graph()
-
-
-run_tests({
-    test_that("The degree command is correct", {
-        expect_true(compare(V(region.net)$degree, as.numeric(degree(region.net)))$equal, 
-                    info = "Use the degree command to find the degree centrality for each health department.")
-    })
-    test_that("The betweenness command is correct", {
-        expect_true(compare(V(region.net)$between, as.numeric(betweenness(region.net)))$equal,
-                     info = "Use the betweenness command to find the betweenness centrality for each health department.")
-    })
-    test_that("size parameter in region.plot.degree is correct",{
-        expect_identical(region.plot.degree[[9]]$size, soln.region.plot.degree[[9]]$size,
-            info = 'The size aesthetic in `geom_node_point()` of region.plot.degree is incorrect. 
-                    Did you set `size` to "degree"?')
-    })
-    test_that("size parameter in region.plot.between is correct",{
-        expect_identical(region.plot.between[[9]]$size, soln.region.plot.between[[9]]$size,
-            info = 'The size aesthetic in `geom_node_point()` of region.plot.between is incorrect. 
-                    Did you set `size` to "between"?')
-    })  
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 31.241 0.371 2126.529 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 8. What about state-level networks during emergencies?
@@ -892,8 +422,6 @@ edge_density(cali.net)
 
 
 36
-
-
 
 0.106349206349206
 
@@ -932,60 +460,6 @@ edge_density(cali.net)
 		<dd>69.6579365079365</dd>
 </dl>
 
-
-
-
-```R
-correct.cali.net <- induced_subgraph(graph = health.dep.net, 
-                                     vids = which(V(health.dep.net)$state %in% c("CA")))
-
-run_tests({
-    test_that("The degree command is correct", {
-        expect_true(compare(top.cali.degree, head(sort(degree(cali.net), decreasing = TRUE)))$equal, 
-        info = "Use the degree command to find the degree centrality for each health department.")})
-    test_that("The betweenness command is correct", {
-        expect_true(compare(top.cali.between, head(sort(betweenness(cali.net), decreasing = TRUE)))$equal,
-        info = "Use the betweenness command to find the betweenness centrality for each health department.")})
-    test_that("The subset worked correctly.", {
-        expect_true(compare(as_ids(E(cali.net)), as_ids(E(correct.cali.net)))$equal, 
-        info = "The vids argument for the induced_subgraph command should be completed like this: vids = which(V(health.dep.net)$state %in% 'LA').")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 31.295 0.379 2126.589 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 9. Are central health departments urban?
 <p>In addition to the <code>state</code> attribute, the network object includes several other health department characteristics that may be useful in understanding what makes two health departments partner with each other. One of the characteristics is <code>rurality</code>, which classifies each health department as rural or urban. Two other characteristics are <code>fte</code>, or full-time employees, and <code>leader.tenure</code>, which measures the years the leader has been at the health department.</p>
 <p>Urban health departments are likely to be in more populated areas and to serve more people. It would make sense that urban health departments are more central to the network since they have more resources to use in forming and maintaining partnerships. However, rural health departments might have more incentive to partner to fill gaps in service provision. Having more full-time employees and stable leadership could also influence the ability of health departments to partner. </p>
@@ -1021,111 +495,19 @@ cali.net.fte.deg
 
 ```
 
-
-
-
-
-
 ![png](output_25_2.png)
-
-
-
-
 
 ![png](output_25_4.png)
 
-
-
 ![png](output_25_5.png)
-
-
-
-```R
-# Fill in the `colour` parameter with the rurality attribute 
-# and the `size` parameter with degree to visualize rurality in cali.net
-soln.ca.rural.plot <- ggraph(graph = cali.net, layout = "with_kk") +
-  geom_edge_link() +
-  geom_node_point(aes(colour = rurality, size = degree(cali.net))) +
-  geom_node_text(aes(label = name, size = 3), nudge_y = .2) +
-  theme_graph()
-
-# Fill in the `colour` parameter with the population attribute 
-# and the `size` parameter with degree to visualize population in cali.net
-soln.ca.pop.plot <- ggraph(graph = cali.net, layout = "with_kk") +
-  geom_edge_link() +
-  geom_node_point(aes(colour = population, size = degree(cali.net))) +
-  geom_node_text(aes(label = name, size = 3), nudge_y = .2) +
-  theme_graph()
-
-
-# Fill in the `colour` parameter with the fte attribute and 
-# the `size` parameter with degree to visualize fte in cali.net
-soln.ca.fte.plot <- ggraph(graph = cali.net, layout = "with_kk") +
-  geom_edge_link() +
-  geom_node_point(aes(colour = fte, size = degree(cali.net))) +
-  geom_node_text(aes(label = name, size = 3), nudge_y = .2) +
-  theme_graph()
-
-
-run_tests({
-    test_that("colour parameter in cali.net.rural.deg is correct",{
-        expect_identical(cali.net.rural.deg[[9]]$colour, soln.ca.rural.plot[[9]]$colour,
-            info = 'The size aesthetic in `geom_node_point()` of cali.net.rural.deg is incorrect. 
-                    Did you set `colour` to "rurality"?')
-    })
-    test_that("colour parameter in cali.net.pop.deg is correct",{
-        expect_identical(cali.net.pop.deg[[9]]$colour, soln.ca.pop.plot[[9]]$colour,
-            info = 'The size aesthetic in `geom_node_point()` of cali.net.pop.deg is incorrect. 
-                    Did you set `colour` to "population"?')
-    })  
-    test_that("colour parameter in cali.net.fte.deg is correct",{
-        expect_identical(cali.net.fte.deg[[9]]$colour, soln.ca.fte.plot[[9]]$colour,
-            info = 'The size aesthetic in `geom_node_point()` of cali.net.fte.deg is incorrect. 
-                    Did you set `colour` to "fte"?')
-    }) 
-})
-
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 32.704 0.379 2127.998 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
 
 ## 10. Which health departments have high betweenness?
 <p>Local health departments nationwide coordinate to provide services needed on a daily basis and to respond to local, regional, and national emergencies. An examination of betweenness and degree centrality identified a Texas health department (TX144) and a Missouri health department (MO049) that had both high degree and high betweenness. These health departments may be very useful in coordinating national public health efforts. </p>
 <p>The regional network across Louisiana and Texas was disconnected, suggesting an opportunity to form new ties to improve coordination efforts for the future. Urban health departments in Texas had higher degree and betweenness and would be key players in coordination in Texas. Only urban health departments were in the Louisiana network, which may indicate poor survey response by rural health departments, which often have extremely limited resources.</p>
 <p>The most central node by betweenness in the California state network was a rural health department (CA013), while two urban health departments (CA045, CA032) were the most connected. A statewide effort might rely on these three health departments to disseminate information and coordinate efforts across this large state. </p>
 <p>By measuring and visualizing the network of health departments, we can get a better idea of strengths, key players, and gaps in governmental public health. Health departments can use this information to purposefully build their networks and to take advantage of the current natural leaders to protect us all from peril. </p>
-<p><img src="https://s3.amazonaws.com/assets.datacamp.com/production/project_438/img/county-doh-pic.jpg" alt="County Department of Health"></p>
+
+![png](2.png)
 
 
 ```R
@@ -1158,117 +540,10 @@ cali.net.fte.bet <- ggraph(graph = cali.net, layout = "with_kk") +
 cali.net.fte.bet
 ```
 
-
-
-
-
-
 ![png](output_28_2.png)
-
-
-
-
 
 ![png](output_28_4.png)
 
-
-
 ![png](output_28_5.png)
-
-
-
-```R
-soln.cali.net.rural.bet <- ggraph(graph = cali.net, layout = "with_kk") +
-  geom_edge_link() +
-  geom_node_point(aes(colour = rurality, size = between)) +
-  geom_node_text(aes(label = name, size = 3), nudge_y = .2) +
-  theme_graph()
-
-soln.cali.net.pop.bet <- ggraph(graph = cali.net, layout = "with_kk") +
-  geom_edge_link() +
-  geom_node_point(aes(colour = population, size = between)) +
-  geom_node_text(aes(label = name, size = 3), nudge_y = .2) +
-  theme_graph()
-
-soln.cali.net.fte.bet <- ggraph(graph = cali.net, layout = "with_kk") +
-  geom_edge_link() +
-  geom_node_point(aes(colour = fte, size = between)) +
-  geom_node_text(aes(label = name, size = 3), nudge_y = .2) +
-  theme_graph()
-
-run_tests({
-    test_that("The betweenness command is correct for region.net", {
-        expect_true(compare(V(region.net)$between, as.numeric(betweenness(region.net)))$equal,
-                    info = "Use the betweenness command to find the betweenness centrality for each health department.")
-    })
-    test_that("The betweenness command is correct for cali.net", {
-        expect_true(compare(V(cali.net)$between, as.numeric(betweenness(cali.net)))$equal,
-                    info = "Use the betweenness command to find the betweenness centrality for each health department.")
-    })
-    test_that("cali.net.rural.bet is correct",{
-        expect_identical(soln.cali.net.rural.bet$data, cali.net.rural.bet$data,
-                        info = "cali.net.rural.bet is not correct. Did you use 'graph = cali.net'?")
-        expect_identical(soln.cali.net.rural.bet[[9]]$colour, cali.net.rural.bet[[9]]$colour,
-                        info = "cali.net.rural.bet is not correct. Did you use 'color = rurality'?")
-        expect_identical(soln.cali.net.rural.bet[[9]]$size, cali.net.rural.bet[[9]]$size,
-                        info = "cali.net.rural.bet is not correct. Did you use 'size = between' in `geom_node_point()`?")
-        expect_identical(soln.cali.net.rural.bet[[9]]$label, cali.net.rural.bet[[9]]$label,
-                        info = "cali.net.rural.bet is not correct. Did you use 'label = name'?")
-    })
-    test_that("cali.net.pop.bet is correct",{
-        expect_identical(soln.cali.net.pop.bet$data, cali.net.pop.bet$data,
-                        info = "cali.net.pop.bet is not correct. Did you use 'graph = cali.net'?")
-        expect_identical(soln.cali.net.pop.bet[[9]]$colour, cali.net.pop.bet[[9]]$colour,
-                        info = "cali.net.pop.bet is not correct. Did you use 'color = rurality'?")
-        expect_identical(soln.cali.net.pop.bet[[9]]$size, cali.net.pop.bet[[9]]$size,
-                        info = "cali.net.pop.bet is not correct. Did you use 'size = between' in `geom_node_point()`?")
-        expect_identical(soln.cali.net.pop.bet[[9]]$label, cali.net.pop.bet[[9]]$label,
-                        info = "cali.net.pop.bet is not correct. Did you use 'label = name'?")
-    })
-    test_that("cali.net.fte.bet is correct",{
-        expect_identical(soln.cali.net.fte.bet$data, cali.net.fte.bet$data,
-                        info = "cali.net.fte.bet is not correct. Did you use 'graph = cali.net'?")
-        expect_identical(soln.cali.net.fte.bet[[9]]$colour, cali.net.fte.bet[[9]]$colour,
-                        info = "cali.net.fte.bet is not correct. Did you use 'color = rurality'?")
-        expect_identical(soln.cali.net.fte.bet[[9]]$size, cali.net.fte.bet[[9]]$size,
-                        info = "cali.net.fte.bet is not correct. Did you use 'size = between' in `geom_node_point()`?")
-        expect_identical(soln.cali.net.fte.bet[[9]]$label, cali.net.fte.bet[[9]]$label,
-                        info = "cali.net.fte.bet is not correct. Did you use 'label = name'?")
-        })
-})
-
-
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 34.297 0.379 2129.589 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
+  
 
