@@ -5,7 +5,7 @@
 <p>In 2016, the survey asked each health department to identify five health departments they connected to the most. Connections among health departments facilitate information sharing and coordination of services and are especially important during public health emergencies. The Ebola outbreak in 2014, Hurricane Harvey in 2017, and the California wildfires in 2018 are examples of national, regional, and state emergencies requiring coordination of public health services.</p>
 <p>To understand the partnerships underlying the public health response to emergencies, let's examine the network of local health departments and identify key health departments and gaps in the network at the national, regional, and state levels.  </p>
 
-![png](1.png)
+![jpg](1.jpg)
 
 
 ```R
@@ -507,7 +507,7 @@ cali.net.fte.deg
 <p>The most central node by betweenness in the California state network was a rural health department (CA013), while two urban health departments (CA045, CA032) were the most connected. A statewide effort might rely on these three health departments to disseminate information and coordinate efforts across this large state. </p>
 <p>By measuring and visualizing the network of health departments, we can get a better idea of strengths, key players, and gaps in governmental public health. Health departments can use this information to purposefully build their networks and to take advantage of the current natural leaders to protect us all from peril. </p>
 
-![png](2.png)
+![jpg](2.jpg)
 
 
 ```R
