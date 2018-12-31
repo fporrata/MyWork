@@ -103,7 +103,7 @@ silhouette_method <- fviz_nbclust(k_means_data, kmeans, method = "silhouette")
 # View the plot
 silhouette_method
 ```
-!png](output_10_1.png)
+![png](output_10_1.png)
 
 
 
