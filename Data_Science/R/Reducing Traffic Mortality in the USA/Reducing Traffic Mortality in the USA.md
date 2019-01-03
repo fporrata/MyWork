@@ -49,65 +49,6 @@ print(accidents_head)
     [19] "District of Columbia|5.9|34|27|100"                                                                                                  
     [20] "Florida|17.9|21|29|94"                                                                                                               
 
-
-
-```R
-# These packages need to be loaded in the first @tests cell. 
-library(testthat) 
-library(IRkernel.testthat)
-
-# Then follows one or more tests of the student's code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-
-run_tests({
-    test_that("the answer is correct", {
-        expect_true(current_dir == getwd(), 
-                    info = "Did you correctly assign the current_dir variable?")
-        expect_true( 'road-accidents.csv'%in%file_list_ds, 
-                    info = "Did you use the list.files function with the path argument to get the files inside the datasets folder?")
-        expect_equal(file_list , list.files() , 
-                     info = "Did you correctly assign the current_dir variable?")
-        expect_true(length(accidents_head) == 20, 
-                    info = "Make sure you read in the correct number of lines by using the n argument.")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 41.317 0.395 2247.459 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 2. Read in and get an overview of the data
 <p>Next, we will orient ourselves to get to know the data with which we are dealing.</p>
 
@@ -131,16 +72,6 @@ tail(car_acc, 6)
 
 
 ```
-
-    Parsed with column specification:
-    cols(
-      state = col_character(),
-      drvr_fatl_col_bmiles = col_double(),
-      perc_fatl_speed = col_integer(),
-      perc_fatl_alcohol = col_integer(),
-      perc_fatl_1st_time = col_integer()
-    )
-
 
     [1] 51  5
     Classes 'tbl_df', 'tbl' and 'data.frame':	51 obs. of  5 variables:
@@ -178,62 +109,6 @@ tail(car_acc, 6)
 	<tr><td>Wyoming      </td><td>17.4         </td><td>42           </td><td>32           </td><td>90           </td></tr>
 </tbody>
 </table>
-
-
-
-
-```R
-
-# One or more tests of the student's code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-run_tests({
-    test_that("the answer is correct", {
-    expect_is(car_acc, "tbl_df" , 
-        info = "Did you use the read_delim() function to read the file? Did you set comment='#'?")
-    expect_equal(nrow(car_acc), 51 , 
-        info = "Did you tell R that in the file comments are indicated by # ?")
-    expect_equal(ncol(car_acc), 5 , 
-        info = "Did you tell R that in the file a new column is indicated by | ?")
-    expect_equal( length(rows_and_cols), 2 , 
-        info = "Did you use dim() to determine both the number of rows and columns?")
-    })
-    # You can have more than one test
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 41.379 0.395 2247.52 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 3. Create a textual and a graphical summary of the data
@@ -275,58 +150,6 @@ car_acc %>%
 ![png](output_7_2.png)
 
 
-
-```R
-# One or more tests of the student's code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-
-
-run_tests({
-    test_that("the answer is correct", {
-        expect_is(dat_summ, "table", info = "Did you use `summary()` to obtain a summary of car_acc?")
-        })
-    p <- last_plot()
-    test_that("the plot is correct", {
-        expect_is(p, "ggmatrix", info = "Did you create a figure using ggpairs()?")    
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 43.254 0.395 2249.395 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 4. Quantify the association of features and accidents
 <p>We can already see some potentially interesting relationships between the target variable (the number of fatal accidents) and the feature variables (the remaining three columns).</p>
 <p>To quantify the pairwise relationships that we observed in the scatter plots, we can compute the Pearson correlation coefficient matrix. The Pearson correlation coefficient is one of the most common methods to quantify correlation between variables, and by convention, the following thresholds are usually used:</p>
@@ -359,56 +182,6 @@ print(corr_col)
     perc_fatl_alcohol           -0.24545506
     perc_fatl_1st_time           1.00000000
 
-
-
-```R
-# One or more tests of the student's code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-run_tests({
-    test_that("the answer is correct", {
-        expect_is(corr_col, "matrix" , 
-                  info = "Did you remove the 'state' column before computing the correlation?")
-        expect_equal(prod(dim(corr_col)), 16 , 
-                     info = "Did you use the cor function on the data frame after removing the 'state' column?")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 43.294 0.395 2249.434 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 5. Fit a multivariate linear regression
 <p>From the correlation table, we see that the amount of fatal accidents is most strongly correlated with alcohol consumption (first row). But in addition, we also see that some of the features are correlated with each other, for instance, speeding and alcohol consumption are positively correlated. We, therefore, want to compute the association of the target with each feature while adjusting for the effect of the remaining features. This can be done using multivariate linear regression.</p>
 <p>Both the multivariate regression and the correlation measure how strongly the features are associated with the outcome (fatal accidents). When comparing the regression coefficients with the correlation coefficients, we will see that they are slightly different. The reason for this is that the multiple regression computes the association of a feature with an outcome, given the association with all other features, which is not accounted for when calculating the correlation coefficients.</p>
@@ -426,56 +199,6 @@ print(fit_coef)
 
            (Intercept)    perc_fatl_speed  perc_fatl_alcohol perc_fatl_1st_time 
             9.06498048        -0.04180041         0.19086404         0.02473301 
-
-
-
-```R
-# One or more tests of the student's code.  
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-run_tests({
-    test_that("the answer is correct", {
-        expect_is(fit_reg, "lm" , 
-                  info = "Did you use the lm function?")
-        expect_true( near(fit_coef[1],9.06498048340333) , 
-                    info = "Did you give lm the correct linear model formula containing all three predictors?")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 43.343 0.395 2249.482 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
 
 ## 6. Perform PCA on standardized data
 <p>We have learned that alcohol consumption is weakly associated with the number of fatal accidents across states. This could lead us to conclude that alcohol consumption should be a focus for further investigations and maybe strategies should divide states into high versus low alcohol consumption in accidents. But there are also associations between  alcohol consumptions and the other two features, so it might be worth trying to split the states in a way that accounts for all three features.</p>
@@ -521,70 +244,6 @@ print(cve_pc2)
 ![png](output_16_2.png)
 
 
-
-```R
-# One or more tests of the student's code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-p <- last_plot()
-
-run_tests({
-    test_that("the computations are correct", {
-        expect_true( near( mean(car_acc_standised$perc_fatl_speed)+
-                      mean(car_acc_standised$perc_fatl_alcohol)+
-                      mean(car_acc_standised$perc_fatl_1st_time),0) , 
-                    info = "Did you use the scale function to create car_acc_standised?")
-        expect_true( near(pr_var[1] , 1.34332588935974 ) , 
-                info = "Did you compute the proportion of explained variance by taking the square of pca_fit$sdev?")
-        expect_true( near(cve[2] ,  0.794697860810483 ) ,
-                info = "Did you correctly compute the cumulative variance explained from pve by using the cumsum function?")
-        })
-    test_that("the plot is correct", {
-        p <- last_plot()
-        correct_geoms <- c(class(p$layers[[1]]$geom)[1], class(p$layers[[2]]$geom)[1])
-
-        expect_true(class(p$layers[[1]]$geom)[1] %in% correct_geoms, 
-                    info = "The plot is incorrect. Did you use a line and a point geom?")
-        expect_true(class(p$layers[[2]]$geom)[1] %in% correct_geoms, 
-                    info = "The plot is incorrect. Did you use a line and a point geom?")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 43.639 0.395 2249.778 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 7. Visualize the first two principal components
 <p>The first two principal components enable visualization of the data in two dimensions while capturing a high proportion of the variation (79%) from all three features: speeding, alcohol influence, and first-time accidents. This enables us to use our eyes to try to discern patterns in the data with the goal to find groups of similar states. Although clustering algorithms are becoming increasingly efficient, human pattern recognition is an easily accessible and very efficient method of assessing patterns in data.</p>
 <p>We will create a scatter plot of the first principle components and explore how the states cluster together in this visualization.</p>
@@ -600,63 +259,7 @@ data_frame(pcomp1,pcomp2) %>%
 ggplot(aes(x =pcomp1 , y = pcomp2)) + geom_point()
 ```
 
-
-
-
 ![png](output_19_1.png)
-
-
-
-```R
-# One or more tests of the student's code.
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-p <- last_plot()
-
-run_tests({
-    test_that("the answer is correct", {
-    expect_true( near(sum(pcomp1+pcomp2),-2.74780198594726e-15) , 
-        info = "Did you extract the principle compenent scores from the PCA fit using pca_fit$scores[,1] and pca_fit$scores[,2]?") 
-      })
-    test_that("the plot is correct", {
-        expect_is(p, "ggplot", info = "Did you create a ggplot figure?")
-        expect_is(p$layers[[1]]$geom, "GeomPoint", info = "Did you create a plot with geom_point()?")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 43.879 0.395 2250.017 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 8. Find clusters of similar states in the data
@@ -689,76 +292,7 @@ geom_point() + geom_line() +
 labs(x="Number of clusters", y="Intertias")
 ```
 
-
-
-
 ![png](output_22_1.png)
-
-
-
-```R
-# One or more tests of the student's code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-get_aesthetics <- function(p) {
-    unlist(c(list(p$mapping), purrr::map(p$layers, "mapping")))
-}
-run_tests({
-    test_that("the answer is correct", {
-        expect_equal( sum(k_vec) , 55 , 
-                     info = "Did you create a vector that goes from 1 to 10 by increments of 1?")
-        expect_is( mykm[[1]] , 'kmeans' , 
-                  info = "Did you use to kmeans function to populate mykm?")
-        expect_equal( max(mykm[[9]]$cluster) , 9 , 
-                     info = "Did you use of the 'centers' argument of the kmean function so that 
-                            the number of centers changes with each iteration?") 
-    })
-    p <- last_plot()
-    test_that("plot is correct", {
-        expect_is(p, "ggplot", info = "Did you create a ggplot figure?")  
-        expect_equal(length(p$layers), 2, info = "Did you create a plot with geom_line() and geom_point()?")
-        aesthetics <- get_aesthetics(p)
-        expect_equal(rlang::quo_name(aesthetics$x), "k_vec",
-                     info = "Did you put k_vec on the x-axis?")
-        expect_equal(rlang::quo_name(aesthetics$y), "inertias",
-                     info = "Did you put inertias on the y-axis?")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 44.184 0.395 2250.321 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
 
 ## 9. KMeans to visualize clusters in the PCA scatter plot
 <p>Since there wasn't a clear elbow in the scree plot, assigning the states to either two or three clusters is a reasonable choice, and we will resume our analysis using three clusters. Let's see how the PCA scatter plot looks if we color the states according to the cluster to which they are assigned.</p>
@@ -775,67 +309,7 @@ labs(x="Principle Component 1",
     y="Principle Component 2") 
 ```
 
-
-
-
 ![png](output_25_1.png)
-
-
-
-```R
-# One or more tests of the student's code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-get_aesthetics <- function(p) {
-    unlist(c(list(p$mapping), purrr::map(p$layers, "mapping")))
-}
-
-run_tests({
-    test_that("the answer is correct", {
-        expect_equal( length(unique(cluster_id)), 3 , 
-                     info = "Did you access the cluster element of mykm?")
-    })
-    test_that("the plot is correct", {
-         p <- last_plot()
-         aesthetics <- get_aesthetics(p)
-         expect_equal(rlang::quo_name(aesthetics$colour), "cluster_id",
-                     info = "Did you map the cluster_id to the color using aes()?")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 44.56 0.395 2250.696 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 10. Visualize the feature differences between the clusters
@@ -857,65 +331,7 @@ car_acc %>%
     coord_flip()
 ```
 
-
-
-
 ![png](output_28_1.png)
-
-
-
-```R
-# One or more tests of the student's code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-run_tests({
-    test_that("the answer is correct", {
-    expect_equal( length(unique(car_acc$cluster)) , 3 , 
-        info = "Did you add the cluster_id vector to the carr_acc data frame?")
-        })
-    test_that("the plot is correct", {
-        p <- last_plot()
-        expect_is(p, "ggplot", info = "Did you create a ggplot figure?")
-        expect_equal(p$data, car_acc %>%  select(-drvr_fatl_col_bmiles) %>% 
-                gather(key=feature,value=percent,-state,-cluster), 
-                     info = "Did you create your plot out after renoming drvr_fatl_col_bmiles and after gathering your data?")
-        expect_is(p$layers[[1]]$geom, "GeomViolin", info = "Did you create a plot with geom_violin()?")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 45.128 0.399 2251.268 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 11. Compute the number of accidents within each cluster
@@ -965,73 +381,7 @@ carr_acc_joined_summ %>%
     3 3          11  861.  9466.
 
 
-
-
-
 ![png](output_31_3.png)
-
-
-
-```R
-# One or more tests of the student's code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-soln_carr_acc_joined <- carr_acc_joined %>% 
-    mutate( num_drvr_fatl_col=drvr_fatl_col_bmiles*million_miles_annually/1000 )
-
-run_tests({
-    test_that("the answer is correct", {
-        expect_is(miles_driven, "tbl_df" , 
-                  info = "Did you load the miles-driven.csv file using read_delim()?")
-        expect_equal(sum(dim(carr_acc_joined)), 59 , 
-                     info = "Did you use the left_join() function and joined the data frames by the state column?")
-    })
-    test_that("num_drvr_fatl_col was made correctly", {
-        expect_equal(soln_carr_acc_joined$num_drvr_fatl_col, carr_acc_joined$num_drvr_fatl_col, 
-                    info = "Did you correctly calculate the total number of deadly accidents? 
-                            try: drvr_fatl_col_bmiles * million_miles_annually / 1000")
-    })
-    test_that("the plot is correct", {
-        p <- last_plot()
-        expect_is(p, "ggplot", info = "Did you create a ggplot figure?")
-        expect_equal(p$data, carr_acc_joined_summ, info = "Did you create your plot out of carr_acc_joined_summ?")
-        expect_is(p$layers[[1]]$geom, "GeomBar", info = "Did you create a plot with geom_bar()?")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 45.424 0.403 2251.567 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 12. Make a decision when there is no clear right choice
@@ -1041,66 +391,13 @@ run_tests({
 ```R
 # Which cluster would you choose?
 cluster_num <- 1
-```
 
 
-```R
-# One or more tests of the student's code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-run_tests({
-    test_that("Well done! Note that there is no definite correct answer here and there are a few ways to justify each cluster choice:'
-           '\n1 (Red) = The highest number of people helped in total and the most states. Good if we can mobilize many resources right away.'
-           '\n3 (Blue) = The lowest number of states and the highest number of people helped per state. Good for a focused pilot effort.'
-           '\n2 (Green) = A good balance of the attributes from the two other clusters. This cluster also has the highest alcohol consumption'
-           '\nwhich was the strongest correlated to fatal accidents.", {
-        expect_true(cluster_num %in% c(1,2,3), 
-                    info = "cluster_num must be either 1, 2, or 3")
-    })
-    # You can have more than one test
-})
-
-# Python test
-# def test_cluster_choice():
-#     assert cluster_num in range(3), \
-#     'cluster_num must be either 0, 1, or 2'
-#     print('Well done! Note that there is no definite correct answer here and there are a few ways to justify each cluster choice:'
+There is no definite correct answer here and there are a few ways to justify each cluster choice:'
 #           '\n0 (Blue) = The lowest number of states and the highest number of people helped per state. Good for a focused pilot effort.'
 #           '\n2 (Green) = The highest number of people helped in total and the most states. Good if we can mobilize many resources right away.'
 #           '\n1 (Orange) = A good balance of the attributes from the two other clusters. This cluster also has the highest alcohol consumption'
 #           '\nwhich was the strongest correlated to fatal accidents.')
 ```
 
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 45.469 0.403 2251.611 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
