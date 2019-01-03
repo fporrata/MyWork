@@ -58,7 +58,7 @@ chipotle %>%
 closed_chipotles
 ```
 
-    ![png](2.PNG)
+![png](2.PNG)
 
 
 
@@ -116,7 +116,7 @@ chipotle_open %>%
 chipotle_heatmap 
 ```
 
-    ![png](3.PNG)
+![png](3.PNG)
 
 
 
@@ -426,7 +426,7 @@ sd_pop_map
 ```
 
 
- ![png](4.PNG)
+![png](4.PNG)
 
 
 ## 8. Where to open a Chipotle II
@@ -578,7 +578,7 @@ voronoi_map <-
 voronoi_map
 ```
 
-    ![png](6.PNG)
+![png](6.PNG)
 
 
 
