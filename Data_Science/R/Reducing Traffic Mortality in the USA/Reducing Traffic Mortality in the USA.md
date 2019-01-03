@@ -393,11 +393,10 @@ carr_acc_joined_summ %>%
 cluster_num <- 1
 
 
-There is no definite correct answer here and there are a few ways to justify each cluster choice:'
-#           '\n0 (Blue) = The lowest number of states and the highest number of people helped per state. Good for a focused pilot effort.'
-#           '\n2 (Green) = The highest number of people helped in total and the most states. Good if we can mobilize many resources right away.'
-#           '\n1 (Orange) = A good balance of the attributes from the two other clusters. This cluster also has the highest alcohol consumption'
-#           '\nwhich was the strongest correlated to fatal accidents.')
+#There is no definite correct answer here and there are a few ways to justify each cluster choice:'
+#           (Blue) = The lowest number of states and the highest number of people helped per state. Good for a focused pilot effort.
+#           (Green) = The highest number of people helped in total and the most states. Good if we can mobilize many resources right away.
+#           (Orange) = A good balance of the attributes from the two other clusters. This cluster also has the highest alcohol consumption which was the strongest correlated to fatal accidents.')
 ```
 
 
