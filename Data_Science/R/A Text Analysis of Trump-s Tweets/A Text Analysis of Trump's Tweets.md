@@ -1,7 +1,9 @@
 
 ## 1. The tweets
 <p>I don’t usually post about politics (I’m not particularly savvy about polling, which is where data science has had the <a href="http://fivethirtyeight.com/">most substantial impact on politics</a>), but I saw a hypothesis about Donald Trump’s Twitter account that simply begged to be investigated with data: </p>
-<p><a href="https://twitter.com/tvaziri/status/762005541388378112"><img src="https://s3.amazonaws.com/assets.datacamp.com/production/project_511/img/tweet.png" alt="@tvaziri's hypothesis about Donald Trump’s Twitter account"></a></p>
+
+![png](tweet.png)
+
 <p>When Trump wishes the Olympic team good luck, he’s tweeting from his iPhone. When he’s insulting a rival, he’s usually tweeting from an Android. Is this an artifact showing which tweets are Trump’s own and which are by some handler in the campaign?</p>
 <p>Others have <a href="http://www.cnet.com/news/trumps-tweets-android-for-nasty-iphone-for-nice/">explored Trump’s timeline</a> and noticed this tends to hold up. And Trump himself <a href="http://www.theverge.com/2015/10/5/9453935/donald-trump-twitter-strategy">did indeed tweet from a Samsung Galaxy</a> until <a href="https://www.recode.net/2017/5/27/15705090/president-donald-trump-twitter-android-iphone-ios-samsung-galaxy-security-hacking">March 2017</a>. But how could we examine it quantitatively? During the development of the <a href="http://github.com/juliasilge/tidytext">tidytext R package</a>, I was writing about writing about text mining and sentiment analysis, and this is an excellent opportunity to apply it again.</p>
 <p>My analysis, shown below, concludes that <strong>the Android and iPhone tweets are clearly from different people</strong>. Tweets from these two devices are posted during different times of day, and the use of hashtags, links, and retweets are distinctive. What’s more, we can see that <strong>the Android tweets are angrier and more negative</strong>, while the iPhone tweets tend to be benign announcements and pictures. Overall I’d agree with <a href="https://twitter.com/tvaziri/">@tvaziri</a>’s analysis. We can tell the difference between the campaign’s tweets (iPhone) and Trump’s own (Android). Let's see how.</p>
@@ -21,20 +23,6 @@ tweets <- read_csv("datasets/trump_tweets.csv", guess_max = 36000) %>%
 head(tweets)
 ```
 
-    Parsed with column specification:
-    cols(
-      source = col_character(),
-      id_str = col_double(),
-      text = col_character(),
-      created_at = col_datetime(format = ""),
-      retweet_count = col_integer(),
-      in_reply_to_user_id_str = col_double(),
-      favorite_count = col_integer(),
-      is_retweet = col_logical()
-    )
-
-
-
 <table>
 <thead><tr><th scope=col>source</th><th scope=col>id_str</th><th scope=col>text</th><th scope=col>created_at</th><th scope=col>retweet_count</th><th scope=col>in_reply_to_user_id_str</th><th scope=col>favorite_count</th><th scope=col>is_retweet</th></tr></thead>
 <tbody>
@@ -47,75 +35,6 @@ head(tweets)
 </tbody>
 </table>
 
-
-
-
-```R
-# These packages need to be loaded in the first @tests cell. 
-library(testthat) 
-library(IRkernel.testthat)
-
-soln_tweets  <- read_csv("datasets/trump_tweets.csv", guess_max = 36000) %>%
-  filter(created_at >= "2015-06-01", created_at <= "2016-11-08")
-
-run_tests({
-    test_that("packages are loaded", {
-        expect_true("tidyverse" %in% .packages(), info = "Did you load the tidyverse package?")
-        expect_true("lubridate" %in% .packages(), info = "Did you load the lubridate package?")
-    })
-    test_that("The .csv was read in correctly", {
-        expect_is(tweets, "tbl_df", info = "Did you read in bottom_line with read_csv?")
-        expect_equal(tweets, soln_tweets, info = "tweets contains the wrong values. Did you load the correct .csv file?")
-        expect_equal(nrow(tweets),nrow(soln_tweets), info = "tweets has an incorrect nubmer of rows. 
-                                                    Did you filter for the correct time frame?" )
-    })
-})
-```
-
-    Parsed with column specification:
-    cols(
-      source = col_character(),
-      id_str = col_double(),
-      text = col_character(),
-      created_at = col_datetime(format = ""),
-      retweet_count = col_integer(),
-      in_reply_to_user_id_str = col_double(),
-      favorite_count = col_integer(),
-      is_retweet = col_logical()
-    )
-
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 32.804 0.316 1983.258 0.003 0.001
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 2. Clean those tweets
@@ -175,61 +94,6 @@ head(cleaned_tweets)
 
 
 
-
-```R
-soln_cleaned_tweets <- soln_tweets %>%
-  select(id_str, source, text, created_at) %>%
-  filter(source %in% c("Twitter for iPhone", "Twitter for Android")) %>%
-  extract(source, "source", "(\\w+)$")
-
-run_tests({
-    #Thinking about order of columns and how to test for them out of order. So far, only figured out with sort.
-    # expect_equivalent does not work.
-    test_that("cleaned_tweets is not correct", {
-        expect_true(identical(cleaned_tweets[order(colnames(cleaned_tweets))], 
-                              soln_cleaned_tweets[order(colnames(soln_cleaned_tweets))]), 
-        info = "The column names are not correct. Either the correct columns were not selected or the wrong argument was given to 'extract()'?")
-    })
-    test_that("filter() was used correctly", {
-        expect_equal(cleaned_tweets$source, soln_cleaned_tweets$source, 
-                     info = "`source` is not correct. Did you use the correct column names? Make sure they are surrounded by quotation marks.")
-    })
-}) 
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 32.935 0.316 1983.388 0.003 0.001
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 3. Is "time" the giveaway?
 <p>Most people are creatures of habit, and we would expect their tweet times to be a type of ‘signature’. We can certainly spot the difference here. Most tweets from the Android are in the early morning or later in the evening, while tweets from the iPhone occur more often in the afternoon.</p>
 
@@ -248,82 +112,13 @@ cleaned_tweets %>%
   labs(x = "Hour of day (EST)", y = "% of tweets", color = "")
 ```
 
-
-
-
 ![png](output_7_1.png)
-
-
-
-```R
-stud_p <- last_plot()
-
-soln_plot_time  <- soln_cleaned_tweets  %>% 
-  count(source, hour = hour(with_tz(created_at, "EST"))) %>%
-  mutate(percent = n / sum(n)) %>%
-  ggplot(aes(hour, percent, color = source)) +
-  geom_line() +
-  scale_y_continuous(labels = percent_format()) +
-  labs(x = "Hour of day (EST)", y = "% of tweets", color = "")
-
-run_tests({
-    test_that("scales packages are loaded", {
-        expect_true("scales" %in% .packages(), info = "Did you load the scales package?")
-    })
-    test_that("Data used in the plot are correct", {
-        expect_identical(stud_p$data, soln_plot_time$data, info = "The data used to create the plot are not correct. Did you count the sources and use `mutate()` to add a column of percents? 
-                                Refer to the hint if you are unsure about how to proceed.")
-        })
-    test_that("Plot aesthetics are correct.", {
-        expect_identical(deparse(stud_p$mapping$x),deparse(soln_plot_time$mapping$x),
-                         info = 'The `x` aesthetic is incorrect. Did you map it to `hour`?')
-        expect_identical(deparse(stud_p$mapping$y),deparse(soln_plot_time$mapping$y),
-                         info = "The `y` aesthetic is incorrect. Did you map it to `percent`?")
-    })
-    test_that("Plot labels and legend are correct.", {
-        expect_identical(stud_p$labels$x, soln_plot_time$labels$x, info="The x label is not correct.")
-        expect_identical(stud_p$labels$y, soln_plot_time$labels$y, info="The y label is not correct.")
-        expect_identical(stud_p$labels$colour, soln_plot_time$labels$colour, info="The empty legend string is not correct. Did you use empty quotation marks?")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 33.273 0.316 1983.725 0.003 0.001
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
 
 ## 4. The quote tweet is dead
 <p>Another place we can spot a difference is in Trump’s anachronistic behavior of “manually retweeting” people by copy-pasting their tweets, then surrounding them with quotation marks. These are known as <a href="https://www.theringer.com/tech/2018/5/2/17311616/twitter-retweet-quote-endorsement-function-trolls">quote tweets</a>.</p>
-<p><a href="https://twitter.com/realDonaldTrump/status/758512401629192192"><img src="https://s3.amazonaws.com/assets.datacamp.com/production/project_511/img/tweet_quotes.png" alt="Trump quote-tweeting someone"></a></p>
+
+![png](tweet_quotes.png)
+
 <p>Almost all the quote tweets are posted from the Android.</p>
 <p>After this plot, we’ll filter out the quote tweets in the remaining <strong>by-word</strong> analyses because they contain text from followers that may not be representative of Trump’s tweets.</p>
 
@@ -338,85 +133,18 @@ cleaned_tweets %>%
   labs(x = "", y = "Number of tweets", fill = "") +
   ggtitle('Whether tweets start with a quotation mark (")')
 ```
-
-
-
-
 ![png](output_10_1.png)
-
-
-
-```R
-stud_p <- last_plot()
-
-soln_plot_quote <- soln_cleaned_tweets %>%
-  count(source,
-        quoted = ifelse(str_detect(text, '^"'), "Quoted", "Not quoted")) %>%
-  ggplot(aes(source, n, fill = quoted)) +
-  geom_bar(stat = "identity", position = "dodge") +
-  labs(x = "", y = "Number of tweets", fill = "") +
-  ggtitle('Whether tweets start with a quotation mark (")')
-
-
-run_tests({
-    test_that("Data used in the plot are correct", {
-        expect_identical(stud_p$data, soln_plot_quote$data, info = "The data used to create the plot are not correct. Did you count the sources and create \"Quoted\" and \"Not quoted\" data? (Capitalization matters) 
-                                Refer to the hint if you are unsure about how to proceed.")
-    })
-    test_that("Plot aesthetics are correct.", {
-        expect_identical(deparse(stud_p$mapping$x),deparse(soln_plot_quote$mapping$x),
-                         info = 'The `x` aesthetic is incorrect. Did you map it to `source`?')      
-        expect_identical(deparse(stud_p$mapping$y),deparse(soln_plot_quote$mapping$y),
-                         info = "The `y` aesthetic is incorrect. Did you map it to `n`?")
-        expect_identical(deparse(stud_p$mapping$fill),deparse(soln_plot_quote$mapping$fill),
-                         info = "The `fill` aestheitc is incorrect. Did you map it to `quoted`?")
-    })
-    test_that("geom_bar() is correct", {
-        expect_equal(stud_p$layers[[1]], soln_plot_quote$layers[[1]],
-        info = "The parameters in `geom_bar()` are not correct. Check the values for `identity=`, and `position=`?")
-        })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 33.795 0.316 1984.247 0.003 0.001
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 5. Links and pictures
 <p>Another place we see a difference between the iPhone and Android tweets is in the sharing of links or pictures.</p>
 <p>It turns out that tweets from the iPhone were <strong>way more likely to contain either a picture or a link</strong>. This also makes sense with our narrative: iPhone (presumably run by the campaign) tends to write “announcement” tweets about events, like this:</p>
-<p><a href="https://twitter.com/realDonaldTrump/status/762110918721310721"><img src="https://s3.amazonaws.com/assets.datacamp.com/production/project_511/img/tweet_windham.png" alt="&quot;Thank you Windham, New Hampshire!&quot;"></a></p>
+
+![png](tweet_windham.png)
+
 <p>While Android (Trump himself) tends to write picture-less tweets like:</p>
-<p><a href="https://twitter.com/realDonaldTrump/status/762400869858115588"><img src="https://s3.amazonaws.com/assets.datacamp.com/production/project_511/img/tweet_media.png" alt="&quot;The media is going crazy...very dishonest!&quot;"></a></p>
+
+![png](tweet_media.png)
 
 
 ```R
@@ -433,77 +161,7 @@ ggplot(tweet_picture_counts, aes(source, n, fill = picture)) +
   labs(x = "", y = "Number of tweets", fill = "")
 ```
 
-
-
-
 ![png](output_13_1.png)
-
-
-
-```R
-stud_p  <- last_plot()
-
-soln_tweet_picture_counts <- soln_cleaned_tweets %>%
-  filter(!str_detect(text, '^"')) %>%
-  count(source,
-        picture = ifelse(str_detect(text, "t.co"),
-                         "Picture/link", "No picture/link"))
-
-soln_plot_pic  <- ggplot(soln_tweet_picture_counts, aes(source, n, fill = picture)) +
-  geom_bar(stat = "identity", position = "dodge") +
-  labs(x = "", y = "Number of tweets", fill = "")
-
-run_tests({
-    test_that("tweet_picture_counts is correct", {
-        expect_identical(tweet_picture_counts, soln_tweet_picture_counts, 
-        info = "`tweet_picutre_counts` is not correct. Did you cound the sources correctly? Did you use str_detect()?")
-    })
-    test_that("Plot aesthetics are correct.", {
-        expect_identical(deparse(stud_p$mapping$x),deparse(soln_plot_pic$mapping$x),
-                         info = 'The `x` aesthetic is incorrect. Did you map it to `source`?')      
-        expect_identical(deparse(stud_p$mapping$y),deparse(soln_plot_pic$mapping$y),
-                         info = "The `y` aesthetic is incorrect. Did you map it to `n`?")
-        expect_identical(deparse(stud_p$mapping$fill),deparse(soln_plot_pic$mapping$fill),
-                         info = "The `fill` aestheitc is incorrect. Did you map it to `quoted`?")
-    })
-    test_that("geom_bar() is correct", {
-        expect_equal(stud_p$layers[[1]], soln_plot_pic$layers[[1]],
-        info = "The parameters in `geom_bar()` are not correct. Check the values for `identity=`, and `position=`?")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 34.125 0.316 1984.576 0.003 0.001
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 6. Comparison of words
@@ -543,61 +201,6 @@ head(tweet_words)
 </tbody>
 </table>
 
-
-
-
-```R
-soln_tweet_words <- soln_cleaned_tweets %>%
-  filter(!str_detect(text, '^"')) %>%
-  mutate(text = str_replace_all(text, "https://t.co/[A-Za-z\\d]+|&amp;", "")) %>%
-  unnest_tokens(word, text, token = "regex", pattern = reg) %>%
-  filter(!word %in% stop_words$word,
-         str_detect(word, "[a-z]"))
-
-run_tests({
-    test_that("packages are loaded", {
-        expect_true("tidytext" %in% .packages(), info = "Did you load the tidyverse package?")
-    })
-    test_that("tweet_words is correct", {
-        expect_equal(nrow(tweet_words), nrow(soln_tweet_words), 
-        info = "`tweet_words` does not have the correct number of rows. Check the calls to `filter()` ahd `unnest_tokens()` Did you use stop_words$word correctly?.") 
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 34.519 0.328 1984.982 0.003 0.001
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 7. Most common words
 <p>What are the most common words @realDonaldTrump tweets? This plot should look familiar to anyone who has seen the feed.</p>
 
@@ -613,83 +216,14 @@ tweet_words %>%
   ylab("Occurrences") +
  coord_flip()
 ```
-
-
-
-
 ![png](output_19_1.png)
-
-
-
-```R
-stud_p <- last_plot()
-
-soln_plot_tweet_words  <- soln_tweet_words %>%
-  count(word, sort = TRUE) %>%
-  head(20) %>%
-  mutate(word = reorder(word, n)) %>%
-  ggplot(aes(word, n)) +
-  geom_bar(stat = "identity") +
-  ylab("Occurrences") +
-  coord_flip()
-
-run_tests({
-    test_that("Data used in the plot are correct", {
-        expect_identical(stud_p$data, soln_plot_tweet_words$data, info = "The data used to create the plot are not correct. Did you count `words` and reorder them correctly? 
-                                Refer to the hint if you are unsure about how to proceed.")
-    })
-   test_that("Plot aesthetics are correct.", {
-        expect_identical(deparse(stud_p$mapping$x),deparse(soln_plot_tweet_words$mapping$x),
-                         info = 'The `x` aesthetic is incorrect. Did you map it to `source`?')      
-        expect_identical(deparse(stud_p$mapping$y),deparse(soln_plot_tweet_words$mapping$y),
-                         info = "The `y` aesthetic is incorrect. Did you map it to `n`?")
-   })
-    test_that("geom_bar() is correct", {
-        expect_equal(stud_p$layers[[1]], soln_plot_tweet_words$layers[[1]],
-        info = "The parameters in `geom_bar()` are not correct. Check the values for `identity=`, and `position=`?")
-        })
-    test_that("coordinates were flipped", {
-        expect_equal(stud_p$coordinates$default, soln_plot_tweet_words$coordinates$default, info="The coordinates were not flipped.")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 34.792 0.328 1985.254 0.003 0.001
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 8. Common words: Android vs. iPhone (i)
 <p>Now let’s consider which words are most common from the Android relative to the iPhone, and vice versa. We’ll use the simple measure of log odds ratio <strong>for each word</strong>, calculated as:</p>
-<p>$$\log_2(\frac{\frac{\mbox{# in Android} + 1}{\mbox{Total #words Android} + 1}} {\frac{\mbox{# in iPhone} + 1}{\mbox{Total #words iPhone} + 1}})$$</p>
+
+![png](log.PNG)
+
 <p><br></p>
 <p>We'll only be looking at words that occur at least five times in both platforms. There will be some instances with fewer than five uses in either the Android or the iPhone, but never one with fewer than five total. If there is one occurrence of a word in the Android, you'll know that there are at least four occurrences in the iPhone for the same word.</p>
 <p><br></p>
@@ -726,62 +260,6 @@ head(android_iphone_ratios)
 </table>
 
 
-
-
-```R
-soln_android_iphone_ratios <- soln_tweet_words %>%
-  count(word, source) %>%
-  group_by(word)  %>% 
-  filter(sum(n) >= 5) %>%
-  spread(source, n, fill = 0) %>%
-  ungroup() %>%
-  mutate_if(is.numeric, funs((. + 1) / sum(. + 1))) %>%
-  mutate(logratio = log2(Android / iPhone)) %>%
-  arrange(desc(logratio))
-
-run_tests({
-    test_that("the answer is correct", {
-    expect_identical(soln_android_iphone_ratios, android_iphone_ratios, 
-        info = "android_iphone_ratios is not correct. Did you divide Android by iPhone? Call sum(n) in `filter()`? 
-                How about arrange in descending value according to `logratio`?")
-    })
-    
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 35.075 0.332 1985.54 0.003 0.001
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 9. Common words: Android vs. iPhone (ii)
 <p>Now that we've calculated the log odds ratio of each word, we'll plot the 15 words with the greatest log odds ratio for the Android and the iPhone.</p>
 <p>With the way we've set up the log odds ratio, positive values are assigned to words from the Android, and negative values are assigned to the iPhone. </p>
@@ -801,80 +279,7 @@ android_iphone_ratios %>%
   scale_fill_manual(name = "", labels = c("Android", "iPhone"),
                     values = c("red", "lightblue"))
 ```
-
-
-
-
 ![png](output_25_1.png)
-
-
-
-```R
-stud_p <- last_plot()
-
-soln_plot_LOR   <- soln_android_iphone_ratios %>%
-  group_by(logratio > 0) %>%
-  top_n(15, abs(logratio)) %>%
-  ungroup() %>%
-  mutate(word = reorder(word, logratio)) %>%
-  ggplot(aes(word, logratio, fill = logratio < 0)) +
-  geom_bar(stat = "identity") +
-  coord_flip() +
-  ylab("Android / iPhone log ratio") +
-  scale_fill_manual(name = "", labels = c("Android", "iPhone"),
-                    values = c("red", "lightblue"))
-
-
-run_tests({
-    test_that("Data used in the plot are correct", {
-        expect_identical(stud_p$data, soln_plot_LOR$data, info = "The data used to create the plot are not correct.
-        Did you group by the logratio greatet than 0 and take the top 15 of abs(logratio)?")
-    })
-   test_that("Plot aesthetics are correct.", {
-        expect_identical(deparse(stud_p$mapping$x),deparse(soln_plot_LOR$mapping$x),
-                         info = 'The `x` aesthetic is incorrect. Did you map it to `word`?')      
-        expect_identical(deparse(stud_p$mapping$y),deparse(soln_plot_LOR$mapping$y),
-                         info = "The `y` aesthetic is incorrect. Did you map it to `logratio`?")
-   })
-    test_that("geom_bar() is correct", {
-        expect_equal(stud_p$layers[[1]], soln_plot_LOR$layers[[1]],
-        info = "The parameters in `geom_bar()` are not correct. Check the values for `identity=`.")
-        })
-    })
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 35.445 0.332 1985.91 0.003 0.001
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
 
 ## 10. Adding sentiments
 <p>What do we know so far? </p>
@@ -922,62 +327,6 @@ head(android_iphone_sentiment)
 
 
 
-```R
-soln_nrc <- sentiments %>%
-  filter(lexicon == "nrc") %>%
-  select(word, sentiment)
-
-soln_android_iphone_sentiment <- soln_android_iphone_ratios %>%
-  inner_join(soln_nrc, by = "word") %>%
-  filter(!sentiment %in% c("positive", "negative")) %>%
-  mutate(sentiment = reorder(sentiment, -logratio),
-         word = reorder(word, -logratio)) %>%
-  group_by(sentiment) %>%
-  top_n(10, abs(logratio)) %>%
-  ungroup() 
-
-
-run_tests({
-    test_that("the answer is correct", {
-    expect_equal(soln_android_iphone_sentiment, android_iphone_sentiment, 
-        info = "android_iphone_sentiment is not correct. Check the type of join.")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 35.516 0.332 1985.98 0.003 0.001
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 11. Android vs. iPhone sentiments
 <p>Now we'll take a look at the sentiments of the common words from both devices. We'll see that a lot of words annotated as negative sentiments (with a few exceptions like “crime” and “terrorist”) are more common in Trump’s Android tweets than the campaign’s iPhone tweets.</p>
 
@@ -993,77 +342,8 @@ ggplot(android_iphone_sentiment, aes(word, logratio, fill = logratio < 0)) +
                     values = c("red", "lightblue"))
 ```
 
-
-
-
 ![png](output_31_1.png)
 
-
-
-```R
-stud_p  <-  last_plot()
-
-soln_plot_sentiment  <- ggplot(soln_android_iphone_sentiment, aes(word, logratio, fill = logratio < 0)) +
-  facet_wrap(~ sentiment, scales = "free", nrow = 2) +
-  geom_bar(stat = "identity") +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-  labs(x = "", y = "Android / iPhone log ratio") +
-  scale_fill_manual(name = "", labels = c("Android", "iPhone"),
-                    values = c("red", "lightblue"))
-run_tests({
-    test_that("Data used in the plot are correct", {
-        expect_identical(stud_p$data, soln_plot_sentiment$data, info = "The data used to create the plot are not correct. Check `android_iphone_sentiment`.")
-    })
-    test_that("Plot aesthetics are correct.", {
-        expect_identical(deparse(stud_p$mapping$x),deparse(soln_plot_sentiment$mapping$x),
-                         info = 'The `x` aesthetic is incorrect. Did you map it to `word`?')
-        expect_identical(deparse(stud_p$mapping$y),deparse(soln_plot_sentiment$mapping$y),
-                         info = "The `y` aesthetic is incorrect. Did you map it to `logratio`?")
-    })
-    test_that("geom_bar() is correct", {
-        expect_equal(stud_p$layers[[1]], soln_plot_sentiment$layers[[1]],
-                     info = "The parameters in `geom_bar()` are not correct. Check the values for `identity=`.")
-    })
-    test_that("the use of `facet()` is correct", {
-        expect_identical(deparse(stud_p$facet$params$facets) , deparse(soln_plot_sentiment$facet$params$facet), 
-                         info = "The variable used the facet the plot is incorrect.")
-        expect_identical(stud_p$facet$params$nrow, soln_plot_sentiment$facet$params$nrow,
-                         info = "The number of rows in the call to `facet()` is incorrect.")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 36.77 0.336 1987.237 0.003 0.001
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 12. Conclusion: The ghost in the political machine
@@ -1077,45 +357,4 @@ run_tests({
 ```R
 anonymous_iPhone_tweeter <- "Cog"
 ```
-
-
-```R
-run_tests({
-    test_that("an answer was put in", {
-        expect_true(is.character(anonymous_iPhone_tweeter), info = "Did you make a choice? What do you think (in characters)?")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 36.8 0.336 1987.267 0.003 0.001
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
