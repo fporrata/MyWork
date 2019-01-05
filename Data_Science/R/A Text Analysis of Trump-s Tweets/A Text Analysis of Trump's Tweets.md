@@ -227,7 +227,7 @@ tweet_words %>%
 <p><br></p>
 <p>We'll only be looking at words that occur at least five times in both platforms. There will be some instances with fewer than five uses in either the Android or the iPhone, but never one with fewer than five total. If there is one occurrence of a word in the Android, you'll know that there are at least four occurrences in the iPhone for the same word.</p>
 <p><br></p>
-<p>The “$ + 1$”, called <a href="https://en.wikipedia.org/wiki/Additive_smoothing">Laplace smoothing</a>, are to avoid dividing by zero and to put <a href="http://varianceexplained.org/r/empirical_bayes_baseball/">more trust in common words</a>.</p>
+<p>The “+1”, called <a href="https://en.wikipedia.org/wiki/Additive_smoothing">Laplace smoothing</a>, are to avoid dividing by zero and to put <a href="http://varianceexplained.org/r/empirical_bayes_baseball/">more trust in common words</a>.</p>
 
 
 ```R
