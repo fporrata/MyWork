@@ -1,11 +1,13 @@
 
 ## 1. Import Python libraries
-<p><img src="https://s3.amazonaws.com/assets.datacamp.com/production/project_555/img/92_notebook.jpg" alt="honey bee">
-<em>A honey bee (Apis).</em></p>
+
+![png](0A.PNG)
+
 <p>Can a machine identify a bee as a honey bee or a bumble bee? These bees have different <a href="https://www.thesca.org/connect/blog/bumblebees-vs-honeybees-what%E2%80%99s-difference-and-why-does-it-matter">behaviors and appearances</a>, but given the variety of backgrounds, positions, and image resolutions, it can be a challenge for machines to tell them apart.</p>
 <p>Being able to identify bee species from images is a task that ultimately would allow researchers to more quickly and effectively collect field data. Pollinating bees have critical roles in both ecology and agriculture, and diseases like <a href="http://news.harvard.edu/gazette/story/2015/07/pesticide-found-in-70-percent-of-massachusetts-honey-samples/">colony collapse disorder</a> threaten these species. Identifying different species of bees in the wild means that we can better understand the prevalence and growth of these important insects.</p>
-<p><img src="https://s3.amazonaws.com/assets.datacamp.com/production/project_555/img/20_notebook.jpg" alt="bumble bee">
-<em>A bumble bee (Bombus).</em></p>
+
+![png](0B.PNG)
+
 <p>This notebook walks through building a simple deep learning model that can automatically detect honey bees and bumble bees and then loads a pre-trained model for evaluation.</p>
 
 
@@ -34,37 +36,6 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten, Conv2D, MaxPooling2D
 ```
 
-    Using TensorFlow backend.
-
-
-
-```python
-%%nose
-
-def test_task_1():
-    assert 'keras' in globals(), \
-    'Did you forget to import keras?'
-    
-def test_task_2():
-    assert 'Sequential' in globals(), \
-    'Did you forget to import Sequential from keras.models?'
-    
-def test_task_3():
-    for layer_type in ['Dense', 'Dropout', 'Flatten', 'Conv2D', 'MaxPooling2D']:
-        assert layer_type in globals(), \
-    'Did you forget to import Dense, Dropout, Flatten, Conv2D, or MaxPooling2D from keras.layers?'
-```
-
-
-
-
-
-
-    3/3 tests passed
-
-
-
-
 ## 2. Load image labels
 <p>Now that we have all of our imports ready, it is time to look at the labels for our data. We will load our <code>labels.csv</code> file into a DataFrame called <code>labels</code>, where the index is the image name (e.g. an index of 1036 refers to an image named 1036.jpg) and the <code>genus</code> column tells us the bee type. <code>genus</code> takes the value of either <code>0.0</code> (Apis or honey bee) or <code>1.0</code> (Bombus or bumble bee).</p>
 
@@ -90,32 +61,12 @@ y = labels.genus.values
 
 
 
-```python
-%%nose
-
-def test_task2_0():
-    assert labels.shape == (1654, 1), \
-    'Did you remember to set index_col=0 within the pd.read_csv() function?'
-    
-def test_task2_1():
-    assert y[13] == 1.0 and len(y) == 1654, \
-    'Did you assign y to labels.genus.values?'
-```
-
-
-
-
-
-
-    2/2 tests passed
-
-
-
-
 ## 3. Examine RGB values in an image matrix
 <p>Image data can be represented as a matrix. The width of the matrix is the width of the image, the height of the matrix is the height of the image, and the depth of the matrix is the number of channels. Most image formats have three color channels: red, green, and blue.</p>
 <p>For each pixel in an image, there is a value for every channel. The combination of the three values corresponds to the color, as per the <a href="https://en.wikipedia.org/wiki/RGB_color_model">RGB color model</a>. Values for each color can range from 0 to 255, so a purely blue pixel would show up as (0, 0, 255).</p>
-<p><img src="https://s3.amazonaws.com/assets.datacamp.com/production/project_555/img/rgb_example.png" width="600"></p>
+
+![png](1.PNG)
+
 <p>Let's explore the data for a sample image. </p>
 
 
@@ -139,27 +90,6 @@ print('RGB values for the top left pixel are:', example_image[0,0,:])
 
 
 ![png](output_7_1.png)
-
-
-
-```python
-%%nose
-import numpy
-
-def test_task3_0():
-    assert 'example_image' in globals() and example_image.shape == (50, 50, 3) and example_image.max() == 236, \
-    'Did you load the image using io.imread and assign it to example_image?'
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
 
 ## 4. Normalize image data
 <p>Now we need to normalize our image data. Normalization is a general term that means changing the scale of our data so it is consistent.</p>
@@ -193,35 +123,6 @@ print(X.shape)
     (1654, 50, 50, 3)
 
 
-
-```python
-%%nose
-
-# last_value = _
-
-def test_task4_0():
-    assert 'StandardScaler' in str(globals()['ss']), \
-    'Did you assign StandardScaler() to ss?'
-    
-def test_task4_1():
-    assert X.shape == (1654, 50, 50, 3), \
-    'Did you call np.array on image_list to stack all the images into a matrix and assign it to X?'
-    
-# def test_task4_2():
-#     assert last_value == (1654, 50, 50, 3), \
-#     'Did you print X.shape?'
-```
-
-
-
-
-
-
-    2/2 tests passed
-
-
-
-
 ## 5. Split into train, test, and evaluation sets
 <p>Now that we have our big image data matrix, <code>X</code>, as well as our labels, <code>y</code>, we can split our data into train, test, and evaluation sets. To do this, we'll first allocate 20% of the data into our evaluation, or holdout, set. This is data that the model never sees during training and will be used to score our trained model.</p>
 <p>We will then split the remaining data, 60/40, into train and test sets just like in supervised machine learning models. We will pass both the train and test sets into the neural network. </p>
@@ -251,31 +152,6 @@ print(x_eval.shape[0], 'eval samples')
     5947500 train samples
     530 test samples
     331 eval samples
-
-
-
-```python
-%%nose
-
-def test_task5_0():
-    assert x_train.shape == (793, 50, 50, 3) and x_test.shape == (530, 50, 50, 3) and x_eval.shape == (331, 50, 50, 3), \
-    '''Did you set test_size=0.2 for the first split into eval and interim sets,
-        and then test_size=0.4 for the split into train and test sets?'''
-    
-def test_task5_1():
-    assert np.all(np.round(x_train[0, 0, 0, :], 2) == [-3.61, -2.38, -1.16]), \
-        '''Did you set test_size=0.2 for the first split into eval and interim sets,
-        and then test_size=0.4 for the split into train and test sets?'''
-```
-
-
-
-
-
-
-    2/2 tests passed
-
-
 
 
 ## 6. Model building (part i)
@@ -318,15 +194,6 @@ def test_task6_2():
 ```
 
 
-
-
-
-
-    3/3 tests passed
-
-
-
-
 ## 7. Model building (part ii)
 <p>Let's continue building our model. So far our model has two convolutional layers. However, those are not the only layers that we need to perform our task. A complete neural network architecture will have a number of other layers that are designed to play a specific role in the overall functioning of the network. Much deep learning research is about how to structure these layers into coherent systems.</p>
 <p>We'll add the following layers:</p>
@@ -340,7 +207,9 @@ def test_task6_2():
 <li><code>Dense</code>. Final layer which calculates the probability the image is either a bumble bee or honey bee.</li>
 </ul>
 <p>To take a look at how it all stacks up, we'll print the model summary. Notice that our model has a whopping <code>3,669,249</code> paramaters. These are the different weights that the model learns through training and what are used to generate predictions on a new image.</p>
-<p><img src="https://s3.amazonaws.com/assets.datacamp.com/production/project_555/img/mlp_conv.png" alt=""></p>
+
+
+![png](2.PNG)
 
 
 ```python
@@ -392,40 +261,6 @@ model.summary()
     Non-trainable params: 0
     _________________________________________________________________
 
-
-
-```python
-%%nose
-
-def test_task7_0():
-    assert (type(model.layers[2]) == keras.layers.pooling.MaxPooling2D and
-            model.layers[2].get_config()['pool_size'] == (2, 2)), \
-    'Did you add a MaxPooling2D layer with pool size of (2, 2)?'
-    
-def test_task7_1():
-    assert (type(model.layers[7]) == keras.layers.core.Dropout and
-            model.layers[7].get_config()['rate'] == 0.5), \
-    'Did you add a Dropout layer with a rate of 0.5`?'
-    
-def test_task7_2():
-    assert model.layers[8].get_config()['units'] == 1, \
-    'Did you pass in num_classes to the final Dense layer?'
-       
-def test_task7_3():
-    assert model.layers[8].get_config()['activation'] == 'sigmoid', \
-    'Did you set sigmoid as the activation in the final Dense layer?'
-```
-
-
-
-
-
-
-    4/4 tests passed
-
-
-
-
 ## 8. Compile and train model
 <p>Now that we've specified the model architecture, we will <a href="https://keras.io/models/model/#compile">compile</a> the model for training. For this we need to specify the loss function (what we're trying to minimize), the optimizer (how we want to go about minimizing the loss), and the metric (how we'll judge the performance of the model).</p>
 <p>Then, we'll call <a href="https://keras.io/models/model/#fit"><code>.fit</code></a> to begin the trainig the process. </p>
@@ -469,36 +304,6 @@ model.fit(
     10/10 [==============================] - 0s 14ms/step - loss: 0.6346 - acc: 0.7000 - val_loss: 0.7014 - val_acc: 0.5000
 
 
-
-
-
-    <keras.callbacks.History at 0x7f0ac032ec50>
-
-
-
-
-```python
-%%nose
-
-def test_task9_0():
-    assert 'binary_crossentropy' in str(model.loss), \
-    'Did you assign loss to keras.losses.binary_crossentropy?'
-    
-def test_task9_1():
-    assert model.metrics == ['accuracy'], \
-    'Did you specify [accuracy] as the metric?'
-```
-
-
-
-
-
-
-    2/2 tests passed
-
-
-
-
 ## 9. Load pre-trained model and score
 <p>Now we'll load a pre-trained model that has the architecture we specified above and was trained for 200 epochs on the full train and test sets we created above.</p>
 <p>Let's use the <a href="https://keras.io/models/model/#evaluate"><code>evaluate</code></a> method to see how well the model did at classifying bumble bees and honey bees for the test and validation sets.  Recall that accuracy is the number of correct predictions divided by the total number of predictions. Given that our classes are balanced, a model that predicts <code>1.0</code> for every image would get an accuracy around <code>0.5</code>.</p>
@@ -531,25 +336,6 @@ print('Eval accuracy:', eval_score[1])
     Eval accuracy: 0.649546827434413
 
 
-
-```python
-%%nose
-    
-def test_task9_0():
-    assert [round(s, 4) for s in eval_score] == [0.6549, 0.6495], \
-    'Did you calculate the eval loss and accuracy using eval_score = pretrained_cnn.evaluate(x_eval, y_eval, verbose=0)?'
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
-
 ## 10. Visualize model training history
 <p>In addition to scoring the final iteration of the pre-trained model as we just did, we can also see the evolution of scores throughout training thanks to the <a href="https://keras.io/callbacks/#history"><code>History</code></a> object. We'll use the <a href="https://docs.python.org/3/library/pickle.html"><code>pickle</code></a> library to load the model history and then plot it.</p>
 <p>Notice how the accuracy improves over time, eventually leveling off. Correspondingly, the loss decreases over time. Plots like these can help diagnose overfitting. If we had seen an upward curve in the validation loss as times goes on (a U shape in the plot), we'd suspect that the model was starting to memorize the test set and would not generalize well to new data.</p>
@@ -578,27 +364,9 @@ plt.ylabel('Loss value');
 
     dict_keys(['val_loss', 'val_acc', 'acc', 'loss'])
 
-
-
 ![png](output_28_1.png)
 
 
-
-```python
-%%nose
-import matplotlib
-    
-def test_task10_0():
-    assert 'fig' in globals() and isinstance(fig, matplotlib.figure.Figure), \
-    "Did you plot pretrained_cnn_history['val_acc'] and pretrained_cnn_history['val_loss'] on their appropriate axes?"
-```
-
-
-
-
-
-
-    1/1 tests passed
 
 
 
@@ -638,27 +406,4 @@ print("")
      [0]
      [1]]
     
-
-
-
-```python
-%%nose
-
-def test_task11_0():
-    assert round(float(y_proba[0][0]), 2) == 0.66, \
-    'Did you predict probabilities using pretrained_cnn.predict(x_eval)?'
-
-def test_task11_1():
-    assert y_pred[3][0] == 0, \
-    'Did you predict classes using pretrained_cnn.predict_classes(x_eval)?'
-```
-
-
-
-
-
-
-    2/2 tests passed
-
-
 
