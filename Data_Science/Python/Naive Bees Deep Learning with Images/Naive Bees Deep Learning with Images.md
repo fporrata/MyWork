@@ -173,27 +173,6 @@ model.add(Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=(50, 50,
 model.add(Conv2D(64, kernel_size=(3, 3), activation='relu', input_shape=(50, 50, 3)))
 ```
 
-
-```python
-%%nose
-
-def test_task6_0():
-    assert 'num_classes' in globals() and num_classes == 1, \
-    'Did you set num_classes equal to 1?'
-    
-def test_task6_1():
-    assert type(model) == keras.engine.sequential.Sequential, \
-    'Did you set model equal to Sequential()?'
-    
-def test_task6_2():
-    assert (model.layers[1].get_config()['filters'] == 64 and
-            model.layers[1].get_config()['kernel_size'] == (3, 3) and
-            model.layers[1].get_config()['activation'] == 'relu' and
-            type(model.layers[1]) == keras.layers.convolutional.Conv2D), \
-    'Did you configure the second convolutional layer as specified in the instructions?'
-```
-
-
 ## 7. Model building (part ii)
 <p>Let's continue building our model. So far our model has two convolutional layers. However, those are not the only layers that we need to perform our task. A complete neural network architecture will have a number of other layers that are designed to play a specific role in the overall functioning of the network. Much deep learning research is about how to structure these layers into coherent systems.</p>
 <p>We'll add the following layers:</p>
