@@ -1,0 +1,12 @@
+This is a quick function I use to check if a key exists in a dictionary so I can use a list comprehension.
+The function uses logic similar to IIF in other languages.
+The list comprehension belows uses the function to get a value or '' if the key does not exists.  This is very useful when you are getting data
+from an API and the JSON does not include all the fields.  Using str() on a null field will give you an error.
+
+
+def checkKey(dict, key):
+    return dict[key] if key in dict.keys() else '' 
+
+
+
+[d['batch_id'] + ',' + d['machinegroup'] + ',' + str(checkKey(d['results'],'test_length')) + ',' + str(checkKey(d['results'],'test_rl'))  + ',' + checkKey(d['results'],'fdr') + ',' + str(checkKey(d['results'],'impedance')) for d in data]
