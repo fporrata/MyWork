@@ -3,6 +3,37 @@ The function uses logic similar to IIF in other languages.
 The list comprehension belows uses the function to get a value or '' if the key does not exists.  This is very useful when you are getting data
 from an API and the JSON does not include all the fields.  Using str() on a null field will give you an error.
 
+Example of JSON return in data variable:
+[{'id': 4,
+  'created': '2018-09-22T09:53:43.287141Z',
+  'updated': None,
+  'quality_schema_id': 2,
+  'machinegroup': '5ef6e492-b3c0-44b7-b962-3336880dfacf',
+  'run_id': '163ff49f4f8',
+  'batch_id': '163ffb5c1ad',
+  'timestamp': '2018-06-15T17:38:20Z',
+  'results': {'test_length': 10364.0,
+   'test_rl': '20WBU-24NBU',
+   'fdr': 'FAIL',
+   'impedance': 49.02}},
+ {'id': 5,
+  'created': '2018-09-22T10:25:57.033913Z',
+  'updated': None,
+  'quality_schema_id': 2,
+  'machinegroup': '5ef6e492-b3c0-44b7-b962-3336880dfacf',
+  'run_id': '1641db74378',
+  'batch_id': '16428019f13',
+  'timestamp': '2018-06-22T23:34:42Z',
+  'results': {'test_length': 2004.0}}]]
+
+As you can see there is a results section in JSON that can have different number of parameters:
+'test_length',
+'test_rl',
+'fdr',
+'impedance'
+
+In python results can be treated as a dictionary.  The checkKey function determines if the key is in the returned JSON.
+
 
 def checkKey(dict, key):
     return dict[key] if key in dict.keys() else '' 
