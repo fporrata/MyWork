@@ -495,7 +495,7 @@ def AmicableNumber(lst):
        OUTPUT - set of amicable numbers    
     """
     dict_SumPdivisors = {}
-    dict_SumPdivisors = {x: np.sum(sumPdivisors(x)) for x in lst }
+    dict_SumPdivisors = {x: sumPdivisors(x) for x in lst }
     #remove entries where value equals to 1 to make search faster
     myDict = {key:val for key, val in dict_SumPdivisors.items() if val != 1}
     #find amicable numbers
