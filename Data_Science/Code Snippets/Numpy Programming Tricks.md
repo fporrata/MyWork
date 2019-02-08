@@ -1,10 +1,12 @@
 
 
 ```python
+#1 - #sort descending
+
 import numpy as np
 array_1 = np.array([3, 6, -21, -1 ,4])
 
-#sort descending
+
 -np.sort(-array_1)
 
 ```
@@ -18,7 +20,7 @@ array_1 = np.array([3, 6, -21, -1 ,4])
 
 
 ```python
-#Calculating percent of values in an array.  Very usefult to calculate p values.
+#2 - Calculating percent of values in an array.  Very usefult to calculate p values.
 
 array_1 = np.array([1,0,1,3,1,0,1,1,2,1,0,1,2,0,0,0,2,0,2,2,0,1,0,0,0,1,1,1,2,1,0,0,0,0,0,2,0
 ,0,0,1,2,0,1,2,2,0,0,0,3,0,0,0,2,2,2,1,2,0,2,1,2,2,0,0,0,1,0,0,0,1,1,1,1,0
@@ -73,7 +75,7 @@ print(np.mean(array_1 > 2))
 
 
 ```python
-#column-standadization and Co-variance of a data matrix
+#3 - column-standadization and Co-variance of a data matrix
 import numpy as np
 
 #version 1
