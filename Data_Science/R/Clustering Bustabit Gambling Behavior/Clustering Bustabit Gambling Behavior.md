@@ -48,21 +48,7 @@ bustabit %>%
     slice(1)
 ```
 
-    Parsed with column specification:
-    cols(
-      Id = col_double(),
-      GameID = col_double(),
-      Username = col_character(),
-      Bet = col_double(),
-      CashedOut = col_double(),
-      Bonus = col_double(),
-      Profit = col_double(),
-      BustedAt = col_double(),
-      PlayDate = col_datetime(format = "")
-    )
-
-
-
+  
 <table>
 <thead><tr><th scope=col>Id</th><th scope=col>GameID</th><th scope=col>Username</th><th scope=col>Bet</th><th scope=col>CashedOut</th><th scope=col>Bonus</th><th scope=col>Profit</th><th scope=col>BustedAt</th><th scope=col>PlayDate</th></tr></thead>
 <tbody>
@@ -84,60 +70,6 @@ bustabit %>%
 	<tr><td>19029273           </td><td>3395044            </td><td>Shadowshot         </td><td>130                </td><td>2                  </td><td>2.77               </td><td>133.6              </td><td>251025.1           </td><td>2016-11-29 00:03:05</td></tr>
 </tbody>
 </table>
-
-
-
-
-```R
-# These packages need to be loaded in the first @tests cell. 
-library(testthat) 
-library(IRkernel.testthat)
-
-run_tests({
-    test_that("packages are loaded", {
-    expect_true("tidyverse" %in% .packages(), info = "Did you load the tidyverse package?")
-    })
-    
-    test_that("bustabit is correct", {
-    expect_is(bustabit, "tbl_df", 
-        info = "Did you read in the bustabit data with read_csv() (not read.csv())?")
-    expect_equal(nrow(bustabit), 50000, 
-        info = "Did you read in the bustabit data with read_csv() (not read.csv())?")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 13.892 0.265 3789.8 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 2. Deriving relevant features for clustering
@@ -176,63 +108,6 @@ head(bustabit_features)
 	<tr><td>14147823           </td><td>3365723            </td><td>afrod              </td><td> 2                 </td><td>1.05               </td><td> NA                </td><td> 0.00              </td><td>1.04               </td><td>2016-11-20 17:50:55</td><td> -2                </td><td>0                  </td><td>1                  </td></tr>
 </tbody>
 </table>
-
-
-
-
-```R
-bustabit_features_soln <- bustabit %>% 
-  mutate(CashedOut = ifelse(is.na(CashedOut), BustedAt + .01, CashedOut),
-         Profit = ifelse(is.na(Profit), 0, Profit),
-         Losses = ifelse(Profit == 0, -1 * Bet, 0),
-         GameWon = ifelse(Profit == 0, 0, 1),
-         GameLost = ifelse(Profit == 0, 1, 0)) 
-
-run_tests({
-    test_that("bustabit_features is correct", {
-    expect_is(bustabit_features, "tbl_df", 
-        info = "Did you use tidyverse routines to create bustabit_features?")
-    expect_identical(bustabit_features$Losses, bustabit_features_soln$Losses, 
-        info = "Did you compute the Losses column correctly by taking the -1 * Bet (for a lost game) or 0 (for a winning game)?")
-    expect_identical(bustabit_features$GameWon, bustabit_features_soln$GameWon, 
-        info = "Did you compute the GameLost column by using the value 0 for a lost game, and 1 for a winning game?")
-    expect_identical(bustabit_features$GameLost, bustabit_features_soln$GameLost, 
-        info = "Did you compute the GameLost column by using the value 1 for a lost game, and 0 for a winning game?")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 14.076 0.272 3789.99 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 3. Creating per-player statistics
@@ -278,65 +153,6 @@ head(bustabit_clus, n = 5)
 
 
 
-```R
-bustabit_clus_soln <- bustabit_features_soln %>%
-  group_by(Username) %>%
-  summarize(AverageCashedOut = mean(CashedOut), 
-            AverageBet = mean(Bet),
-            TotalProfit = sum(Profit),
-            TotalLosses = sum(Losses), 
-            GamesWon = sum(GameWon),
-            GamesLost = sum(GameLost))
-
-run_tests({
-    test_that("bustabit_clus is correct", {
-    expect_is(bustabit, "tbl_df", 
-        info = "Did you use tidyverse routines to create bustabit_clus?")
-    expect_equal(nrow(bustabit_clus), 4149, 
-        info = "bustabit_clus does not have the correct number of rows. Please make sure you grouped the data by Username.")
-    expect_identical(bustabit_clus$AverageBet, bustabit_clus_soln$AverageBet, 
-        info = "Did you compute the AverageBet column correctly by averaging all past bets?")
-    expect_identical(bustabit_clus$TotalLosses, bustabit_clus_soln$TotalLosses, 
-        info = "Did you compute the TotalLosses column correctly by summing all past losses?")
-    expect_identical(bustabit_clus$GamesLost, bustabit_clus_soln$GamesLost, 
-        info = "Did you compute the GamesLost column by counting all past losing games?")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 14.146 0.272 3790.06 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 4. Scaling and normalization of the derived features
 <p>The variables are on very different <strong>scales</strong> right now. For example, <code>AverageBet</code> is in bits (1/1000000 of a Bitcoin), <code>AverageCashedOut</code> is a multiplier, and <code>GamesLost</code> and <code>GamesWon</code> are counts. As a result, we would like to <strong>normalize</strong> the variables such that across clustering algorithms, they will have approximately equal weighting.</p>
 <p>One thing to think about is that in many cases, we may actually want a particular numeric variable to maintain a higher weight. This could occur if there is some prior knowledge regarding, for example, which variable might be most important in terms of defining similar Bustabit behavior. In this case, without that prior knowledge, we will forego the weighting of variables and scale everything. We are going to use <strong>mean-sd</strong> standardization to scale the data. Note that this is also known as a <strong>Z-score</strong>.</p>
@@ -377,63 +193,6 @@ summary(bustabit_standardized)
      Max.   :  0.10916   Max.   :13.2534   Max.   :19.30911  
 
 
-
-```R
-mean_sd_standard_soln <- function(x) {
-    (x - mean(x)) / sd(x)
-}
-
-bustabit_standardized_soln <- bustabit_clus_soln %>%
-    mutate_if(funs(is.numeric), mean_sd_standard_soln)
-
-run_tests({
-    test_that("mean_sd_standard is correct", {
-        expect_identical(mean_sd_standard(1:10), mean_sd_standard_soln(1:10), 
-            info = "Did you perform mean-sd standardization by subtracting the mean and dividing by the standard deviation?")
-    })
-    
-    test_that("bustabit_standardized is correct", {
-    expect_is(bustabit_standardized, "tbl_df", 
-        info = "Did you use dplyr routines to apply this function to each numeric column?")
-    expect_equal(bustabit_standardized$AverageCashedOut, mean_sd_standard_soln(bustabit_clus$AverageCashedOut), 
-        info = "Is your mean_sd_standard function correctly applied to the data columns?")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 14.2 0.277 3790.118 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 5. Cluster the player data using K means
 <p>With standardized data of per-player features, we are now ready to use K means clustering in order to cluster the players based on their online gambling behavior. K means is implemented in R in the <code>kmeans()</code> function from the stats package. This function requires the <code>centers</code> parameter, which represents the number of clusters to use. </p>
 <p>Without prior knowledge, it is often difficult to know what an appropriate choice for the number of clusters is. We will begin by choosing <strong>five</strong>. This choice is rather arbitrary, but represents a good initial compromise between choosing too many clusters (which reduces the interpretability of the final results), and choosing too few clusters (which may not capture the distinctive behaviors effectively). Feel free to play around with other choices for the number of clusters and see what you get instead!</p>
@@ -458,60 +217,6 @@ table(bustabit_clus$cluster)
     
        1    2    3    4    5 
      412   16   17 3626   78 
-
-
-
-```R
-bustabit_clus_soln$cluster <- factor(cluster_solution$cluster)
-
-run_tests({
-    test_that("The cluster assignment was performed correctly", {
-        expect_is(cluster_solution, "kmeans",
-                  info = "Did you use the kmeans() function to create your cluster assignment?")
-        expect_equal(length(unique(cluster_solution$cluster)), 5, 
-            info = "Did you choose 5 clusters?")
-    })
-    
-        
-    test_that("The assignments were stored in the cluster data frame", {
-    expect_is(bustabit_clus$cluster, "factor", 
-        info = "Did you store the cluster assignment in the bustabit_clus object and explicitly coerce the object to be a factor?")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 14.241 0.28 3790.162 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
 
 ## 6. Compute averages for each cluster
 <p>We have a clustering assignment which maps every Bustabit gambler to one of five different groups. To begin to assess the quality and distinctiveness of these groups, we are going to look at <strong>group averages</strong> for each cluster across the original variables in our clustering dataset. This will, for example, allow us to see which cluster tends to make the largest bets, which cluster tends to win the most games, and which cluster tends to lose the most money. This will provide us with our first clear indication as to whether the behaviors of the groups appear distinctive!</p>
@@ -538,57 +243,6 @@ bustabit_clus_avg
 	<tr><td>5            </td><td> 1.758407    </td><td>   432.1163  </td><td>  18568.1141 </td><td>  -16724.0641</td><td>87.1794872   </td><td>61.205128    </td></tr>
 </tbody>
 </table>
-
-
-
-
-```R
-cluster_mean_solution <- bustabit_clus_soln %>%
-    group_by(cluster) %>%
-    summarize_if(funs(is.numeric), mean)
-
-run_tests({
-    test_that("The bustabit_clus_avg was created correctly", {
-        expect_is(bustabit_clus_avg, "tbl_df",
-                  info = "Did you use tidyverse routines to compute the cluster averages?")
-        expect_identical(bustabit_clus_avg, cluster_mean_solution, 
-            info = "Did you correctly compute the group averages?")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 14.284 0.28 3790.205 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
 
 ## 7. Visualize the clusters with a Parallel Coordinate Plot
 <p>We can already learn a bit about our cluster groupings by looking at the previous table. We can clearly see that there is a group that makes very large bets, a group that tends to cash out at very high multiplier values, and a group that has played many games of Bustabit. We can visualize these group differences graphically using a Parallel Coordinate Plot or PCP. To do so, we will introduce one more kind of scaling: min-max scaling, which forces each variable to fall between 0 and 1.</p>
@@ -619,92 +273,6 @@ ggparcoord(bustabit_avg_minmax, columns = 2:ncol(bustabit_avg_minmax),
 
 ![png](output_19_1.png)
 
-
-
-```R
-min_max_standard_soln <- function(x) {
-    (x - min(x)) / (max(x) - min(x))
-}
-
-bustabit_avg_minmax_soln <- cluster_mean_solution %>%
-    mutate_if(is.numeric, funs(min_max_standard_soln))
-
-student_plot <- last_plot()
-solution_plot <- ggparcoord(bustabit_avg_minmax, columns = 2:ncol(bustabit_avg_minmax), 
-           groupColumn = "cluster", scale = "globalminmax", order = "skewness")
-
-run_tests({
-    test_that("min_max_standard is correct", {
-        expect_identical(min_max_standard(1:10), min_max_standard_soln(1:10), 
-            info = "Did you perform min-max standardization by subtracting the min and dividing by the range?")
-    })
-    
-    test_that("bustabit_avg_minmax is correct", {
-        expect_is(bustabit_avg_minmax, "tbl_df", 
-            info = "Did you use dplyr routines to apply bustabit_avg_minmax to each numeric column?")
-        expect_identical(bustabit_avg_minmax, bustabit_avg_minmax_soln,
-            info = "Did you correctly apply min_max_standard to each numeric column in bustabit_avg_minmax?")
-    })
-    
-    test_that("The plot is drawn correctly", {
-        expect_s3_class(student_plot, "ggplot") 
-        expect_identical(
-            student_plot$data,
-            solution_plot$data,
-            info = 'The plot data is incorrect. Did you use `bustabit_avg_minmax`?'
-        )      
-        expect_identical(
-            deparse(student_plot$mapping$x),
-            deparse(solution_plot$mapping$x),
-            info = 'The `x` aesthetic is incorrect. Did you use `ggparcoord` to produce the plot?'
-        )      
-        expect_identical(
-            deparse(student_plot$mapping$y),
-            deparse(solution_plot$mapping$y),
-            info = 'The `y` aesthetic is incorrect. Did you use `ggparcoord` to produce the plot?'
-        )      
-        expect_identical(
-            deparse(student_plot$mapping$group),
-            deparse(solution_plot$mapping$group),
-            info = 'The `group` aesthetic is incorrect. Did you specify the `groupColumn` argument for ggparcoord as cluster?'
-        )
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 14.7 0.284 3790.624 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 8. Visualize the clusters with Principal Components
 <p>One issue with plots like the previous is that they get more unwieldy as we continue to add variables. One way to solve this is to use the Principal Components of a dataset in order to reduce the dimensionality to aid in visualization. Essentially, this is a two-stage process:</p>
 <ol>
@@ -728,84 +296,9 @@ p1 <- ggplot(my_pc, aes(x = PC1, y = PC2, color = cluster)) + geom_point()
 p1
 ```
 
-
-
-
 ![png](output_22_1.png)
 
 
-
-```R
-my_pc_soln <- as.data.frame(prcomp(bustabit_standardized_soln[,-1])$x)
-my_pc_soln$cluster <- bustabit_clus_soln$cluster
-
-student_plot <- last_plot()
-solution_plot <- ggplot(data = my_pc, aes(x = PC1, y = PC2, color = cluster)) +
-    geom_point()
-
-run_tests({
-    test_that("min_max_standard is correct", {
-        expect_is(p1, "ggplot", 
-            info = "Did you use ggplot to create the PCP and store it as p1?")
-    })
-    
-    test_that("The plot is drawn correctly", {
-        expect_s3_class(student_plot, "ggplot") 
-        expect_identical(
-            student_plot$data,
-            solution_plot$data,
-            info = 'The plot data is incorrect. Did you use `my_pc` as the data argument?'
-        )      
-        expect_identical(
-            deparse(student_plot$mapping$x),
-            deparse(solution_plot$mapping$x),
-            info = 'The `x` variable is incorrect. Did you assign PC1 as the x variable?'
-        )      
-        expect_identical(
-            deparse(student_plot$mapping$y),
-            deparse(solution_plot$mapping$y),
-            info = 'The `y` variable is incorrect. Did you assign PC2 as the y variable?'
-        )      
-        expect_identical(
-            deparse(student_plot$mapping$color),
-            deparse(solution_plot$mapping$color),
-            info = 'The `color` variable is incorrect. Did you specify cluster as the color variable?'
-        )
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 15.243 0.284 3791.167 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 9. Analyzing the groups of gamblers our solution uncovered
@@ -846,70 +339,4 @@ bustabit_clus_avg_named
 	<tr><td>5                 </td><td> 1.758407         </td><td>   432.1163       </td><td>  18568.1141      </td><td>  -16724.0641     </td><td>87.1794872        </td><td>61.205128         </td><td>Strategic Addicts </td></tr>
 </tbody>
 </table>
-
-
-
-
-```R
-cluster_names_soln <- c(
-    "Risky Commoners",
-    "High Rollers",
-    "Risk Takers",
-    "Cautious Commoners",
-    "Strategic Addicts"
-)
-
-bustabit_clus_avg_named_soln <- cluster_mean_solution %>%
-    cbind(Name = cluster_names_soln)
-
-run_tests({
-    test_that("The cluster labels are correctly defined", {
-        expect_identical(
-            cluster_names,
-            cluster_names_soln,
-            info = 'Did you correctly identify clusters 1 through 5 with the appropriate name?'
-        )
-    })
-        
-    test_that("The labels were stored in the cluster means table correctly", {
-        expect_identical(
-            bustabit_clus_avg_named,
-            bustabit_clus_avg_named_soln,
-            info = 'Did you store the correct cluster names as a column in the cluster means table?'
-        )
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 15.29 0.284 3791.213 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
