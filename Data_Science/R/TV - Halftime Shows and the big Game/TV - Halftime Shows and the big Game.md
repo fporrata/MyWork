@@ -422,7 +422,7 @@ musicians_songs  %>%
 	<tr><td>30                 </td><td>Diana Ross         </td><td>10                 </td></tr>
 	<tr><td>49                 </td><td>Katy Perry         </td><td> 8                 </td></tr>
 	<tr><td>51                 </td><td>Lady Gaga          </td><td> 7                 </td></tr>
-	<tr><td>47                                                               </td><td><span style=white-space:pre-wrap>Beyonc&lt;U+00E9&gt;     </span></td><td> 7                                                               </td></tr>
+	<tr><td>47                                                               </td><td><span style=white-space:pre-wrap>Beyoncé;     </span></td><td> 7                                                               </td></tr>
 	<tr><td>41                 </td><td>Prince             </td><td> 7                 </td></tr>
 	<tr><td>23                 </td><td>Elvis Presto       </td><td> 7                 </td></tr>
 	<tr><td>50                 </td><td>Coldplay           </td><td> 6                 </td></tr>
