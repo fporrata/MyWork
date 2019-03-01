@@ -9,9 +9,13 @@
 <li>Lastly, the house maintains slight advantages because in 1 out of every 100 games, everyone playing busts.</li>
 </ol>
 <p>Below we see an example of a winning game:</p>
-<p><img src="https://s3.amazonaws.com/assets.datacamp.com/production/project_643/img/bustabit_win.gif" alt=""></p>
+
+![gif](bustabit_win.gif)
+
 <p>And a losing game, for comparison:</p>
-<p><img src="https://s3.amazonaws.com/assets.datacamp.com/production/project_643/img/bustabit_loss.gif" alt=""></p>
+
+![gif](bustabit_loss.gif)
+
 <p>Our goal will be to define relevant <strong>groups</strong> or <strong>clusters</strong> of Bustabit users to identify what patterns and behaviors of gambling persist. Can we describe a particular group as risk-averse? Is there a set of gamblers that have a strategy that seems to be more successful in the long term?</p>
 <p>The data you will be working with includes over 40000 games of Bustabit by a bit over 4000 different players, for a total of 50000 rows (one game played by one player). The data includes the following variables:</p>
 <ol>
