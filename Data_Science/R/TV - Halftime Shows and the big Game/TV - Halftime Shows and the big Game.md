@@ -7,8 +7,7 @@
 <li>How have viewership, TV ratings, and advertisement costs evolved?</li>
 <li>Who are the most prolific musicians in terms of halftime show performances?</li>
 </ul>
-<p><img src="https://s3.amazonaws.com/assets.datacamp.com/production/project_691/img/left_shark.jpg" alt="Left Shark Steals The Show">
-<em><a href="https://www.flickr.com/photos/huntleypaton/16464994135/in/photostream/">Left Shark Steals The Show</a>. Katy Perry performing at halftime of Super Bowl XLIX. Photo by Huntley Paton. Attribution-ShareAlike 2.0 Generic (CC BY-SA 2.0).</em></p>
+
 <p>The dataset we'll use was <a href="https://en.wikipedia.org/wiki/Web_scraping">scraped</a> and polished from Wikipedia. It is made up of three CSV files, one with <a href="https://en.wikipedia.org/wiki/List_of_Super_Bowl_champions">game data</a>, one with <a href="https://en.wikipedia.org/wiki/Super_Bowl_television_ratings">TV data</a>, and one with <a href="https://en.wikipedia.org/wiki/List_of_Super_Bowl_halftime_shows">halftime musician data</a> for all 52 Super Bowls through 2018.</p>
 
 
@@ -27,48 +26,7 @@ head(tv)
 head(halftime_musicians)
 ```
 
-    Parsed with column specification:
-    cols(
-      date = col_date(format = ""),
-      super_bowl = col_double(),
-      venue = col_character(),
-      city = col_character(),
-      state = col_character(),
-      attendance = col_double(),
-      team_winner = col_character(),
-      winning_pts = col_double(),
-      qb_winner_1 = col_character(),
-      qb_winner_2 = col_character(),
-      coach_winner = col_character(),
-      team_loser = col_character(),
-      losing_pts = col_double(),
-      qb_loser_1 = col_character(),
-      qb_loser_2 = col_character(),
-      coach_loser = col_character(),
-      combined_pts = col_double(),
-      difference_pts = col_double()
-    )
-    Parsed with column specification:
-    cols(
-      super_bowl = col_double(),
-      network = col_character(),
-      avg_us_viewers = col_double(),
-      total_us_viewers = col_double(),
-      rating_household = col_double(),
-      share_household = col_double(),
-      rating_18_49 = col_double(),
-      share_18_49 = col_double(),
-      ad_cost = col_double()
-    )
-    Parsed with column specification:
-    cols(
-      super_bowl = col_double(),
-      musician = col_character(),
-      num_songs = col_double()
-    )
-
-
-
+   
 <table>
 <thead><tr><th scope=col>date</th><th scope=col>super_bowl</th><th scope=col>venue</th><th scope=col>city</th><th scope=col>state</th><th scope=col>attendance</th><th scope=col>team_winner</th><th scope=col>winning_pts</th><th scope=col>qb_winner_1</th><th scope=col>qb_winner_2</th><th scope=col>coach_winner</th><th scope=col>team_loser</th><th scope=col>losing_pts</th><th scope=col>qb_loser_1</th><th scope=col>qb_loser_2</th><th scope=col>coach_loser</th><th scope=col>combined_pts</th><th scope=col>difference_pts</th></tr></thead>
 <tbody>
@@ -111,110 +69,6 @@ head(halftime_musicians)
 </tbody>
 </table>
 
-
-
-
-```R
-# These packages need to be loaded in the first @tests cell. 
-library(testthat) 
-library(IRkernel.testthat)
-
-soln_super_bowls  <-  read_csv("datasets/super_bowls.csv")
-soln_tv = read_csv("datasets/tv.csv")
-soln_halftime_musicians = read_csv("datasets/halftime_musicians.csv")
-
-run_tests({
-    test_that("packages are loaded", {
-        expect_true("tidyverse" %in% .packages(), info = "Did you load the tidyverse package?")
-      })
-    test_that("The .csv were read in correctly", {
-        expect_is(super_bowls, "tbl_df", info = "Did you read in super_bowls.csv with read_csv?")
-        expect_equal(super_bowls, soln_super_bowls, 
-                     info = "super_bowls contains the wrong values. Did you load the correct .csv file?")
-
-        expect_is(tv, "tbl_df", info = "Did you read in tv.csv with read_csv?")
-        expect_equal(tv, soln_tv, 
-                     info = "tv contains the wrong values. Did you load the correct .csv file?")
-
-        expect_is(halftime_musicians, "tbl_df", info = "Did you read in halftime_musicians.csv with read_csv?")
-        expect_equal(halftime_musicians, soln_halftime_musicians, 
-                     info = "halftime_musicians contains the wrong values. Did you load the correct .csv file?")
-    })
-})
-```
-
-    Parsed with column specification:
-    cols(
-      date = col_date(format = ""),
-      super_bowl = col_double(),
-      venue = col_character(),
-      city = col_character(),
-      state = col_character(),
-      attendance = col_double(),
-      team_winner = col_character(),
-      winning_pts = col_double(),
-      qb_winner_1 = col_character(),
-      qb_winner_2 = col_character(),
-      coach_winner = col_character(),
-      team_loser = col_character(),
-      losing_pts = col_double(),
-      qb_loser_1 = col_character(),
-      qb_loser_2 = col_character(),
-      coach_loser = col_character(),
-      combined_pts = col_double(),
-      difference_pts = col_double()
-    )
-    Parsed with column specification:
-    cols(
-      super_bowl = col_double(),
-      network = col_character(),
-      avg_us_viewers = col_double(),
-      total_us_viewers = col_double(),
-      rating_household = col_double(),
-      share_household = col_double(),
-      rating_18_49 = col_double(),
-      share_18_49 = col_double(),
-      ad_cost = col_double()
-    )
-    Parsed with column specification:
-    cols(
-      super_bowl = col_double(),
-      musician = col_character(),
-      num_songs = col_double()
-    )
-
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 15.142 0.271 660.917 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 2. Taking note of dataset issues
@@ -270,48 +124,6 @@ summary(halftime_musicians)
 
 
 
-```R
-run_tests({
-    test_that("the sky is blue", {
-        expect_true("blue sky" == "blue sky", 
-                    info = "Not testing anything.")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 15.18 0.275 660.958 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 3. Combined points distribution
 <p>In the TV data, the following columns have a lot of missing values:</p>
 <ul>
@@ -359,53 +171,6 @@ super_bowls  %>%
 
 
 
-```R
-stud_plot <- last_plot()
-soln_plot  <- ggplot(soln_super_bowls, aes(combined_pts)) +
- geom_histogram(binwidth = 5) + 
- labs(x = "Combined Points", y = "Number of Super Bowls")
-
-run_tests({
-    test_that("the plot was created correctly", {
-        expect_equal(stud_plot, soln_plot, 
-                     info = "The historgram of combined points was not created correctly. \nCheck that combined_pts is the aesthetic and the binwidth = 5.")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 15.389 0.275 661.166 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 4. Point difference distribution
 <p>Most of the combined scores are between 40 and 50 points, with the extremes being roughly equal distance away in opposite directions. At the highest combined scores of 74 and 75, are two games featuring dominant quarterback performances. One happened last year - Super Bowl LII when Tom Brady's Patriots lost to Nick Foles' underdog Eagles 33 to 41, for a combined score of 74.</p>
 <p>On the other end of the spectrum, we have Super Bowl III and VII, which featured tough defenses that dominated the games. We also have Super Bowl IX in New Orleans in 1975, whose 16-6 score can be attributed to inclement weather. Overnight rain made the field slick, and it was cold (46 °F / 8 °C), making it hard for the Steelers and Vikings to do much offensively. This was the second-coldest Super Bowl ever and the last to be played in inclement weather for over 30 years. The NFL realized people like points, I guess.</p>
@@ -444,53 +209,6 @@ super_bowls  %>%
 
 
 
-```R
-stud_plot <- last_plot()
-soln_plot  <- ggplot(soln_super_bowls, aes(difference_pts)) +
- geom_histogram(binwidth = 2) +
- labs(x = "Point Difference", y = "Number of Super Bowls")
-
-run_tests({
-    test_that("the plot was created correctly", {
-        expect_equal(stud_plot, soln_plot, 
-                     info = "The historgram of point differences was not created correctly.\nCheck that difference_pts is the aesthetic and binwidth is correctly set.")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 15.647 0.275 661.423 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 5. Do blowouts translate to lost viewers?
 <p>The vast majority of Super Bowls are close games. Makes sense. Both teams are the best in their conference if they've made it this far. The closest game ever was the Buffalo Bills' 1-point loss to the New York Giants in 1991, which is best remembered for Scott Norwood's last-second missed field goal attempt that went <em><a href="https://www.youtube.com/watch?v=RPFZCGgjDSg">wide right</a></em>, kicking off four Bills Super Bowl losses in a row. Poor Scott. The biggest point spread so far is 45 points (!) when Hall of Famer, Joe Montana, led the San Francisco 49ers to victory in 1990, one year before the closest game ever.</p>
 <p>I remember watching the Seahawks crush the Broncos by 35 points (43-8) in 2014, which sucked to watch in my opinion. The game was never really close. I'm pretty sure we changed the channel at the end of the third quarter. Let's combine the game data and TV data to see if this is a universal phenomenon. Do large point differences translate to lost viewers? We can plot <a href="https://en.wikipedia.org/wiki/Nielsen_ratings">household share</a> <em>(average percentage of U.S. households with a TV in use that were watching for the entire broadcast)</em> vs. point difference to find out.</p>
@@ -514,63 +232,6 @@ ggplot(games_tv, aes(x=difference_pts, y = share_household)) +
 
 ![png](output_13_1.png)
 
-
-
-```R
-stud_plot <- last_plot()
-
-soln_games_tv <- soln_tv  %>% 
- filter(super_bowl != 1)  %>% 
- inner_join(soln_super_bowls, by = "super_bowl")
-
-soln_plot  <- ggplot(soln_games_tv, aes(difference_pts, share_household)) +
- geom_point() +
- geom_smooth(method = "lm") +
- labs(x = "Point Difference", y = "Viewership (household share)")
-
-run_tests({
-    test_that("games_tv was created correctly", {
-        expect_equal(games_tv, soln_games_tv, 
-                     info = "games_tv was not created correctly. \nCheck that you use "!=" to remove SB one, and joined to super_bowls.")
-    })
-    test_that("the plot was created correctly", {
-        expect_equal(stud_plot, soln_plot, 
-                     info = "The scatterplot is not correct.\nCheck the x and y aesthetics and that you used method = 'lm' in geom_smooth().")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 15.913 0.275 661.689 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 6. Viewership and the ad industry over time
@@ -601,66 +262,6 @@ ggplot(games_tv_plot, aes(x=super_bowl, y=value)) +
 ![png](output_16_1.png)
 
 
-
-```R
-stud_plot <- last_plot()
-
-soln_games_tv_plot  <- soln_games_tv %>% 
-    gather(key = "category", value = "value", avg_us_viewers, rating_household, ad_cost)  %>% 
-    mutate(cat_name = case_when(category == "avg_us_viewers" ~ "Average number of US viewers",
-                                category == "rating_household" ~ "Household rating",
-                                category == "ad_cost" ~ "Advertisement cost (USD)",
-                                TRUE ~ as.character(category)))
-
-soln_plot <- ggplot(soln_games_tv_plot, aes(super_bowl, value)) +
- geom_line() +
- facet_wrap(~ cat_name, scales = "free", nrow = 3) + 
- labs(x = "Super Bowl", y = "") +
- theme_minimal()
-
-run_tests({
-    test_that("wide_games_tv was created correctly", {
-        expect_equal(games_tv_plot, soln_games_tv_plot, 
-                     info = "wide_games_tv was not created correctly. \nYou need to gather the three columns you are going to plot.")
-        })
-    test_that("the plot was created correctly", {
-        expect_equal(stud_plot, soln_plot, 
-                     info = "The faceted line plot is not correct.\nCheck the x and y aesthetics and the theme.")
-        })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 16.398 0.275 662.174 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 7. Halftime shows weren't always this great
@@ -743,53 +344,6 @@ run_tests({
 
 
 
-
-```R
-soln_pre_MJ  <- soln_halftime_musicians  %>% 
- filter(super_bowl <= 27) 
-
-run_tests({
-    test_that("pre_MJ created correctly", {
-        expect_equal(pre_MJ, soln_pre_MJ, 
-                     info = "pre_MJ was not created correctly. \nCheck that you filtered for super_bowl <= 27.")
-        })
-    })
-        
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 16.511 0.275 662.285 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 8. Who has the most halftime show appearances?
 <p>Now that's a lot of marching bands! There was also the American jazz clarinetist, Pete Fountain, and Miss Texas 1973 played the violin. Nothing against those performers - they are just simply not <a href="https://www.youtube.com/watch?v=suIg9kTGBVI">Beyoncé</a>. To be fair, no one is.</p>
 <p>Let's find all the musicians who performed at the Super Bowl more than once and count their performances.</p>
@@ -825,55 +379,6 @@ halftime_musicians  %>%
 </table>
 
 
-
-
-```R
-out <- .Last.value
-
-soln_test  <- soln_halftime_musicians  %>% 
-    count(musician)  %>% 
-    filter(n > 1) 
-    
-
-run_tests({
-    test_that("You found the musicians with more than 1 appearance", {
-        expect_equal(out, soln_test, 
-                     info = "The display is not correct. \nCheck that you filtered for musicians who appeared more than once, and arranged the counts in descending order.")
-        })
-    })
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 16.552 0.279 662.33 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 9. Who performed the most songs in a halftime show?
@@ -936,63 +441,6 @@ musicians_songs  %>%
 
 
 
-```R
-stud_plot  <-  last_plot()
-
-soln_musicians_songs  <-soln_halftime_musicians  %>% 
-    filter(!str_detect(musician, "Marching"),
-           !str_detect(musician, "Spirit"),
-          super_bowl > 20)
-
-soln_plot <- ggplot(soln_musicians_songs, aes(num_songs)) + 
-    geom_histogram(binwidth = 1) +
-    labs(x = "Number of songs per halftime show", y = "Number of musicians")
-
-run_tests({
-    test_that("musicians_songs is correct", {
-        expect_equal(musicians_songs, soln_musicians_songs, 
-                     info = "musicians_songs is not correct. \nCheck the filtering.")
-    })
-    test_that("the histogram is correct", {
-        expect_equal(stud_plot, soln_plot, info = "The plot is not correct. Did you use num_songs as the asethetic with a binwidth = 1?")
-    })
-})
-
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 16.775 0.279 662.553 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 10. Conclusion
 <p>Most non-band musicians do 1 to 3 songs per halftime show. It's important to note that the duration of the halftime show is fixed (roughly 12 minutes) so songs per performance is more a measure of how many hit songs you have (cram as many hit songs in as you can!). Timberlake went off in 2018 with 11 songs! Wow! Diana Ross comes in second with a ten song medley in 1996.</p>
 <p>In this notebook, we loaded, cleaned, and explored Super Bowl game, television, and halftime show data. We visualized the distributions of combined points, point differences, and halftime show performances using histograms. We used line plots to see how advertisement cost increases lagged behind viewership increases. And, we discovered that blowouts appear to lead to a drop in viewership.</p>
@@ -1012,47 +460,4 @@ paste("The winner of Super Bowl LII will be the", super_bowl_LII_winner)
 
 'The winner of Super Bowl LII will be the New England Patriots'
 
-
-
-```R
-run_tests({
-    test_that("You found a magical unicorn!", {
-        expect_is(patriots, "character")
-        expect_is(rams, "character")
-        })
-    })
-
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 16.853 0.279 662.63 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
