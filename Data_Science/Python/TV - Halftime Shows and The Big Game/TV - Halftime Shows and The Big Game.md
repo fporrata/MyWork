@@ -7,8 +7,7 @@
 <li>How have viewership, TV ratings, and ad cost evolved over time?</li>
 <li>Who are the most prolific musicians in terms of halftime show performances?</li>
 </ul>
-<p><img src="https://s3.amazonaws.com/assets.datacamp.com/production/project_684/img/left_shark.jpg" alt="Left Shark Steals The Show">
-<em><a href="https://www.flickr.com/photos/huntleypaton/16464994135/in/photostream/">Left Shark Steals The Show</a>. Katy Perry performing at halftime of Super Bowl XLIX. Photo by Huntley Paton. Attribution-ShareAlike 2.0 Generic (CC BY-SA 2.0).</em></p>
+
 <p>The dataset we'll use was <a href="https://en.wikipedia.org/wiki/Web_scraping">scraped</a> and polished from Wikipedia. It is made up of three CSV files, one with <a href="https://en.wikipedia.org/wiki/List_of_Super_Bowl_champions">game data</a>, one with <a href="https://en.wikipedia.org/wiki/Super_Bowl_television_ratings">TV data</a>, and one with <a href="https://en.wikipedia.org/wiki/List_of_Super_Bowl_halftime_shows">halftime musician data</a> for all 52 Super Bowls through 2018. Let's take a look, using <code>display()</code> instead of <code>print()</code> since its output is much prettier in Jupyter Notebooks.</p>
 
 
@@ -29,19 +28,7 @@ display(halftime_musicians.head())
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -179,19 +166,7 @@ display(halftime_musicians.head())
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -275,19 +250,7 @@ display(halftime_musicians.head())
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
 
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -333,43 +296,6 @@ display(halftime_musicians.head())
 </div>
 
 
-
-```python
-%%nose
-# %%nose needs to be included at the beginning of every @tests cell
-
-# One or more tests of the student's code
-# The @solution should pass the tests
-# The purpose of the tests is to try to catch common errors and
-# to give the student a hint on how to resolve these errors
-
-def test_pandas_loaded():
-    assert 'pd' in globals(), \
-    'Did you import the pandas module under the alias pd?'
-    
-def test_super_bowls_correctly_loaded():
-    correct_super_bowls = pd.read_csv('datasets/super_bowls.csv')
-    assert correct_super_bowls.equals(super_bowls), "The variable super_bowls does not contain the data in super_bowls.csv."
-
-def test_tv_correctly_loaded():
-    correct_tv = pd.read_csv('datasets/tv.csv')
-    assert correct_tv.equals(tv), "The variable tv does not contain the data in tv.csv."
-    
-def test_halftime_musicians_correctly_loaded():
-    correct_halftime_musicians = pd.read_csv('datasets/halftime_musicians.csv')
-    assert correct_halftime_musicians.equals(halftime_musicians), "The variable halftime_musicians does not contain the data in halftime_musicians.csv."
-```
-
-
-
-
-
-
-    4/4 tests passed
-
-
-
-
 ## 2. Taking note of dataset issues
 <p>For the Super Bowl game data, we can see the dataset appears whole except for missing values in the backup quarterback columns (<code>qb_winner_2</code> and <code>qb_loser_2</code>), which make sense given most starting QBs in the Super Bowl (<code>qb_winner_1</code> and <code>qb_loser_1</code>) play the entire game.</p>
 <p>From the visual inspection of TV and halftime musicians data, there is only one missing value displayed, but I've got a hunch there are more. The Super Bowl goes all the way back to 1967, and the more granular columns (e.g. the number of songs for halftime musicians) probably weren't tracked reliably over time. Wikipedia is great but not perfect.</p>
@@ -411,31 +337,6 @@ halftime_musicians.info()
     dtypes: float64(1), int64(1), object(1)
     memory usage: 3.2+ KB
 
-
-
-```python
-%%nose
-# %%nose needs to be included at the beginning of every @tests cell
-
-# One or more tests of the student's code
-# The @solution should pass the tests
-# The purpose of the tests is to try to catch common errors and
-# to give the student a hint on how to resolve these errors
-
-def test_nothing_task_2():
-    assert True, "Nothing to test."
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
-
 ## 3. Combined points distribution
 <p>For the TV data, the following columns have missing values and a lot of them:</p>
 <ul>
@@ -471,19 +372,6 @@ display(super_bowls[super_bowls.combined_pts < 25])
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -558,19 +446,6 @@ display(super_bowls[super_bowls.combined_pts < 25])
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -664,31 +539,6 @@ display(super_bowls[super_bowls.combined_pts < 25])
 </div>
 
 
-
-```python
-%%nose
-# %%nose needs to be included at the beginning of every @tests cell
-
-# One or more tests of the student's code
-# The @solution should pass the tests
-# The purpose of the tests is to try to catch common errors and
-# to give the student a hint on how to resolve these errors
-
-def test_matplotlib_loaded():
-    assert 'plt' in globals(), \
-    'Did you import the pyplot module from matplotlib under the alias plt?'
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
-
 ## 4. Point difference distribution
 <p>Most combined scores are around 40-50 points, with the extremes being roughly equal distance away in opposite directions. Going up to the highest combined scores at 74 and 75, we find two games featuring dominant quarterback performances. One even happened recently in 2018's Super Bowl LII where Tom Brady's Patriots lost to Nick Foles' underdog Eagles 41-33 for a combined score of 74.</p>
 <p>Going down to the lowest combined scores, we have Super Bowl III and VII, which featured tough defenses that dominated. We also have Super Bowl IX in New Orleans in 1975, whose 16-6 score can be attributed to inclement weather. The field was slick from overnight rain, and it was cold at 46 °F (8 °C), making it hard for the Steelers and Vikings to do much offensively. This was the second-coldest Super Bowl ever and the last to be played in inclement weather for over 30 years. The NFL realized people like points, I guess.</p>
@@ -713,19 +563,6 @@ display(super_bowls[super_bowls.difference_pts >= 35])
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -779,19 +616,6 @@ display(super_bowls[super_bowls.difference_pts >= 35])
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -905,31 +729,6 @@ display(super_bowls[super_bowls.difference_pts >= 35])
 </table>
 </div>
 
-
-
-```python
-%%nose
-# %%nose needs to be included at the beginning of every @tests cell
-
-# One or more tests of the student's code
-# The @solution should pass the tests
-# The purpose of the tests is to try to catch common errors and
-# to give the student a hint on how to resolve these errors
-
-def test_nothing_task_4():
-    assert True, "Nothing to test."
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
-
 ## 5. Do blowouts translate to lost viewers?
 <p>The vast majority of Super Bowls are close games. Makes sense. Both teams are likely to be deserving if they've made it this far. The closest game ever was when the Buffalo Bills lost to the New York Giants by 1 point in 1991, which was  best remembered for Scott Norwood's last-second missed field goal attempt that went <em><a href="https://www.youtube.com/watch?v=RPFZCGgjDSg">wide right</a></em>, kicking off four Bills Super Bowl losses in a row. Poor Scott. The biggest point discrepancy ever was 45 points (!) where Hall of Famer Joe Montana's led the San Francisco 49ers to victory in 1990, one year before the closest game ever.</p>
 <p>I remember watching the Seahawks crush the Broncos by 35 points (43-8) in 2014, which sucked to watch in my opinion. The game was never really close. I'm pretty sure we changed the channel at the end of the third quarter. Let's combine our game data and TV to see if this is a universal phenomenon. Do large point differences translate to lost viewers? We can plot <a href="https://en.wikipedia.org/wiki/Nielsen_ratings">household share</a> <em>(average percentage of U.S. households with a TV in use that were watching for the entire broadcast)</em> vs. point difference to find out.</p>
@@ -947,48 +746,7 @@ sns.regplot(x="difference_pts", y="share_household", data=games_tv)
 ```
 
 
-
-
-    <matplotlib.axes._subplots.AxesSubplot at 0x7f7036b1d710>
-
-
-
-
 ![png](output_13_1.png)
-
-
-
-```python
-%%nose
-# %%nose needs to be included at the beginning of every @tests cell
-
-# One or more tests of the student's code
-# The @solution should pass the tests
-# The purpose of the tests is to try to catch common errors and
-# to give the student a hint on how to resolve these errors
-
-last_value = _
-
-def test_seaborn_loaded():
-    assert 'sns' in globals(), \
-    'Did you import the seaborn module under the alias sns?'
-
-def test_plot_exists_5():
-    try:
-        assert type(last_value) == type(sns.regplot(x='difference_pts', y='share_household', data=games_tv))
-    except AssertionError:
-        assert False, 'A plot was not the last output of the code cell.'
-```
-
-
-
-
-
-
-    2/2 tests passed
-
-
-
 
 
 ![png](output_14_2.png)
@@ -1022,30 +780,6 @@ plt.tight_layout()
 
 
 ![png](output_16_0.png)
-
-
-
-```python
-%%nose
-# %%nose needs to be included at the beginning of every @tests cell
-
-# One or more tests of the student's code
-# The @solution should pass the tests
-# The purpose of the tests is to try to catch common errors and
-# to give the student a hint on how to resolve these errors
-
-def test_nothing_task_6():
-    assert True, "Nothing to test."
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
 
 
 ## 7. Halftime shows weren't always this great
@@ -1124,36 +858,6 @@ halftime_musicians[halftime_musicians.super_bowl <= 27].musician
     Name: musician, dtype: object
 
 
-
-
-```python
-%%nose
-# %%nose needs to be included at the beginning of every @tests cell
-
-# One or more tests of the student's code
-# The @solution should pass the tests
-# The purpose of the tests is to try to catch common errors and
-# to give the student a hint on how to resolve these errors
-
-last_value = _
-
-def test_filter_correct_7():
-    try:
-        assert "Wynonna Judd" not in last_value.to_string()
-    except AttributeError:
-        assert False, "Hmm, it seems halftime_musicians wasn't filtered correctly and/or displayed as the last output of the cell. Michael Jackson's performance should be the first row displayed."
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
-
 ## 8. Who has the most halftime show appearances?
 <p>Lots of marching bands. American jazz clarinetist Pete Fountain. Miss Texas 1973 playing a violin. Nothing against those performers, they're just simply not <a href="https://www.youtube.com/watch?v=suIg9kTGBVI">Beyoncé</a>. To be fair, no one is.</p>
 <p>Let's see all of the musicians that have done at least one halftime show, including their performance counts.</p>
@@ -1187,36 +891,6 @@ halftime_appearances[halftime_appearances.super_bowl > 1].sort_values('super_bow
     57                                                 Nelly
     44     Los Angeles Unified School District All City H...
     Name: musician, dtype: object
-
-
-
-
-```python
-%%nose
-# %%nose needs to be included at the beginning of every @tests cell
-
-# One or more tests of the student's code
-# The @solution should pass the tests
-# The purpose of the tests is to try to catch common errors and
-# to give the student a hint on how to resolve these errors
-
-last_value = _
-
-def test_filter_correct_8():
-    try:
-        assert len(last_value) == 14
-    except TypeError:
-        assert False, "Hmm, it seems halftime_appearances wasn't filtered correctly and/or displayed as the last output of the cell. There should be 14 repeat halftime show acts."
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
 
 
 ## 9. Who performed the most songs in a halftime show?
@@ -1253,19 +927,6 @@ display(no_bands.head(n=15))
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1372,29 +1033,6 @@ display(no_bands.head(n=15))
 
 
 
-```python
-%%nose
-# %%nose needs to be included at the beginning of every @tests cell
-
-# One or more tests of the student's code
-# The @solution should pass the tests
-# The purpose of the tests is to try to catch common errors and
-# to give the student a hint on how to resolve these errors
-
-def test_nothing_task_9():
-    assert True, "Nothing to test."
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
-
 ## 10. Conclusion
 <p>So most non-band musicians do 1-3 songs per halftime show. It's important to note that the duration of the halftime show is fixed (roughly 12 minutes) so songs per performance is more a measure of how many hit songs you have. JT went off in 2018, wow. 11 songs! Diana Ross comes in second with 10 in her medley in 1996.</p>
 <p>In this notebook, we loaded, cleaned, then explored Super Bowl game, television, and halftime show data. We visualized the distributions of combined points, point differences, and halftime show performances using histograms. We used line plots to see how ad cost increases lagged behind viewership increases. And we discovered that blowouts do appear to lead to a drop in viewers.</p>
@@ -1412,29 +1050,4 @@ print('The winner of Super Bowl LII will be the', super_bowl_LII_winner)
 ```
 
     The winner of Super Bowl LII will be the New England Patriots
-
-
-
-```python
-%%nose
-# %%nose needs to be included at the beginning of every @tests cell
-
-# One or more tests of the student's code
-# The @solution should pass the tests
-# The purpose of the tests is to try to catch common errors and
-# to give the student a hint on how to resolve these errors
-
-def test_valid_winner_chosen():
-    assert super_bowl_LII_winner == 'New England Patriots' or super_bowl_LII_winner == 'Los Angeles Rams', \
-    "It appears a valid potential winner was not selected. Please assign the patriots variable or the rams variable to super_bowl_LII_winner."
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
 
