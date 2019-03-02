@@ -336,8 +336,8 @@ ggplot(argentina, aes(x = cluster, y = poverty, color = cluster)) +
 <li>Buenos Aires, Santa Cruz, and Misiones </li>
 </ol>
 <p>Which proposal includes the most diverse set of provinces?</p>
-<p><img width="800px" height="800px" src="https://assets.datacamp.com/production/project_638/img/components_color.png"></p>
 
+![png](components_color.png)
 
 ```R
 # Assign pilot provinces to the most diverse group
