@@ -18,23 +18,6 @@ nrow(argentina)
 head(argentina)
 ```
 
-    Parsed with column specification:
-    cols(
-      province = col_character(),
-      gdp = col_double(),
-      illiteracy = col_double(),
-      poverty = col_double(),
-      deficient_infra = col_double(),
-      school_dropout = col_double(),
-      no_healthcare = col_double(),
-      birth_mortal = col_double(),
-      pop = col_double(),
-      movie_theatres_per_cap = col_double(),
-      doctors_per_cap = col_double()
-    )
-
-
-
 22
 
 
@@ -50,86 +33,6 @@ head(argentina)
 	<tr><td>Chubut        </td><td> 17747854     </td><td>1.54806       </td><td> 8.051752     </td><td> 8.044618     </td><td>0.5863094     </td><td>39.5473       </td><td>3.0           </td><td>  509108      </td><td>1.571376e-05  </td><td>0.004498063   </td></tr>
 </tbody>
 </table>
-
-
-
-
-```R
-library(testthat) 
-library(IRkernel.testthat)
-
-soln_argentina <- readr::read_csv("datasets/argentina.csv")
-
-run_tests({
-    
-    test_that("The correct package was loaded.", {
-        expect_true("tidyverse" %in% .packages(), 
-                    info = "Please make sure that the tidyverse package is loaded.")
-    })
-    
-    test_that("Read in data correctly.", {
-        
-        expect_is(argentina, "tbl_df", info="Did you use read_csv for reading the data in?")
-        
-        expect_identical(colnames(argentina),
-                         colnames(soln_argentina),
-            info = "`argentina` has the wrong columns. Did you import datasets/argentina.csv?")
-    })
-    
-    test_that("Read in data correctly.", {
-        expect_equivalent(argentina, soln_argentina, 
-            info = 'argentina should contain the data in "datasets/argentina.csv"')
-    })
-})
-```
-
-    Parsed with column specification:
-    cols(
-      province = col_character(),
-      gdp = col_double(),
-      illiteracy = col_double(),
-      poverty = col_double(),
-      deficient_infra = col_double(),
-      school_dropout = col_double(),
-      no_healthcare = col_double(),
-      birth_mortal = col_double(),
-      pop = col_double(),
-      movie_theatres_per_cap = col_double(),
-      doctors_per_cap = col_double()
-    )
-
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 32.9 0.248 1626.036 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 2. Most populous, richest provinces
@@ -154,10 +57,6 @@ arrange(desc(pop)) %>%
 select(province,pop) %>%
 filter(pop > 1000000) )
 ```
-
-    Selecting by gdp_per_cap
-
-
 
 <table>
 <thead><tr><th scope=col>province</th><th scope=col>gdp_per_cap</th></tr></thead>
@@ -189,97 +88,6 @@ filter(pop > 1000000) )
 
 
 
-
-```R
-soln_argentina <- soln_argentina %>% 
-  mutate(gdp_per_cap = gdp / pop) 
-
-soln_rich_provinces  <- soln_argentina %>% 
-  arrange(-gdp_per_cap) %>% 
-  select(province, gdp_per_cap) %>% 
-  top_n(4)
-
-soln_bigger_pops <- soln_argentina %>% 
-  arrange(-pop) %>%          
-  select(province, pop) %>%  
-  filter(pop > 1e6)
-
-
-run_tests({
-    
-    test_that("bigger_pops has correct columns", {
-      expect_identical(
-          colnames(soln_bigger_pops),
-          colnames(bigger_pops), 
-        info = "bigger_pops has incorrect columns. Did you select `province` and `pop`?")
-    })
-    
-    test_that("bigger_pops has correct number of rows", {
-      expect_true(nrow(bigger_pops) == 9, 
-        info = "bigger_pops should have 9 rows")
-    })
-    
-    test_that("bigger_pops has correct values", {
-      expect_equivalent(bigger_pops, 
-                        soln_bigger_pops, 
-        info = "bigger_pops should have the provinces with more than 1 million inhabitants")
-    })
-    
-    test_that("bigger_pops has correct columns", {
-      expect_identical(
-          colnames(soln_rich_provinces),
-          colnames(rich_provinces), 
-        info = "rich_provinces has incorrect columns. Did you select `province` and `gdp_per_cap`?")
-    })
-    
-    test_that("rich_provinces has correct number of rows", {
-      expect_true(nrow(rich_provinces) == 4, 
-        info = "rich_provinces should have 4 rows")
-    })
-    
-    test_that("rich_provinces has be correct ", {
-      expect_equivalent(rich_provinces, soln_rich_provinces, 
-        info = "rich_provinces should have the top 4 provinces by gdp_per_cap")
-    })
-})
-```
-
-    Selecting by gdp_per_cap
-
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 33 0.248 1626.135 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 3. A matrix for PCA
 <p>Principal Component Analysis (PCA) is an unsupervised learning technique that summarizes multivariate data by reducing redundancies (variables that are correlated). New variables (the principal components) are linear combinations of the original data that retain as much variation as possible. We would imagine that some aspects of economic and social data would be highly correlated, so let's see what pops out. But first, we need to do some data preparation.</p>
 <p>R makes it easy to run a PCA with the <code>PCA()</code> function from the <code>FactoMineR</code> package. The first argument in <code>PCA()</code> is a data frame or matrix of the data where the rows are "individuals" (or in our case, provinces) and columns are numeric variables. To prepare for the analysis, we will remove the column of province names and build a matrix from the dataset.</p>
@@ -308,59 +116,6 @@ head(argentina_matrix)
 </tbody>
 </table>
 
-
-
-
-```R
-soln_argentina_matrix <- soln_argentina %>% 
-                           select_if(is.numeric) %>%  
-                           as.matrix 
-
-run_tests({
-    
-    test_that("argentina_matrix is a matrix", {
-      expect_true(class(argentina_matrix) == "matrix", 
-        info = "Did you use as.matrix to cast your data.frame to a matrix?")
-    })
-
-    test_that("argentina_matrix has the correct data", {
-        expect_equal(argentina_matrix, soln_argentina_matrix,
-                    info = "argentina_matrix does not have the correct data. ")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 33.061 0.248 1626.196 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 4. Reducing dimensions
@@ -399,73 +154,6 @@ library(FactoMineR)
     14 "$call$row.w"      "weights for the individuals"        
     15 "$call$col.w"      "weights for the variables"          
 
-
-
-```R
-soln_argentina_pca <- FactoMineR::PCA(soln_argentina_matrix, scale.unit = TRUE)
-
-run_tests({
-    
-    test_that("The correct package was loaded.", {
-        expect_true("FactoMineR" %in% .packages(), 
-                    info = "Please make sure that the FactoMineR package is loaded.")
-    })
-    
-    test_that("Variance is scaled", {
-
-      expect_true("PCA" %in% class(argentina_pca),
-        info = "Did you use PCA from FactoMineR?")
-    })
-    
-    test_that("Variance is scaled", {
-      skip("skip slow test")
-      argentina_pca_wrong <- PCA(argentina_matrix, scale.unit = FALSE)
-
-      expect_false(argentina_pca$eig[1,1]==argentina_pca_wrong$eig[1,1],
-        info = "Did you set scale.units to TRUE?")
-    })
-    
-    test_that("Results are correct", {
-        
-      expect_true(argentina_pca$eig[1,1]==soln_argentina_pca$eig[1,1],
-        info = "Did you apply PCA to argentina_matrix?")
-    })  
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 33.741 0.248 1626.875 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 5. PCA: Variables & Components
 <p>Now that we have the principal components, we can see how the original variables are correlated among themselves and how the original variables are correlated with the principal components. We will build a plot using the <code>factoextra</code> package to help us understand these relationships. A correlation circle plot (also known as a variable correlation plot) shows the relationship among all variables as they are plotted on the first two principal components (Dimension 1 and Dimension 2).</p>
 <p>To understand the plot, note that:</p>
@@ -491,93 +179,11 @@ options(repr.plot.width=7, repr.plot.height=5)
 ( variance_first_two_pca <- argentina_pca$eig["comp 1", "percentage of variance"] + argentina_pca$eig["comp 2", "percentage of variance"] )
 ```
 
-
-
-
 63.5489736117608
 
 
 
 ![png](output_13_2.png)
-
-
-
-```R
-student_plot <- pca_var_plot
-soln_pca_var_plot <- fviz_pca_var(soln_argentina_pca)
-
-
-run_tests({
-    
-    test_that("The correct package was loaded.", {
-        expect_true("FactoMineR" %in% .packages(), 
-                    info = "Please make sure that the FactoMineR package is loaded.")
-    })
-       
-    test_that("pca_var_plot is correct", {
-            
-      expect_s3_class(student_plot, "ggplot")
-         
-      expect_identical(soln_pca_var_plot$data, 
-                       student_plot$data,
-        info = "Did you use fviz_pca_var with argentina_pca as argument?")
-        
-      expect_identical(
-          
-        deparse(student_plot$mapping$x),
-        deparse(soln_pca_var_plot$mapping$x),
-          info = 'The `x` aesthetic is incorrect. Did you change the default settings to fviz_pca_var?'
-      )  
-        
-      expect_identical(
-          
-        deparse(student_plot$mapping$y),
-        deparse(soln_pca_var_plot$mapping$y),
-          info = 'The `y` aesthetic is incorrect. Did you change the default settings to fviz_pca_var?'
-      )
-    })
-    
-    
-    test_that("variance_first_two_pca is the sum of the first 2 component's variance", {
-
-      expect_equal(variance_first_two_pca, 63.5489736117608, tolerance=1e-4,
-        info = "Did you add the variance of the first two components?")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 34.065 0.252 1627.203 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
 
 ## 6. Plotting the components
 <p>With the first two principal components representing almost 65% of the variance, most of the information we are interested in is summarized in these two components. From the variable correlation plot, we can see that population and GDP are highly correlated; illiteracy, poverty, no healthcare, school dropout, and deficient infrastructure are correlated; and GDP per capita and movie theaters per capita are correlated.</p>
@@ -589,74 +195,7 @@ run_tests({
 fviz_pca_ind(argentina_pca, title = "Provinces - PCA")
 ```
 
-
-
-
 ![png](output_16_1.png)
-
-
-
-```R
-student_plot <- last_plot()
-soln_plot <- fviz_pca_ind(soln_argentina_pca, title = "Provinces - PCA") 
-
-run_tests({
-    
-    test_that("Student plot is correct", {
-        
-      expect_equivalent(
-        student_plot$data,
-        soln_plot$data,
-        info = "Did you use argentina_pca as input to fviz_pca_ind?"
-      )
-    })
-    
-    
-    test_that("last plot has correct labels", {
-        
-      expect_equal(student_plot$labels$title, 
-                   soln_plot$labels$title, 
-        info = "Did you add the title 'Provinces - PCA?'")
-        
-      expect_equivalent(
-        student_plot$labels,
-        soln_plot$labels,
-        info = "Did you use the default settings for fviz_pca_ind?")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 34.371 0.252 1627.508 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 7. Cluster using K means
@@ -698,60 +237,6 @@ argentina_comps <- tibble(pca_1 = argentina_pca$ind$coord[ ,1],
     [6] "betweenss"    "size"         "iter"         "ifault"      
 
 
-
-```R
-soln_argentina_comps <- tibble(pca_1 = soln_argentina_pca$ind$coord[,1],  
-                               pca_2 = soln_argentina_pca$ind$coord[,2])
-
-run_tests({
-    
-    test_that("intermediate data frame is correct", {    
-      expect_equal(argentina_comps, 
-                   soln_argentina_comps, 
-        info = "argentina_comps must have one row per province and only 2 columns, pca_1 and pca_2")
-    })
-    
-    test_that("kmeans finds correct number of clusters", {
-        
-      expect_equal(nrow(argentina_km$centers), 4, 
-        info = "Did you create 4 clusters?")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 34.435 0.252 1627.571 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 8. Components with colors
 <p>Now that we have cluster assignments for each province, we will plot the provinces according to their principal components coordinates, colored by the cluster.</p>
 
@@ -766,93 +251,7 @@ fviz_pca_ind(argentina_pca,
              habillage = clusters_as_factor) 
 ```
 
-
-
-
 ![png](output_22_1.png)
-
-
-
-```R
-student_plot <- last_plot()
-soln_plot <- fviz_pca_ind(soln_argentina_pca, 
-             title = "Clustered Provinces - PCA", 
-             habillage=factor(argentina_km$cluster))
-
-run_tests({
-      
-    test_that("clusters_as_factors is a factor", {
-                
-      expect_is(clusters_as_factor, "factor",
-               info = "Did you convert clusters to a factor?")
-                
-    })
-    
-   
-    test_that("last plot has correct labels", {
-                
-      expect_equal(student_plot$labels$x, 
-                   soln_plot$labels$x,
-        info = "Did you use the default labels for the x axis?")
-        
-    })
-    
-    test_that("last plot has correct labels", {
-        
-      expect_equal(student_plot$labels$y, 
-                   soln_plot$labels$y,
-        info = "Did you use the default labels for the y axis?")
-                
-    })
-    
-    test_that("last plot has correct labels", {
-        
-      expect_equal(student_plot$labels$title, 
-                    soln_plot$labels$title,
-        info = "Did you add the title Clustered Provinces - PCA?")
-    })
-    
-    test_that("last plot has Groups column in data ", {
-        
-      expect_equal(student_plot$data$Groups, 
-                   soln_plot$data$Groups,
-        info = "Did you set the habillage argument when calling fviz_pca_ind?")
-    })
-
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 35.013 0.252 1628.15 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 9. Buenos Aires, in a league of its own
@@ -866,7 +265,9 @@ run_tests({
 </ul>
 <p>We will focus on exploring clusters 1, 2, and 3 in terms of the original variables in the next few tasks.</p>
 <p>As we noted earlier, Buenos Aires is in a league of its own, with the largest positive value in Dimension 2 by far. The figure below is a biplot, a combination of the individuals plot from Task 6 and the circle plot from Task 5.</p>
-<p><img width="700px" height="700px" src="https://assets.datacamp.com/production/project_638/img/biplot.png"></p>
+
+![png](biplot.png)
+
 <p>Since the vectors corresponding to <code>gdp</code> and <code>pop</code> are in the same direction as Dimension 2, Buenos Aires has high GDP and high population. Let's visualize this pattern with a plot of <code>gdp</code> against <code>cluster</code> (we should get similar results with <code>pop</code>).</p>
 
 
@@ -886,144 +287,13 @@ ggplot(argentina, aes(x = cluster, y = gdp, color = cluster)) +
 ```
 
 
-
-
 ![png](output_25_1.png)
-
-
-
-```R
-student_plot <- last_plot()
-
-soln_argentina_km <- kmeans(soln_argentina_comps, centers = 4, nstart = 20, iter.max = 50) 
-
-soln_argentina <- mutate(soln_argentina, 
-                           cluster=factor(argentina_km$cluster))
-
-# Make a scatterplot of gdp vs. cluster, colored by cluster
-soln_plot <- ggplot(soln_argentina, 
-                    aes(cluster, gdp, color=cluster)) +
-             geom_point() +
-             ggrepel::geom_text_repel(aes(label=province), show.legend=FALSE) +
-             labs(x="Cluster", y="GDP")
-
-
-run_tests({
-    
-    test_that("The correct package was loaded.", {
-        expect_true("ggrepel" %in% .packages(), 
-                    info = "Please make sure that the ggrepel package is loaded.")
-    })
-    
-    
-    test_that("added cluster factor", {
-        
-      expect_s3_class(argentina$cluster, "factor")
-        
-      expect_identical(
-        colnames(argentina),
-        colnames(soln_argentina),
-        info = "`argentina` does not have the correct columns")
-        
-      expect_true(
-        "cluster" %in% colnames(argentina),
-        info = "Did you add a cluster column to `argentina`?"
-      )
-        
-    })
-      
-    test_that("The plot is correct", {
-        
-      expect_s3_class(student_plot, "ggplot")
-        
-      expect_identical(
-        soln_plot$data,
-        student_plot$data,
-          info = "Did you use `argentina` for your plot?"
-      )
-        
-      expect_identical(
-        deparse(student_plot$mapping$x),
-        deparse(soln_plot$mapping$x),
-        info = 'The `x` aesthetic is incorrect. Did you map it to `cluster`?'
-      )
-        
-      expect_identical(
-        deparse(student_plot$mapping$y),
-        deparse(soln_plot$mapping$y),
-        info = 'The `y` aesthetic is incorrect. Did you map it to `gdp`?'
-      )
-        
-      expect_identical(
-        deparse(student_plot$mapping$group),
-        deparse(soln_plot$mapping$group),
-        info = 'The `group` aesthetic is incorrect. Did you map it to `cluster`?'
-      )
-                
-      expect_identical(
-        student_plot$labels$x,
-        soln_plot$labels$x,
-        info = "The label in the x-axis is incorrect. Did you set it to `Cluster`?"
-      )
-      expect_identical(
-        student_plot$labels$y,
-        soln_plot$labels$y,
-        info = "The label in the y-axis is incorrect. Did you set it to `GDP`?"
-      )
-    })
-    
-    # Testing the geoms with %in% 
-    test_that("last plot has geom_point and geom_text_repel layers", {
-        
-      student_plot_layers <- student_plot$layers
-      student_plot_layers_geoms <- map(student_plot_layers, ~class(.$geom)[[1]])
-
-      expect_true("GeomPoint" %in% student_plot_layers_geoms,
-        info = "Did you add a geom_point() layer to your plot?")
-        
-      expect_true("GeomTextRepel" %in% student_plot_layers_geoms,
-        info = "Did you add a geom_text_repel() layer to your plot?")
-    })
-    
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 35.665 0.252 1628.801 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
 
 ## 10. The rich provinces
 <p>Provinces in cluster 2 have large negative values in Dimension 1. The biplot shows that <code>gdp_per_cap</code>, <code>movie_theaters_per_cap</code> and <code>doctors_per_cap</code> also have high negative values in Dimension 1. </p>
-<p><img width="700px" height="700px" src="https://assets.datacamp.com/production/project_638/img/biplot.png"></p>
+
+![png](biplot.png)
+
 <p>If we plot <code>gdp_per_cap</code> for each cluster, we can see that provinces in this cluster 2, in general, have greater GDP per capita than the provinces in the other clusters. San Luis is the only province from the other clusters with <code>gdp_per_cap</code> in the range of values observed in cluster 2. We will see similar results for <code>movie_theaters_per_cap</code> and <code>doctors_per_cap</code>.</p>
 
 
@@ -1035,117 +305,13 @@ ggplot(argentina, aes(x = cluster, y = gdp_per_cap, color = cluster)) +
   labs(x = "Cluster", y = "GDP per capita")
 ```
 
-
-
-
 ![png](output_28_1.png)
-
-
-
-```R
-student_plot <- last_plot()
-
-soln_plot <- ggplot(soln_argentina, aes(cluster, gdp_per_cap, color=cluster)) +
-  geom_point() + 
-  geom_text_repel(aes(label=province), show.legend=FALSE) +
-  labs(x="Cluster", y="GDP per capita")
-
-
-run_tests({
-    
-      
-    test_that("The plot is correct", {
-        
-      expect_s3_class(student_plot, "ggplot")
-        
-      expect_identical(
-        soln_plot$data,
-        student_plot$data,
-          info = "Did you use `argentina` for your plot?"
-      )
-        
-      expect_identical(
-        deparse(student_plot$mapping$x),
-        deparse(soln_plot$mapping$x),
-        info = 'The `x` aesthetic is incorrect. Did you map it to `cluster`?'
-      )
-        
-      expect_identical(
-        deparse(student_plot$mapping$y),
-        deparse(soln_plot$mapping$y),
-        info = 'The `y` aesthetic is incorrect. Did you map it to `gdp_per_cap`?'
-      )
-        
-      expect_identical(
-        deparse(student_plot$mapping$group),
-        deparse(soln_plot$mapping$group),
-        info = 'The `group` aesthetic is incorrect. Did you map it to `cluster`?'
-      )
-                        
-      expect_identical(
-        student_plot$labels$x,
-        soln_plot$labels$x,
-        info = "The label in the x-axis is incorrect. Did you set it to `Cluster`?"
-      )
-      expect_identical(
-        student_plot$labels$y,
-        soln_plot$labels$y,
-        info = "The label in the y-axis is incorrect. Did you set it to `GDP per capita`?"
-      )
-    })
-    
-    # Testing the geoms with %in% 
-    test_that("last plot has geom_point and geom_text_repel layers", {
-        
-      student_plot_layers <- student_plot$layers
-      student_plot_layers_geoms <- map(student_plot_layers, ~class(.$geom)[[1]])
-
-      expect_true("GeomPoint" %in% student_plot_layers_geoms,
-        info = "Did you add a geom_point() layer to your plot?")
-        
-      expect_true("GeomTextRepel" %in% student_plot_layers_geoms,
-        info = "Did you add a geom_text_repel() layer to your plot?")
-    })
-    
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 36.379 0.252 1629.515 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 11. The poor provinces
 <p>Provinces in Cluster 3 have high positive values in Dimension 1. As shown in the biplot, provinces with high positive values in Dimension 1 have high values in poverty, deficient infrastructure, etc. These variables are also negatively correlated with <code>gdp_per_cap</code>, so these provinces have low values in this variable.</p>
-<p><img width="700px" height="700px" src="https://assets.datacamp.com/production/project_638/img/biplot.png"></p>
+
+![png](biplot.png)
 
 
 ```R
@@ -1160,111 +326,6 @@ ggplot(argentina, aes(x = cluster, y = poverty, color = cluster)) +
 
 
 ![png](output_31_1.png)
-
-
-
-```R
-student_plot <- last_plot()
-
-soln_plot <- ggplot(soln_argentina, aes(cluster, poverty, color = cluster)) +
-  geom_point() +
-  geom_text_repel(aes(label=province), show.legend = FALSE) +
-  labs(x="Cluster", y="Poverty rate")
-
-
-run_tests({
-    
-      
-    test_that("The plot is correct", {
-        
-      expect_s3_class(student_plot, "ggplot")
-        
-      expect_identical(
-        soln_plot$data,
-        student_plot$data,
-          info = "Did you use `argentina` for your plot?"
-      )
-        
-      expect_identical(
-        deparse(student_plot$mapping$x),
-        deparse(soln_plot$mapping$x),
-        info = 'The `x` aesthetic is incorrect. Did you map it to `cluster`?'
-      )
-        
-      expect_identical(
-            deparse(student_plot$mapping$y),
-            deparse(soln_plot$mapping$y),
-            info = 'The `y` aesthetic is incorrect. Did you map it to `poverty`?'
-      )
-        
-      expect_identical(
-            deparse(student_plot$mapping$group),
-            deparse(soln_plot$mapping$group),
-            info = 'The `group` aesthetic is incorrect. Did you map it to `cluster`?'
-      )
-        
-        
-      # Should we test specific labels?
-                        
-      expect_identical(
-            student_plot$labels$x,
-            soln_plot$labels$x,
-            info = "The label in the x-axis is incorrect. Did you set it to `Cluster`?"
-      )
-      expect_identical(
-            student_plot$labels$y,
-            soln_plot$labels$y,
-            info = "The label in the y-axis is incorrect. Did you set it to `Poverty`?"
-      )
-    })
-    
-    # Testing the geoms with %in% 
-    test_that("last plot has geom_point and geom_text_repel layers", {
-        
-      student_plot_layers <- student_plot$layers
-      student_plot_layers_geoms <- map(student_plot_layers, ~class(.$geom)[[1]])
-
-      expect_true("GeomPoint" %in% student_plot_layers_geoms,
-        info = "Did you add a geom_point() layer to your plot?")
-        
-      expect_true("GeomTextRepel" %in% student_plot_layers_geoms,
-        info = "Did you add a geom_text_repel() layer to your plot?")
-    })
-    
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 36.932 0.252 1630.068 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 12. Planning for public policy
@@ -1282,50 +343,4 @@ run_tests({
 # Assign pilot provinces to the most diverse group
 pilot_provinces <- 3
 ```
-
-
-```R
-run_tests({
-    test_that("the answer is 1, 2 or 3", {
-      expect_true(as.numeric(pilot_provinces) %in% c(1, 2, 3), 
-        info = "You should choose one of groups 1, 2 or 3")
-    })
-    test_that("the answer is not 1", {
-      expect_false(as.numeric(pilot_provinces) %in% c(1, 2), 
-        info = "This set of provinces is on the same cluster, and are very similar")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 36.972 0.252 1630.108 0.005 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
