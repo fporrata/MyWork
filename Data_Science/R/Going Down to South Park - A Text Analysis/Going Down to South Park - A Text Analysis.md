@@ -1,8 +1,9 @@
 
 ## 1. Import and explore data
-<p>By <a href="https://patrio.blog/">Patrik Drhlík</a></p>
 <p><em>Warning: the dataset in this project contains explicit language.</em></p>
-<p><img src="https://assets.datacamp.com/production/project_561/img/southpark.png" alt=""></p>
+
+![jpg(southpark.png)
+
 <p><a href="https://en.m.wikipedia.org/wiki/South_Park">South Park</a> is a satiric American TV show. It is an adult show mainly because of its coarse language. I know every episode pretty well, but I wanted to see if I can dig up something more using text analysis.</p>
 <p>That's what we will focus on. We will see how the sentiments and the popularity of episodes evolve over time. We will examine the <strong>swear words</strong> and their ratio across episodes. We will also answer some questions about the show. Do you think that naughtier episodes tend to be more popular? Is Eric Cartman, the main face of the show, really the naughtiest character? We will have answers to these and more questions soon enough.</p>
 <p>We will be using two datasets. One that contains every line spoken in all the 287 episodes (first 21 seasons) of the show and another that contains mean episode ratings from <a href="https://www.imdb.com/title/tt0121955">IMDB</a>. We will be joining, summarizing and visualizing until we've answered all our questions.</p>
@@ -25,25 +26,6 @@ sp_ratings <- read_csv("datasets/sp_ratings.csv")
 tail(sp_lines)
 tail(sp_ratings)
 ```
-
-    Parsed with column specification:
-    cols(
-      character = col_character(),
-      text = col_character(),
-      episode_name = col_character(),
-      season_number = col_integer(),
-      episode_number = col_integer()
-    )
-    Parsed with column specification:
-    cols(
-      season_number = col_integer(),
-      episode_number = col_integer(),
-      rating = col_double(),
-      votes = col_integer(),
-      episode_order = col_integer()
-    )
-
-
 
 <table>
 <thead><tr><th scope=col>character</th><th scope=col>text</th><th scope=col>episode_name</th><th scope=col>season_number</th><th scope=col>episode_number</th></tr></thead>
@@ -73,59 +55,6 @@ tail(sp_ratings)
 </table>
 
 
-
-
-```R
-# These packages need to be loaded in the first @tests cell. 
-library(testthat) 
-library(IRkernel.testthat)
-
-run_tests({
-    test_that("sp_lines was loaded correctly", {
-        expect_equal(nrow(sp_lines), 78700, info = "`sp_lines doesn't have a correct number of rows.`")
-        expect_equal(ncol(sp_lines), 5, info = "`sp_lines doesn't have a correct number of columns.")
-        expect_is(sp_lines, "tbl_df")
-    })
-    
-    test_that("sp_ratings was loaded correctly", {
-        expect_equal(nrow(sp_ratings), 287, info = "`sp_ratings doesn't have a correct number of rows.")
-        expect_equal(ncol(sp_ratings), 5, info = "`sp_ratings doesn't have a correct number of columns")
-        expect_is(sp_ratings, "tbl_df")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 35.28 0.541 2205.949 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 2. Sentiments, swear words, and stemming
@@ -158,12 +87,6 @@ tail(sp_words)
 
 
 ```
-
-    Joining, by = "word"
-    Joining, by = "word"
-
-
-
 <table>
 <thead><tr><th scope=col>character</th><th scope=col>episode_name</th><th scope=col>season_number</th><th scope=col>episode_number</th><th scope=col>rating</th><th scope=col>votes</th><th scope=col>episode_order</th><th scope=col>word</th><th scope=col>score</th><th scope=col>word_stem</th><th scope=col>swear_word</th></tr></thead>
 <tbody>
@@ -178,48 +101,6 @@ tail(sp_words)
 
 
 
-
-```R
-run_tests({
-    test_that("sp_words was constructed correctly", {
-        expect_equal(nrow(sp_words), 310821, info = "`sp_words` doesn't have a correct number of rows.")
-        expect_equal(ncol(sp_words), 11, info = "`sp_words` doesn't have a correct number of columns.")
-        expect_is(sp_words, "tbl_df")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 36.263 0.557 2206.947 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 3. Summarize data by episode
@@ -267,56 +148,6 @@ tail(by_episode)
 </tbody>
 </table>
 
-
-
-
-```R
-run_tests({
-    test_that("by_episode was constructed correctly", {
-        expect_equal(nrow(by_episode), 287, info = "`by_episode` doesn't have a correct number of rows.")
-        expect_equal(ncol(by_episode), 5, info = "`by_episode` doesn't have a correect number of columns.")
-        expect_is(by_episode, "tbl_df")
-    })
-    
-    test_that("naughtiest episode is It Hits the Fan", {
-        expect_equal(naughtiest$episode_name, "It Hits the Fan", info = "Did you use `which.max` on `by_episode$swear_word_ratio`?")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 36.343 0.557 2207.027 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 4. South Park overall sentiment
 <p><strong>It Hits the Fan</strong> – more than <strong>13%</strong> of swear words? Now that's a naughty episode! They say a swear word roughly <strong>every 8 seconds</strong> throughout the whole episode!</p>
 <p>It also has a mean sentiment score of <strong>-2</strong>. That is pretty low on a scale from -5 (very negative) to +5 (very positive). <a href="https://en.wikipedia.org/wiki/Sentiment_analysis">Sentiment analysis</a> helps us decide what is the attitude of the document we aim to analyze. We are using a numeric scale, but there are other options. Some dictionaries can even classify words to say if it expresses <em>happiness</em>, <em>surprise</em>, <em>anger</em>, etc.</p>
@@ -335,71 +166,7 @@ ggplot(by_episode, aes(episode_order, sentiment_score)) +
     geom_smooth()
 ```
 
-    `geom_smooth()` using method = 'loess' and formula 'y ~ x'
-
-
-
-
-
 ![png](output_10_2.png)
-
-
-
-```R
-p <- last_plot()
-
-run_tests({
-    test_that("plot is ggplot", {
-        expect_is(p, "ggplot", info = "Did you create the plot using ggplot2?")
-    })
-    
-    test_that("plot aesthetics are correct", {
-        expect_equal(deparse(p$mapping$x), "~episode_order", info = "Did you put `episode_order` on `x`?")
-        expect_equal(deparse(p$mapping$y), "~sentiment_score", info = "Did you put `sentiment_score` on `y`?")
-    })
-    
-    test_that("col and smooth layers are present", {
-        expect_equal(class(p$layers[[1]]$geom)[1], "GeomCol", info = "Did you use `geom_col` to create the plot?")
-        expect_equal(class(p$layers[[2]]$geom)[1], "GeomSmooth", info = "Did you add `geom_smooth` to see the trend?")
-    })
-    
-    test_that("by_episode data is used in the plot", {
-        expect_equal(by_episode, p$data %>% select(-.group), info = "Did you use `by_episode?`")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 36.698 0.557 2207.381 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 5. South Park episode popularity
@@ -418,79 +185,8 @@ ggplot(by_episode, aes(episode_order, rating)) +
     geom_vline(xintercept = 100, color="red", linetype = "dashed")
 ```
 
-    `geom_smooth()` using method = 'loess' and formula 'y ~ x'
-
-
-
-
-
 ![png](output_13_2.png)
 
-
-
-```R
-p <- last_plot()
-
-run_tests({
-    test_that("plot is ggplot", {
-        expect_is(p, "ggplot", info = "Did you create the plot using ggplot2?")
-    })
-    
-    test_that("plot aesthetics are correct", {
-        expect_equal(deparse(p$mapping$x), "~episode_order", info = "Did you put `episode_order` on `x`?")
-        expect_equal(deparse(p$mapping$y), "~rating", info = "Did you put `rating` on `y`?")
-    })
-    
-    test_that("col, smooth and vline layers are present", {
-        expect_equal(class(p$layers[[1]]$geom)[1], "GeomPoint", info = "Did you use `geom_point` to create the plot?")
-        expect_equal(class(p$layers[[2]]$geom)[1], "GeomSmooth", info = "Did you add `geom_smooth` to see the trend?")
-        expect_equal(class(p$layers[[3]]$geom)[1], "GeomVline", info = "Did you add geom_vline to see episode number 100?")
-    })
-    
-    test_that("by_episode data is used in the plot", {
-        expect_equal(by_episode, p$data %>% select(-.group), info = "Did you use `by_episode?`")
-    })
-    
-    test_that("geom_vline style and data are correct", {
-        aes <- cbind(p$layers[[3]]$aes_params, p$layers[[3]]$data)
-        expect_true(aes$colour == "red", info = "Did you set `col` to red?")
-        expect_true(aes$linetype == "dashed", info = "Did you set `lty` to dashed?")
-        expect_true(aes$xintercept == 100, info = "Did you set `xintercept` to 100?")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 37.02 0.565 2207.711 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 6. Are naughty episodes more popular?
@@ -515,77 +211,9 @@ ggplot(by_episode, aes(rating, swear_word_ratio)) +
 )
 ```
 
-    `geom_smooth()` using method = 'loess' and formula 'y ~ x'
-
-
-
-
-
+   
 ![png](output_16_2.png)
 
-
-
-```R
-p <- last_plot()
-
-run_tests({
-    test_that("plot is ggplot", {
-        expect_is(p, "ggplot", info = "Did you create the plot using ggplot2?")
-    })
-    
-    test_that("plot aesthetics are correct", {
-        expect_equal(deparse(p$mapping$x), "~rating", info = "Did you put `rating` on `x`?")
-        expect_equal(deparse(p$mapping$y), "~swear_word_ratio", info = "Did you put `swear_word_ratio` on `y`?")
-    })
-    
-    test_that("point and smooth layers are present", {
-        expect_equal(class(p$layers[[1]]$geom)[1], "GeomPoint", info = "Did you use `geom_point` to create the plot?")
-        expect_equal(class(p$layers[[2]]$geom)[1], "GeomSmooth", info = "Did you add `geom_smooth` to see the trend?")
-    })
-    
-    test_that("by_episode data is used in the plot", {
-        expect_equal(by_episode, p$data %>% select(-.group), info = "Did you use `by_episode?`")
-    })
-    
-    test_that("geom_point parameters are correct", {
-        aes <- p$layers[[1]]$aes_params
-        expect_true(aes$alpha == 0.6, info = "Did you set `alpha` to 0.6?")
-        expect_true(aes$size == 3, info = "Did you set `size` to 3?")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 37.369 0.569 2208.063 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 7. Comparing profanity of two characters
@@ -630,54 +258,6 @@ compare_profanity <- function(char1, char2, words) {
 }
 ```
 
-
-```R
-run_tests({
-    test_that("compary_profanity works", {
-        cartman_cartman <- compare_profanity("cartman", "cartman", sp_words)
-        cartman_stan <- compare_profanity("cartman", "stan", sp_words)
-        
-        expect_equal(cartman_cartman$statistic, 0, info = "Function doesn't work for two same characters (It should have a statistic = 0).")
-        expect_true(cartman_stan$statistic > 0, info = "Function doesn't work - does it return a data frame?")
-        expect_equal(nrow(cartman_stan), 1, info = "It should only return 1 row.")
-        expect_equal(ncol(cartman_stan), 10, info = "It should return 10 columns.")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 37.402 0.569 2208.096 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
-
 ## 8. Is Eric Cartman the naughtiest character?
 <p>Anyone who knows the show might suspect that <strong>Eric Cartman</strong> is the naughtiest character. This is what I think too. We will know for sure very soon. I picked the top speaking characters for our analysis. These will be the most relevant to compare with Cartman. They are stored in the <code>characters</code> vector.</p>
 <p>We will now use <code>map_df()</code> from <code>purrr</code> to easily compare profanity of Cartman with every character in our vector. Our function <code>compare_profanity()</code> always returns a data frame thanks to the <code>tidy()</code> function from <code>broom</code>.</p>
@@ -699,80 +279,7 @@ ggplot(prop_result, aes(x = reorder(character, -estimate1), estimate1)) +
     theme(axis.text.x = element_text(angle = 60, hjust = 1))
 ```
 
-
-
-
 ![png](output_22_1.png)
-
-
-
-```R
-p <- last_plot()
-
-run_tests({
-    test_that("prop_result is correct", {
-        expect_equal(nrow(prop_result), 16, info = "`prop_result` doesn't have 16 rows - did you use the whole `characters` vector?")
-        expect_equal(ncol(prop_result), 10, info = "Does compare_profanity work? It doesn't have 10 columns.")
-    })
-    
-    test_that("plot is ggplot", {
-        expect_is(p, "ggplot", info = "Did you create the plot using ggplot2?")
-    })
-    
-    test_that("plot aesthetics are correct", {
-        expect_equal(deparse(p$mapping$x), "~reorder(character, -estimate1)", info = "Did you put `character` reordered decreasing by `estimate1` on `x`?")
-        expect_equal(deparse(p$mapping$y), "~estimate1", info = "Did you put `estimate1` on `y`?")
-    })
-    
-    test_that("errorbar and hline layers are present", {
-        expect_equal(class(p$layers[[1]]$geom)[1], "GeomErrorbar", info = "Did you use `geom_errorbar` to create the plot?")
-        expect_equal(class(p$layers[[2]]$geom)[1], "GeomHline", info = "Did you add `geom_hline` to see the trend?")
-    })
-    
-    test_that("by_episode data is used in the plot", {
-        expect_equal(prop_result, p$data, info = "Did you use `prop_result?`")
-    })
-    
-    test_that("errorbar mappings are correct", {
-        m <- p$layers[[1]]$mapping
-        expect_true(deparse(m$colour) == "~p.value < 0.05", info = "Did you set `color` to `p.value < 0.05`")
-        expect_true(deparse(m$ymin) == "~conf.low", info = "Did you set `ymin` to `conf.low`?")
-        expect_true(deparse(m$ymax) == "~conf.high", info = "Did you set `ymax` to `conf.high`?")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 37.935 0.573 2208.632 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
 
 
 ## 9. Let's answer some questions
@@ -793,47 +300,3 @@ eric_cartman_naughtiest <- FALSE
 # If he is, assign an empty string, otherwise write his name
 who_is_naughtiest <- "kenny"
 ```
-
-
-```R
-run_tests({
-    test_that("the answers are correct", {
-        expect_equal(naughty_episodes_more_popular, FALSE, info = "Are you sure that naughty episodes are more popular?")
-        expect_equal(eric_cartman_naughtiest, FALSE, info = "Are you sure that Eric Cartman is the naughtiest character?")
-        expect_equal(who_is_naughtiest, "kenny", info = "Are you sure that the character you picked is the naughtiest character?")
-    })
-})
-```
-
-
-
-
-    <ProjectReporter>
-      Inherits from: <ListReporter>
-      Public:
-        .context: NULL
-        .end_context: function (context) 
-        .start_context: function (context) 
-        add_result: function (context, test, result) 
-        all_tests: environment
-        cat_line: function (...) 
-        cat_tight: function (...) 
-        clone: function (deep = FALSE) 
-        current_expectations: environment
-        current_file: some name
-        current_start_time: 37.979 0.573 2208.675 0.004 0
-        dump_test: function (test) 
-        end_context: function (context) 
-        end_reporter: function () 
-        end_test: function (context, test) 
-        get_results: function () 
-        initialize: function (...) 
-        is_full: function () 
-        out: 3
-        results: environment
-        rule: function (...) 
-        start_context: function (context) 
-        start_file: function (name) 
-        start_reporter: function () 
-        start_test: function (context, test) 
-
