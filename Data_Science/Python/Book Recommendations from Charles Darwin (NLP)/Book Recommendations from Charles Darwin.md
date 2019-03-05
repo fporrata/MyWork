@@ -1,6 +1,8 @@
 
 ## 1. Darwin's bibliography
-<p><img src="https://assets.datacamp.com/production/project_607/img/CharlesDarwin.jpg" alt="Charles Darwin" width="300px"></p>
+
+![jpg](CharlesDarwin.jpg)
+
 <p>Charles Darwin is one of the few universal figures of science. His most renowned work is without a doubt his "<em>On the Origin of Species</em>" published in 1859 which introduced the concept of natural selection. But Darwin wrote many other books on a wide range of topics, including geology, plants or his personal life. In this notebook, we will automatically detect how closely related his books are to each other.</p>
 <p>To this purpose, we will develop the bases of <strong>a content-based book recommendation system</strong>, which will determine which books are close to each other based on how similar the discussed topics are. The methods we will use are commonly used in text- or documents-heavy industries such as legal, tech or customer support to perform some common task such as text classification or handling search engine queries.</p>
 <p>Let's take a look at the books we'll use in our recommendation system.</p>
@@ -44,40 +46,6 @@ files
      'datasets/VariationPlantsAnimalsDomestication.txt',
      'datasets/VolcanicIslands.txt',
      'datasets/VoyageBeagle.txt']
-
-
-
-
-```python
-%%nose
-# This needs to be included at the beginning of every @tests cell.
-
-# One or more tests of the students code.
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-
-def test_files_type():
-    assert isinstance(files, list), \
-    'The files variable should be a list.'
-    
-def test_glob_len():
-    assert len(files) == 20, \
-    'The files variable should contain 20 elements. Make sure you only selected files ending by .txt.'
-    
-def test_is_files_list_sorted():
-    assert all(files[i] <= files[i+1] for i in range(len(files)-1)), \
-    'The files list should be sorted by using the .sort() method.'
-```
-
-
-
-
-
-
-    3/3 tests passed
-
-
 
 
 ## 2. Load the contents of each book into Python
@@ -132,53 +100,6 @@ for n in files:
      1188353]
 
 
-
-
-```python
-%%nose
-# This needs to be included at the beginning of every @tests cell.
-import _io
-
-# For some reasons, the index isn't the same between my local notebook and the DataCamp version.
-# Therefore, I can not hardcode the value and have to generate it here.
-
-def test_txts_titles_len():
-    assert len(txts) == 20 & len(titles) == 20, \
-    'The txts and titles variable should contain 20 elements.'
-    
-
-def test_f_type():
-    assert isinstance(f, _io.TextIOWrapper), \
-    'The f variable should be of type _io.TextIOWrapper and be generated with the open() function.'
-    
-def test_file_encoding():
-    assert f.encoding == 'utf-8-sig', \
-    'Make sure you open the text file encoded as utf-8-sig.'   
-    
-def test_txt_in_title():
-    assert all([".txt" not in title for title in titles]), \
-    'The titles contained in the titles variable should not contain the .txt string. Use the .replace() method to remove them.'   
-
-def test_folder_in_title():
-    assert all([folder not in title for title in titles]), \
-    'The titles contained in the titles variable should not contain the name of the folder (' + str(folder) + '). Use the os.path.basename() function to remove them.'   
-    
-    
-def test_alphanumeric_in_txt():
-    assert not sum([len(i) for i in [re.findall('^[\w-]+$', t) for t in txts]]), \
-    'The elements of the txts variable should not contain non-alphanumeric characters.' 
-```
-
-
-
-
-
-
-    6/6 tests passed
-
-
-
-
 ## 3. Find "On the Origin of Species"
 <p>For the next parts of this analysis, we will often check the results returned by our method for a given book. For consistency, we will refer to Darwin's most famous book: "<em>On the Origin of Species</em>." Let's find to which index this book is associated.</p>
 
@@ -193,49 +114,7 @@ for i in range(len(titles)):
 # Print the stored index
 ori
 ```
-
-
-
-
     15
-
-
-
-
-```python
-%%nose
-# This needs to be included at the beginning of every @tests cell.
-
-# For some reasons, the index isn't the same between my local notebook and the DataCamp version.
-# Therefore, I can not hardcode the value and have to generate it here.
-
-for i in range(len(titles)):
-    # Store the index if the title is "OriginofSpecies"
-    if(titles[i]=="OriginofSpecies"):
-        ori_test = i
-
-
-def test_ori_existence():
-    assert 'ori' in globals(), \
-    'Make sure you created a variable called ori.'
-
-def test_ori_type():
-    assert type(ori) == int, \
-    'The ori variable should be of type integer.'
-    
-def test_ori_value():
-    assert ori == ori_test, \
-    'The ori variable does not contain the correct index number.'
-```
-
-
-
-
-
-
-    3/3 tests passed
-
-
 
 
 ## 4. Tokenize the corpus
@@ -286,88 +165,6 @@ texts[ori][1:20]
      'can']
 
 
-
-
-```python
-%%nose
-# This needs to be included at the beginning of every @tests cell.
-
-# One or more tests of the students code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-stoplist = set('for a of the and to in to be which some is at that we i who whom show via may my our might as well'.split())
-
-def intersection(lst1, lst2): 
-    lst3 = [value for value in lst1 if value in lst2] 
-    return lst3 
-
-## Variables existence
-
-def test_var_texts_existence():
-    assert 'texts' in globals(), \
-    'The results should be stored in a variable called texts.'
-
-def test_var_lowercase_existence():
-    assert 'txts_lower_case' in globals(), \
-    'The variable txts_lower_case should exist.'
-    
-def test_var_split_existence():
-    assert 'txts_split' in globals(), \
-    'The variable txts_split should exist.'
-
-## Variables type and length    
-def test_var_texts_type():
-    assert isinstance(txts, list), \
-    'The texts variable should be a list.'
-    
-def test_var_texts_lowercase_type():
-    assert isinstance(txts_lower_case, list), \
-    'The txts_lower_case variable should be a list.'
-
-def test_var_texts_split_type():
-    assert isinstance(txts_split, list), \
-    'The txts_split variable should be a list.'
-
-## Variables length
-def test_var_texts_len():
-    assert len(texts) == 20, \
-    'The texts list should contain 20 elements.'
-
-def test_var_texts_lowercase_len():
-    assert len(txts_lower_case) == 20, \
-    'The txts_lower_case list should contain 20 elements.'
-
-def test_var_texts_split_len():
-    assert len(txts_split) == 20, \
-    'The txts_split list should contain 20 elements.'
-    
-## Variable content
-
-def test_lower_case():
-    assert all([t.islower() for t in txts_lower_case]), \
-    'The texts in the txts_lower_case list should all be in lower case.'
-
-def test_split_list():
-    assert all([isinstance(t, list) for t in txts_split]), \
-    'Each element of the txts_split list should be a list'
-    
-    
-def test_stopwords():
-    assert not sum([len(i) for i in [intersection(t, stoplist) for t in texts]]), \
-    'You should remove stop words from the final token sets contained in the texts variable.'
-```
-
-
-
-
-
-
-    12/12 tests passed
-
-
-
-
 ## 5. Stemming of the tokenized corpus
 <p>If you have read <em>On the Origin of Species</em>, you will have noticed that Charles Darwin can use different words to refer to a similar concept. For example, the concept of selection can be described by words such as <em>selection</em>, <em>selective</em>, <em>select</em> or <em>selects</em>. This will dilute the weight given to this concept in the book and potentially bias the results of the analysis.</p>
 <p>To solve this issue, it is a common practice to use a <strong>stemming process</strong>, which will group together the inflected forms of a word so they can be analysed as a single item: <strong>the stem</strong>. In our <em>On the Origin of Species</em> example, the words related to the concept of selection would be gathered under the <em>select</em> stem.</p>
@@ -408,40 +205,6 @@ texts_stem[ori][1:20]
      'about']
 
 
-
-
-```python
-%%nose
-# This needs to be included at the beginning of every @tests cell.
-
-# One or more tests of the students code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-
-def test_var_existence():
-    assert 'texts_stem'in globals(), \
-    'The content of the pickle file should be loaded into a variable named texts_stem.'
-
-def test_var_type():
-    assert isinstance(texts_stem, list), \
-    'The texts_stem variable should be a list.'
-    
-def test_var_len():
-    assert len(texts_stem) == 20, \
-    'The texts_stem list should contain 20 elements.'
-```
-
-
-
-
-
-
-    3/3 tests passed
-
-
-
-
 ## 6. Building a bag-of-words model
 <p>Now that we have transformed the texts into stemmed tokens, we need to build models that will be useable by downstream algorithms.</p>
 <p>First, we need to will create a universe of all words contained in our corpus of Charles Darwin's books, which we call <em>a dictionary</em>. Then, using the stemmed tokens and the dictionary, we will create <strong>bag-of-words models</strong> (BoW) of each of our texts. The BoW models will represent our books as a list of all uniques tokens they contain associated with their respective number of occurrences. </p>
@@ -470,53 +233,6 @@ bows[ori][1:5]
 
 
     [(23, 1), (27, 1), (63, 2), (65, 1)]
-
-
-
-
-```python
-%%nose
-# This needs to be included at the beginning of every @tests cell.
-
-# One or more tests of the students code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-import gensim.corpora.dictionary
-
-## Dictionary variable
-def test_dictionary_type():
-    assert isinstance(dictionary, gensim.corpora.dictionary.Dictionary), \
-    'The dictionary should be created using the corpora.Dictionary() function and the resulting object should be of type "gensim.corpora.dictionary.Dictionary".'
-    
-def test_dictionary_len():
-    assert len(dictionary) == 28170, \
-    'The dictionary should contain 28170 tokens.'
-    
-## bows variable
-
-def test_bows_type():
-    assert isinstance(bows, list), \
-    'The bows variable should be a list.'
-    
-def test_bows_len():
-    assert len(bows) == 20, \
-    'The bows object should have 20 elements, one model per text.'
-    
-def test_bows_content_type():
-    assert all([isinstance(b, list) for b in bows]), \
-    'Each elements in the bows list should be a list.'
-    
-```
-
-
-
-
-
-
-    5/5 tests passed
-
-
 
 
 ## 7. The most common words of a given book
@@ -548,19 +264,6 @@ df_bow_origin.sort_values(by=['occurrences'], ascending = False).head(10)
 
 
 <div>
-<style>
-    .dataframe thead tr:only-child th {
-        text-align: right;
-    }
-
-    .dataframe thead th {
-        text-align: left;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -634,57 +337,6 @@ df_bow_origin.sort_values(by=['occurrences'], ascending = False).head(10)
   </tbody>
 </table>
 </div>
-
-
-
-
-```python
-%%nose
-# This needs to be included at the beginning of every @tests cell.
-
-# One or more tests of the students code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-
-import pandas.core.frame
-
-# Hardcoded numbers might not hold once on Datacamp's servers.
-# Hence the values are recomputed here.
-
-df_bow_origin_test = pd.DataFrame(bows[ori])
-n_rows_test = df_bow_origin_test.shape[0]
-
-#### Tests
-
-def test_df_type():
-    assert isinstance(df_bow_origin, pandas.core.frame.DataFrame), \
-    'The df_bow_origin variable should be a pandas DataFrame of type pandas.core.frame.DataFrame.'
-
-def test_df_dim1():
-    assert df_bow_origin.shape[1] == 3, \
-    'The df_bow_origin DataFrame should have 3 columns.'
-    
-def test_df_dim2():
-    assert df_bow_origin.shape[0] == n_rows_test, \
-    'The df_bow_origin DataFrame should have ' + str(n_rows_test) + ' rows.'    
-    
-def test_df_columns():
-    assert all(df_bow_origin.columns == list(["index", "occurrences", "token"])), \
-    'The columns of the df_bow_origin DataFrame should be named "index", "occurrences" and "token".'    
-        
-    
-```
-
-
-
-
-
-
-    4/4 tests passed
-
-
-
 
 ## 8. Build a tf-idf model
 <p>If it wasn't for the presence of the stem "<em>speci</em>", we would have a hard time to guess this BoW model comes from the <em>On the Origin of Species</em> book. The most recurring words are, apart from few exceptions, very common and unlikely to carry any information peculiar to the given book. We need to use an additional step in order to determine which tokens are the most specific to a book.</p>
@@ -1709,30 +1361,6 @@ model[bows[ori]]
      ...]
 
 
-
-
-```python
-%%nose
-# This needs to be included at the beginning of every @tests cell.
-
-import gensim.models.tfidfmodel
-
-
-def test_model_type():
-    assert isinstance(model, gensim.models.tfidfmodel.TfidfModel), \
-    'The tf-idf model should be created using the TfidfModel() function and the model variable should be of type "gensim.models.tfidfmodel.TfidfModel".'
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
-
 ## 9. The results of the tf-idf model
 <p>Once again, the format of those results is hard to interpret for a human. Therefore, we will transform it into a more readable version and display the 10 most specific words for the "<em>On the Origin of Species</em>" book.</p>
 
@@ -1755,19 +1383,6 @@ df_tfidf.sort_values(by=['score'], ascending = False).head(10)
 
 
 <div>
-<style>
-    .dataframe thead tr:only-child th {
-        text-align: right;
-    }
-
-    .dataframe thead th {
-        text-align: left;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1843,52 +1458,6 @@ df_tfidf.sort_values(by=['score'], ascending = False).head(10)
 </div>
 
 
-
-
-```python
-%%nose
-# This needs to be included at the beginning of every @tests cell.
-
-# One or more tests of the students code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-
-import pandas.core.frame
-
-### Recomputing object to avoid hard-coded values
-df_tfidf_test = pd.DataFrame(model[bows[ori]])
-n_rows_test_tfidf = df_tfidf_test.shape[0]
-
-def test_df_type():
-    assert isinstance(df_tfidf, pandas.core.frame.DataFrame), \
-    'The df_tfidf variable should contain a pandas DataFrame of type pandas.core.frame.DataFrame.'
-    
-def test_df_dim1():
-    assert df_tfidf.shape[1] == 3, \
-    'The df_bow_origin DataFrame should have 3 columns.'
-    
-def test_df_dim2():
-    assert df_tfidf.shape[0] == n_rows_test_tfidf, \
-    'The df_bow_origin DataFrame should have ' + str(n_rows_test_tfidf) + ' rows.'    
-    
-def test_df_columns():
-    assert all(df_tfidf.columns == list(["id", "score", "token"])), \
-    'The columns of the df_bow_origin DataFrame should be named "index", "score" and "token".'    
-        
-    
-```
-
-
-
-
-
-
-    4/4 tests passed
-
-
-
-
 ## 10. Compute distance between texts
 <p>The results of the tf-idf algorithm now return stemmed tokens which are specific to each book. We can, for example, see that topics such as selection, breeding or domestication are defining "<em>On the Origin of Species</em>" (and yes, in this book, Charles Darwin talks quite a lot about pigeons too). Now that we have a model associating tokens to how specific they are to each book, we can measure how related to books are between each other.</p>
 <p>To this purpose, we will use a measure of similarity called <strong>cosine similarity</strong> and we will visualize the results as a distance matrix, i.e., a matrix showing all pairwise distances between Darwin's books.</p>
@@ -1916,19 +1485,6 @@ sim_df
 
 
 <div>
-<style>
-    .dataframe thead tr:only-child th {
-        text-align: right;
-    }
-
-    .dataframe thead th {
-        text-align: left;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -2421,43 +1977,6 @@ sim_df
 </div>
 
 
-
-
-```python
-%%nose
-
-import gensim.similarities.docsim
-import pandas.core.frame
-
-def test_sims_type():
-    assert isinstance(sims, gensim.similarities.docsim.MatrixSimilarity), \
-    'The sims variable should be created using the similarities.MatrixSimilarity() function and be of type gensim.similarities.docsim.MatrixSimilarity.'
-    
-def test_sim_df_type():
-    assert isinstance(sim_df, pandas.core.frame.DataFrame), \
-    'The sim_df variable should be a pandas DataFrame of type pandas.core.frame.DataFrame.'
-    
-def test_df_dims():
-    assert sim_df.shape[0] == 20 and sim_df.shape[1] == 20 , \
-    'The sim_df DataFrame should have 20 rows and 20 columns.'    
-    
-def test_df_columns():
-    assert all(sim_df.columns == titles), \
-    'The columns of the df_bow_origin DataFrame should be named "index", "score" and "token".'    
-        
-    
-```
-
-
-
-
-
-
-    4/4 tests passed
-
-
-
-
 ## 11. The book most similar to "On the Origin of Species"
 <p>We now have a matrix containing all the similarity measures between any pair of books from Charles Darwin! We can now use this matrix to quickly extract the information we need, i.e., the distance between one book and one or several others. </p>
 <p>As a first step, we will display which books are the most similar to "<em>On the Origin of Species</em>," more specifically we will produce a bar chart showing all books ranked by how similar they are to Darwin's landmark work.</p>
@@ -2473,21 +1992,6 @@ import matplotlib.pyplot as plt
 # Select the column corresponding to "On the Origin of Species" and 
 v = sim_df['OriginofSpecies']
 
-# Sort by ascending scores
-v_sorted = v.sort_values()
-v_sorted = v_sorted.reset_index()
-v_sorted = v_sorted['OriginofSpecies']
-
-
-# Plot this data has a horizontal bar plot
-#v_sorted.plot.barh().plot()
-
-
-
-
-
-
-#-----------------------------------------------
 titles_labels = []
 ax = v.sort_values().plot.barh()
 
@@ -2506,53 +2010,6 @@ plt.show()
 
 
 ![png](output_31_0.png)
-
-
-
-```python
-%%nose
-# This needs to be included at the beginning of every @tests cell.
-
-# One or more tests of the students code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-
-import pandas.core.series
-
-## Variable types
-def test_v_type():
-    assert isinstance(v, pandas.core.series.Series), \
-    'The v variable should be a series of type pandas.core.series.Series.'
-
-def test_v_sorted_type():
-    assert isinstance(v_sorted, pandas.core.series.Series), \
-    'The v_sorted variable should be a series of type pandas.core.series.Series.'
-
-## Variable lengths    
-def test_v_len():
-    assert len(v) == 20, \
-    'The v series should be of length 20.'
-
-def test_v_sorted_len():
-    assert len(v_sorted) == 20, \
-    'The v_sorted series should be of length 20.'
-    
-## Is the series sorted?
-def test_is_series_sorted():
-    assert all(v_sorted[i] <= v_sorted[i+1] for i in range(len(v_sorted)-1)), \
-    'The v_sorted series should be sorted by ascending scores.'
-
-```
-
-
-
-
-
-
-    5/5 tests passed
-
-
 
 
 ## 12. Which books have similar content?
@@ -2701,25 +2158,5 @@ dend
 
 
 ![png](output_34_1.png)
-
-
-
-```python
-%%nose
-
-import numpy
-
-def test_Z_type():
-    assert isinstance(Z, numpy.ndarray), \
-    'The Z variable should be generated by the hierarchy.linkage() function and of type numpy.ndarray.'
-```
-
-
-
-
-
-
-    1/1 tests passed
-
 
 
