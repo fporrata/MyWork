@@ -1,8 +1,6 @@
 
 ## 1. Darwin's bibliography
 
-![jpg](CharlesDarwin.jpg)
-
 <img src="CharlesDarwin.jpg" alt="drawing" width="200"/>
 
 <p>Charles Darwin is one of the few universal figures of science. His most renowned work is without a doubt his "<em>On the Origin of Species</em>" published in 1859 which introduced the concept of natural selection. But Darwin wrote many other books on a wide range of topics, including geology, plants or his personal life. In this notebook, we will automatically detect how closely related his books are to each other.</p>
