@@ -1,0 +1,2725 @@
+
+## 1. Darwin's bibliography
+<p><img src="https://assets.datacamp.com/production/project_607/img/CharlesDarwin.jpg" alt="Charles Darwin" width="300px"></p>
+<p>Charles Darwin is one of the few universal figures of science. His most renowned work is without a doubt his "<em>On the Origin of Species</em>" published in 1859 which introduced the concept of natural selection. But Darwin wrote many other books on a wide range of topics, including geology, plants or his personal life. In this notebook, we will automatically detect how closely related his books are to each other.</p>
+<p>To this purpose, we will develop the bases of <strong>a content-based book recommendation system</strong>, which will determine which books are close to each other based on how similar the discussed topics are. The methods we will use are commonly used in text- or documents-heavy industries such as legal, tech or customer support to perform some common task such as text classification or handling search engine queries.</p>
+<p>Let's take a look at the books we'll use in our recommendation system.</p>
+
+
+```python
+# Import library
+import glob
+
+# The books files are contained in this folder
+folder = "datasets/"
+
+# List all the .txt files and sort them alphabetically
+files = glob.glob(folder + '*.txt')
+files.sort()
+files
+
+
+```
+
+
+
+
+    ['datasets/Autobiography.txt',
+     'datasets/CoralReefs.txt',
+     'datasets/DescentofMan.txt',
+     'datasets/DifferentFormsofFlowers.txt',
+     'datasets/EffectsCrossSelfFertilization.txt',
+     'datasets/ExpressionofEmotionManAnimals.txt',
+     'datasets/FormationVegetableMould.txt',
+     'datasets/FoundationsOriginofSpecies.txt',
+     'datasets/GeologicalObservationsSouthAmerica.txt',
+     'datasets/InsectivorousPlants.txt',
+     'datasets/LifeandLettersVol1.txt',
+     'datasets/LifeandLettersVol2.txt',
+     'datasets/MonographCirripedia.txt',
+     'datasets/MonographCirripediaVol2.txt',
+     'datasets/MovementClimbingPlants.txt',
+     'datasets/OriginofSpecies.txt',
+     'datasets/PowerMovementPlants.txt',
+     'datasets/VariationPlantsAnimalsDomestication.txt',
+     'datasets/VolcanicIslands.txt',
+     'datasets/VoyageBeagle.txt']
+
+
+
+
+```python
+%%nose
+# This needs to be included at the beginning of every @tests cell.
+
+# One or more tests of the students code.
+# The @solution should pass the tests.
+# The purpose of the tests is to try to catch common errors and to 
+# give the student a hint on how to resolve these errors.
+
+def test_files_type():
+    assert isinstance(files, list), \
+    'The files variable should be a list.'
+    
+def test_glob_len():
+    assert len(files) == 20, \
+    'The files variable should contain 20 elements. Make sure you only selected files ending by .txt.'
+    
+def test_is_files_list_sorted():
+    assert all(files[i] <= files[i+1] for i in range(len(files)-1)), \
+    'The files list should be sorted by using the .sort() method.'
+```
+
+
+
+
+
+
+    3/3 tests passed
+
+
+
+
+## 2. Load the contents of each book into Python
+<p>As a first step, we need to load the content of these books into Python and do some basic pre-processing to facilitate the downstream analyses. We call such a collection of texts <strong>a corpus</strong>. We will also store the titles for these books for future reference and print their respective length to get a gauge for their contents.</p>
+
+
+```python
+# Import libraries
+import re, os
+
+# Initialize the object that will contain the texts and titles
+txts = []
+titles = []
+
+for n in files:
+    # Open each file
+    f = open(n, encoding = 'utf-8-sig')
+    # Remove all non-alpha-numeric characters
+    pattern = re.compile('^[\w-]+$')
+    fclean = pattern.sub('',f.read())
+    
+    # Store the texts and titles of the books in two separate lists
+    txts.append(fclean) 
+    titles.append(os.path.basename(n).replace('.txt', ''))
+
+# Print the length, in characters, of each book
+[len(t) for t in txts]
+```
+
+
+
+
+    [126535,
+     515199,
+     1853959,
+     637442,
+     953361,
+     646127,
+     352125,
+     557591,
+     825187,
+     933920,
+     1082757,
+     1054634,
+     815756,
+     1815025,
+     314447,
+     945712,
+     1133642,
+     1139290,
+     352425,
+     1188353]
+
+
+
+
+```python
+%%nose
+# This needs to be included at the beginning of every @tests cell.
+import _io
+
+# For some reasons, the index isn't the same between my local notebook and the DataCamp version.
+# Therefore, I can not hardcode the value and have to generate it here.
+
+def test_txts_titles_len():
+    assert len(txts) == 20 & len(titles) == 20, \
+    'The txts and titles variable should contain 20 elements.'
+    
+
+def test_f_type():
+    assert isinstance(f, _io.TextIOWrapper), \
+    'The f variable should be of type _io.TextIOWrapper and be generated with the open() function.'
+    
+def test_file_encoding():
+    assert f.encoding == 'utf-8-sig', \
+    'Make sure you open the text file encoded as utf-8-sig.'   
+    
+def test_txt_in_title():
+    assert all([".txt" not in title for title in titles]), \
+    'The titles contained in the titles variable should not contain the .txt string. Use the .replace() method to remove them.'   
+
+def test_folder_in_title():
+    assert all([folder not in title for title in titles]), \
+    'The titles contained in the titles variable should not contain the name of the folder (' + str(folder) + '). Use the os.path.basename() function to remove them.'   
+    
+    
+def test_alphanumeric_in_txt():
+    assert not sum([len(i) for i in [re.findall('^[\w-]+$', t) for t in txts]]), \
+    'The elements of the txts variable should not contain non-alphanumeric characters.' 
+```
+
+
+
+
+
+
+    6/6 tests passed
+
+
+
+
+## 3. Find "On the Origin of Species"
+<p>For the next parts of this analysis, we will often check the results returned by our method for a given book. For consistency, we will refer to Darwin's most famous book: "<em>On the Origin of Species</em>." Let's find to which index this book is associated.</p>
+
+
+```python
+# Browse the list containing all the titles
+for i in range(len(titles)):
+    # Store the index if the title is "OriginofSpecies"
+    if (titles[i] == "OriginofSpecies"):
+        ori = i
+
+# Print the stored index
+ori
+```
+
+
+
+
+    15
+
+
+
+
+```python
+%%nose
+# This needs to be included at the beginning of every @tests cell.
+
+# For some reasons, the index isn't the same between my local notebook and the DataCamp version.
+# Therefore, I can not hardcode the value and have to generate it here.
+
+for i in range(len(titles)):
+    # Store the index if the title is "OriginofSpecies"
+    if(titles[i]=="OriginofSpecies"):
+        ori_test = i
+
+
+def test_ori_existence():
+    assert 'ori' in globals(), \
+    'Make sure you created a variable called ori.'
+
+def test_ori_type():
+    assert type(ori) == int, \
+    'The ori variable should be of type integer.'
+    
+def test_ori_value():
+    assert ori == ori_test, \
+    'The ori variable does not contain the correct index number.'
+```
+
+
+
+
+
+
+    3/3 tests passed
+
+
+
+
+## 4. Tokenize the corpus
+<p>As a next step, we need to transform the corpus into a format that is easier to deal with for the downstream analyses. We will tokenize our corpus, i.e., transform each text into a list of the individual words (called tokens) it is made of. To check the output of our process, we will print the first 20 tokens of "<em>On the Origin of Species</em>".</p>
+
+
+```python
+# Define a list of stop words
+stoplist = set('for a of the and to in to be which some is at that we i who whom show via may my our might as well'.split())
+
+# Convert the text to lower case 
+txts_lower_case = [t.lower() for t in txts]
+
+# Transform the text into tokens 
+txts_split = [t.split() for t in txts_lower_case]
+
+# Remove tokens which are part of the list of stop words
+texts = [[word for word in txt if word not in list(stoplist)] for txt in txts_split]
+#texts = [not w in list(stoplist) for w in txts_split]
+
+# Print the first 20 tokens for the "On the Origin of Species" book
+texts[ori][1:20]
+
+
+```
+
+
+
+
+    ['origin',
+     'species.',
+     '*',
+     '*',
+     '*',
+     '*',
+     '*',
+     '"but',
+     'with',
+     'regard',
+     'material',
+     'world,',
+     'can',
+     'least',
+     'go',
+     'so',
+     'far',
+     'this--we',
+     'can']
+
+
+
+
+```python
+%%nose
+# This needs to be included at the beginning of every @tests cell.
+
+# One or more tests of the students code. 
+# The @solution should pass the tests.
+# The purpose of the tests is to try to catch common errors and to 
+# give the student a hint on how to resolve these errors.
+stoplist = set('for a of the and to in to be which some is at that we i who whom show via may my our might as well'.split())
+
+def intersection(lst1, lst2): 
+    lst3 = [value for value in lst1 if value in lst2] 
+    return lst3 
+
+## Variables existence
+
+def test_var_texts_existence():
+    assert 'texts' in globals(), \
+    'The results should be stored in a variable called texts.'
+
+def test_var_lowercase_existence():
+    assert 'txts_lower_case' in globals(), \
+    'The variable txts_lower_case should exist.'
+    
+def test_var_split_existence():
+    assert 'txts_split' in globals(), \
+    'The variable txts_split should exist.'
+
+## Variables type and length    
+def test_var_texts_type():
+    assert isinstance(txts, list), \
+    'The texts variable should be a list.'
+    
+def test_var_texts_lowercase_type():
+    assert isinstance(txts_lower_case, list), \
+    'The txts_lower_case variable should be a list.'
+
+def test_var_texts_split_type():
+    assert isinstance(txts_split, list), \
+    'The txts_split variable should be a list.'
+
+## Variables length
+def test_var_texts_len():
+    assert len(texts) == 20, \
+    'The texts list should contain 20 elements.'
+
+def test_var_texts_lowercase_len():
+    assert len(txts_lower_case) == 20, \
+    'The txts_lower_case list should contain 20 elements.'
+
+def test_var_texts_split_len():
+    assert len(txts_split) == 20, \
+    'The txts_split list should contain 20 elements.'
+    
+## Variable content
+
+def test_lower_case():
+    assert all([t.islower() for t in txts_lower_case]), \
+    'The texts in the txts_lower_case list should all be in lower case.'
+
+def test_split_list():
+    assert all([isinstance(t, list) for t in txts_split]), \
+    'Each element of the txts_split list should be a list'
+    
+    
+def test_stopwords():
+    assert not sum([len(i) for i in [intersection(t, stoplist) for t in texts]]), \
+    'You should remove stop words from the final token sets contained in the texts variable.'
+```
+
+
+
+
+
+
+    12/12 tests passed
+
+
+
+
+## 5. Stemming of the tokenized corpus
+<p>If you have read <em>On the Origin of Species</em>, you will have noticed that Charles Darwin can use different words to refer to a similar concept. For example, the concept of selection can be described by words such as <em>selection</em>, <em>selective</em>, <em>select</em> or <em>selects</em>. This will dilute the weight given to this concept in the book and potentially bias the results of the analysis.</p>
+<p>To solve this issue, it is a common practice to use a <strong>stemming process</strong>, which will group together the inflected forms of a word so they can be analysed as a single item: <strong>the stem</strong>. In our <em>On the Origin of Species</em> example, the words related to the concept of selection would be gathered under the <em>select</em> stem.</p>
+<p>As we are analysing 20 full books, the stemming algorithm can take several minutes to run and, in order to make the process faster, we will directly load the final results from a pickle file and review the method used to generate it.</p>
+
+
+```python
+import pickle
+
+# Load the stemmed tokens list from the pregenerated pickle file
+texts_stem = pickle.load(open(r"datasets/texts_stem.p", "rb"))
+
+# Print the 20 first stemmed tokens from the "On the Origin of Species" book
+texts_stem[ori][1:20]
+```
+
+
+
+
+    ['origin',
+     'speci',
+     'but',
+     'with',
+     'regard',
+     'materi',
+     'world',
+     'can',
+     'least',
+     'go',
+     'so',
+     'far',
+     'thi',
+     'can',
+     'perceiv',
+     'event',
+     'are',
+     'brought',
+     'about']
+
+
+
+
+```python
+%%nose
+# This needs to be included at the beginning of every @tests cell.
+
+# One or more tests of the students code. 
+# The @solution should pass the tests.
+# The purpose of the tests is to try to catch common errors and to 
+# give the student a hint on how to resolve these errors.
+
+def test_var_existence():
+    assert 'texts_stem'in globals(), \
+    'The content of the pickle file should be loaded into a variable named texts_stem.'
+
+def test_var_type():
+    assert isinstance(texts_stem, list), \
+    'The texts_stem variable should be a list.'
+    
+def test_var_len():
+    assert len(texts_stem) == 20, \
+    'The texts_stem list should contain 20 elements.'
+```
+
+
+
+
+
+
+    3/3 tests passed
+
+
+
+
+## 6. Building a bag-of-words model
+<p>Now that we have transformed the texts into stemmed tokens, we need to build models that will be useable by downstream algorithms.</p>
+<p>First, we need to will create a universe of all words contained in our corpus of Charles Darwin's books, which we call <em>a dictionary</em>. Then, using the stemmed tokens and the dictionary, we will create <strong>bag-of-words models</strong> (BoW) of each of our texts. The BoW models will represent our books as a list of all uniques tokens they contain associated with their respective number of occurrences. </p>
+<p>To better understand the structure of such a model, we will print the five first elements of one of the "<em>On the Origin of Species</em>" BoW model.</p>
+
+
+```python
+# Load the functions allowing to create and use dictionaries
+from gensim import corpora
+
+# Create a dictionary from the stemmed tokens
+dictionary = corpora.Dictionary(texts_stem)
+
+# Create a bag-of-words model for each book, using the previously generated dictionary
+bows = [dictionary.doc2bow(txt) for txt in txts_split]
+
+# Print the first five elements of the On the Origin of species' BoW model
+bows[ori][1:5]
+
+
+
+
+```
+
+
+
+
+    [(23, 1), (27, 1), (63, 2), (65, 1)]
+
+
+
+
+```python
+%%nose
+# This needs to be included at the beginning of every @tests cell.
+
+# One or more tests of the students code. 
+# The @solution should pass the tests.
+# The purpose of the tests is to try to catch common errors and to 
+# give the student a hint on how to resolve these errors.
+import gensim.corpora.dictionary
+
+## Dictionary variable
+def test_dictionary_type():
+    assert isinstance(dictionary, gensim.corpora.dictionary.Dictionary), \
+    'The dictionary should be created using the corpora.Dictionary() function and the resulting object should be of type "gensim.corpora.dictionary.Dictionary".'
+    
+def test_dictionary_len():
+    assert len(dictionary) == 28170, \
+    'The dictionary should contain 28170 tokens.'
+    
+## bows variable
+
+def test_bows_type():
+    assert isinstance(bows, list), \
+    'The bows variable should be a list.'
+    
+def test_bows_len():
+    assert len(bows) == 20, \
+    'The bows object should have 20 elements, one model per text.'
+    
+def test_bows_content_type():
+    assert all([isinstance(b, list) for b in bows]), \
+    'Each elements in the bows list should be a list.'
+    
+```
+
+
+
+
+
+
+    5/5 tests passed
+
+
+
+
+## 7. The most common words of a given book
+<p>The results returned by the bag-of-words model is certainly easy to use for a computer but hard to interpret for a human. It is not straightforward to understand which stemmed tokens are present in a given book from Charles Darwin, and how many occurrences we can find.</p>
+<p>In order to better understand how the model has been generated and visualize its content, we will transform it into a DataFrame and display the 10 most common stems for the book "<em>On the Origin of Species</em>".</p>
+
+
+```python
+# Import pandas to create and manipulate DataFrames
+import pandas as pd
+
+# Convert the BoW model for "On the Origin of Species" into a DataFrame
+df_bow_origin = pd.DataFrame(bows[ori])
+
+# Add the column names to the DataFrame
+df_bow_origin.columns = ['index', 'occurrences']
+
+# Add a column containing the token corresponding to the dictionary index
+df_bow_origin["token"] = [dictionary[index] for index in df_bow_origin.index]
+
+# Sort the DataFrame by descending number of occurrences and print the first 10 values
+df_bow_origin.sort_values(by=['occurrences'], ascending = False).head(10)
+
+
+
+```
+
+
+
+
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>index</th>
+      <th>occurrences</th>
+      <th>token</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1176</th>
+      <td>4479</td>
+      <td>7681</td>
+      <td>heart</td>
+    </tr>
+    <tr>
+      <th>1341</th>
+      <td>6005</td>
+      <td>4380</td>
+      <td>interbr</td>
+    </tr>
+    <tr>
+      <th>2027</th>
+      <td>24478</td>
+      <td>3600</td>
+      <td>rejoic</td>
+    </tr>
+    <tr>
+      <th>380</th>
+      <td>1168</td>
+      <td>1749</td>
+      <td>brush</td>
+    </tr>
+    <tr>
+      <th>77</th>
+      <td>286</td>
+      <td>1630</td>
+      <td>8500</td>
+    </tr>
+    <tr>
+      <th>580</th>
+      <td>1736</td>
+      <td>1486</td>
+      <td>conway</td>
+    </tr>
+    <tr>
+      <th>127</th>
+      <td>393</td>
+      <td>1350</td>
+      <td>advis</td>
+    </tr>
+    <tr>
+      <th>584</th>
+      <td>1747</td>
+      <td>1173</td>
+      <td>corps</td>
+    </tr>
+    <tr>
+      <th>330</th>
+      <td>1043</td>
+      <td>1131</td>
+      <td>bleed</td>
+    </tr>
+    <tr>
+      <th>52</th>
+      <td>218</td>
+      <td>1114</td>
+      <td>2</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+```python
+%%nose
+# This needs to be included at the beginning of every @tests cell.
+
+# One or more tests of the students code. 
+# The @solution should pass the tests.
+# The purpose of the tests is to try to catch common errors and to 
+# give the student a hint on how to resolve these errors.
+
+import pandas.core.frame
+
+# Hardcoded numbers might not hold once on Datacamp's servers.
+# Hence the values are recomputed here.
+
+df_bow_origin_test = pd.DataFrame(bows[ori])
+n_rows_test = df_bow_origin_test.shape[0]
+
+#### Tests
+
+def test_df_type():
+    assert isinstance(df_bow_origin, pandas.core.frame.DataFrame), \
+    'The df_bow_origin variable should be a pandas DataFrame of type pandas.core.frame.DataFrame.'
+
+def test_df_dim1():
+    assert df_bow_origin.shape[1] == 3, \
+    'The df_bow_origin DataFrame should have 3 columns.'
+    
+def test_df_dim2():
+    assert df_bow_origin.shape[0] == n_rows_test, \
+    'The df_bow_origin DataFrame should have ' + str(n_rows_test) + ' rows.'    
+    
+def test_df_columns():
+    assert all(df_bow_origin.columns == list(["index", "occurrences", "token"])), \
+    'The columns of the df_bow_origin DataFrame should be named "index", "occurrences" and "token".'    
+        
+    
+```
+
+
+
+
+
+
+    4/4 tests passed
+
+
+
+
+## 8. Build a tf-idf model
+<p>If it wasn't for the presence of the stem "<em>speci</em>", we would have a hard time to guess this BoW model comes from the <em>On the Origin of Species</em> book. The most recurring words are, apart from few exceptions, very common and unlikely to carry any information peculiar to the given book. We need to use an additional step in order to determine which tokens are the most specific to a book.</p>
+<p>To do so, we will use a <strong>tf-idf model</strong> (term frequency–inverse document frequency). This model defines the importance of each word depending on how frequent it is in this text and how infrequent it is in all the other documents. As a result, a high tf-idf score for a word will indicate that this word is specific to this text.</p>
+<p>After computing those scores, we will print the 10 words most specific to the "<em>On the Origin of Species</em>" book (i.e., the 10 words with the highest tf-idf score).</p>
+
+
+```python
+# Load the gensim functions that will allow us to generate tf-idf models
+from gensim.models import TfidfModel
+
+# Generate the tf-idf model
+model = TfidfModel(bows)
+
+# Print the model for "On the Origin of Species"
+model[bows[ori]]
+```
+
+
+
+
+    [(0, 0.0010623348867173012),
+     (23, 0.004619413661598463),
+     (27, 0.0030139521361860224),
+     (63, 0.009238827323196926),
+     (65, 0.001450328426833015),
+     (75, 0.004025618979311572),
+     (78, 0.012139484176862957),
+     (84, 0.0017981510141551168),
+     (91, 0.004499848502582165),
+     (95, 0.002575290552478557),
+     (97, 0.005150581104957114),
+     (99, 0.020966709215717527),
+     (111, 0.010623348867173012),
+     (115, 0.0038788716823142254),
+     (118, 0.042488194619020356),
+     (123, 0.04619413661598463),
+     (130, 0.01310923945119178),
+     (137, 0.03233589563118924),
+     (138, 0.00413746312780184),
+     (140, 0.00258591445487615),
+     (144, 0.015102768269457228),
+     (157, 0.0037181721035105544),
+     (165, 0.02012809489655786),
+     (172, 0.03937367439759394),
+     (173, 0.018590860517552772),
+     (176, 0.008533517701091295),
+     (186, 0.0206873156390092),
+     (194, 0.006749772753873247),
+     (198, 0.006027904272372045),
+     (209, 0.003187004660151904),
+     (212, 0.003361688791338995),
+     (214, 0.03605406773469979),
+     (215, 0.044960181231823465),
+     (220, 0.003187004660151904),
+     (222, 0.0052926025501080385),
+     (224, 0.020602324419828455),
+     (230, 0.010858805063489461),
+     (233, 0.0021246697734346024),
+     (235, 0.016102475917246287),
+     (236, 0.0052926025501080385),
+     (244, 0.009041856408558067),
+     (245, 0.01205580854474409),
+     (246, 0.005842841876945157),
+     (247, 0.002171761012697892),
+     (249, 0.007725871657435671),
+     (251, 0.024278968353725915),
+     (254, 0.014503284268330151),
+     (258, 0.00155154867292569),
+     (265, 0.009041856408558067),
+     (269, 0.0034944515359529213),
+     (271, 0.0010623348867173012),
+     (278, 0.002575290552478557),
+     (280, 0.002575290552478557),
+     (283, 0.004025618979311572),
+     (285, 0.006988903071905843),
+     (290, 0.012876452762392783),
+     (296, 0.025174114198171636),
+     (300, 0.004249339546869205),
+     (301, 0.0010623348867173012),
+     (302, 0.008990755070775583),
+     (303, 0.010585205100216077),
+     (308, 0.006905176763662459),
+     (310, 0.00051718289097523),
+     (311, 0.0038788716823142254),
+     (313, 0.027125569225674204),
+     (323, 0.009238827323196926),
+     (325, 0.046355229944614024),
+     (327, 0.003361688791338995),
+     (329, 0.05292602550108038),
+     (339, 0.006027904272372045),
+     (344, 0.004343522025395784),
+     (345, 0.0034944515359529213),
+     (346, 0.00290065685366603),
+     (349, 0.001450328426833015),
+     (350, 0.023889371139676815),
+     (351, 0.006988903071905843),
+     (354, 0.004025618979311572),
+     (356, 0.0021246697734346024),
+     (359, 0.015451743314871341),
+     (362, 0.0030139521361860224),
+     (363, 0.004249339546869205),
+     (367, 0.006988903071905843),
+     (369, 0.16423922218978732),
+     (370, 0.02795561228762337),
+     (371, 0.001292957227438075),
+     (372, 0.006069742088431479),
+     (374, 0.00258591445487615),
+     (375, 0.004913237464264685),
+     (376, 0.013810353527324917),
+     (379, 0.001593502330075952),
+     (380, 0.010483354607858764),
+     (387, 0.002575290552478557),
+     (388, 0.009238827323196926),
+     (389, 0.002575290552478557),
+     (395, 0.0017981510141551168),
+     (399, 0.0036202802368266104),
+     (406, 0.03245546079020553),
+     (409, 0.00849867909373841),
+     (417, 0.00206873156390092),
+     (418, 0.008113865197551383),
+     (424, 0.015102768269457228),
+     (426, 0.012587057099085818),
+     (429, 0.0022499242512910825),
+     (435, 0.04542786996738798),
+     (442, 0.034944515359529214),
+     (448, 0.03133887915816039),
+     (454, 0.006069742088431479),
+     (456, 0.006749772753873247),
+     (463, 0.04619413661598463),
+     (470, 0.0052926025501080385),
+     (493, 0.0017981510141551168),
+     (497, 0.024153713875869433),
+     (502, 0.01618335912739605),
+     (505, 0.005624810628227706),
+     (510, 0.00870197056099809),
+     (512, 0.00827492625560368),
+     (527, 0.004025618979311572),
+     (529, 0.04342435568207277),
+     (531, 0.004343522025395784),
+     (533, 0.006027904272372045),
+     (536, 0.002575290552478557),
+     (543, 0.0052926025501080385),
+     (545, 0.004025618979311572),
+     (548, 0.018083712817116133),
+     (553, 0.009238827323196926),
+     (556, 0.0051718289097523),
+     (557, 0.000258591445487615),
+     (561, 0.003361688791338995),
+     (563, 0.0052926025501080385),
+     (567, 0.0005311674433586506),
+     (577, 0.009041856408558067),
+     (582, 0.005150581104957114),
+     (585, 0.00290065685366603),
+     (587, 0.0033748863769366235),
+     (592, 0.002171761012697892),
+     (599, 0.0008193274656994863),
+     (600, 0.006069742088431479),
+     (615, 0.010085066374016986),
+     (616, 0.006988903071905843),
+     (619, 0.02446116075167045),
+     (635, 0.0107889060849307),
+     (636, 0.005150581104957114),
+     (641, 0.01847765464639385),
+     (646, 0.006988903071905843),
+     (649, 0.007874734879518789),
+     (655, 0.004249339546869205),
+     (657, 0.013858240984795388),
+     (660, 0.013052955841497136),
+     (663, 0.0030139521361860224),
+     (668, 0.013977806143811685),
+     (669, 0.010651257054093321),
+     (670, 0.012076856937934716),
+     (675, 0.006515283038093677),
+     (676, 0.08990755070775584),
+     (679, 0.006988903071905843),
+     (687, 0.0107889060849307),
+     (689, 0.006749772753873247),
+     (705, 0.012139484176862957),
+     (721, 0.03862935828717835),
+     (727, 0.015451743314871341),
+     (737, 0.00155154867292569),
+     (741, 0.007373947191295377),
+     (750, 0.036230570813804146),
+     (758, 0.009012602122694348),
+     (763, 0.00103436578195046),
+     (770, 0.004096637328497432),
+     (771, 0.0035963020283102335),
+     (776, 0.0008193274656994863),
+     (783, 0.021170410200432154),
+     (785, 0.004025618979311572),
+     (786, 0.008113865197551383),
+     (788, 0.0069819690281656055),
+     (789, 0.007874734879518789),
+     (793, 0.031907225390326324),
+     (797, 0.009831929588393835),
+     (803, 0.03245546079020553),
+     (806, 0.015069760680930112),
+     (811, 0.017472257679764607),
+     (814, 0.03416486926894722),
+     (816, 0.003187004660151904),
+     (821, 0.04530830480837169),
+     (822, 0.13396299618635543),
+     (830, 0.004343522025395784),
+     (831, 0.008193274656994863),
+     (838, 0.005735292259896403),
+     (839, 0.007967511650379759),
+     (842, 0.004619413661598463),
+     (845, 0.00258591445487615),
+     (851, 0.006069742088431479),
+     (857, 0.004025618979311572),
+     (861, 0.012587057099085818),
+     (873, 0.04641050965865648),
+     (881, 0.0030139521361860224),
+     (883, 0.0018101401184133052),
+     (890, 0.008990755070775583),
+     (892, 0.008113865197551383),
+     (900, 0.0016386549313989725),
+     (901, 0.014341520970683566),
+     (902, 0.014341520970683566),
+     (905, 0.015202327088885248),
+     (906, 0.029006568536660303),
+     (909, 0.0022499242512910825),
+     (912, 0.00258591445487615),
+     (917, 0.20087266309332744),
+     (924, 0.0036202802368266104),
+     (926, 0.006988903071905843),
+     (928, 0.004780506990227856),
+     (933, 0.0037181721035105544),
+     (935, 0.008990755070775583),
+     (937, 0.015877807650324115),
+     (938, 0.00655461972559589),
+     (951, 0.0369553092927877),
+     (952, 0.012876452762392783),
+     (954, 0.002327323009388535),
+     (956, 0.020966709215717527),
+     (960, 0.00982647492852937),
+     (962, 0.004025618979311572),
+     (971, 0.00290065685366603),
+     (973, 0.001292957227438075),
+     (974, 0.003187004660151904),
+     (976, 0.017981510141551166),
+     (980, 0.006988903071905843),
+     (982, 0.004619413661598463),
+     (985, 0.06630694699609249),
+     (988, 0.012876452762392783),
+     (996, 0.0052926025501080385),
+     (997, 0.007725871657435671),
+     (998, 0.0629352854954291),
+     (1000, 0.001450328426833015),
+     (1004, 0.004025618979311572),
+     (1006, 0.002655837216793253),
+     (1009, 0.009831929588393835),
+     (1010, 0.0034944515359529213),
+     (1012, 0.04542786996738798),
+     (1013, 0.006988903071905843),
+     (1019, 0.0005311674433586506),
+     (1023, 0.004350985280499045),
+     (1024, 0.0863112486794456),
+     (1030, 0.008051237958623144),
+     (1037, 0.002171761012697892),
+     (1038, 0.009561013980455712),
+     (1039, 0.0017981510141551168),
+     (1042, 0.012139484176862957),
+     (1044, 0.00103436578195046),
+     (1045, 0.023375963184016517),
+     (1048, 0.007725871657435671),
+     (1050, 0.006988903071905843),
+     (1060, 0.00902984653709706),
+     (1062, 0.004619413661598463),
+     (1065, 0.01847765464639385),
+     (1068, 0.005150581104957114),
+     (1085, 0.016102475917246287),
+     (1087, 0.0035963020283102335),
+     (1089, 0.01966385917678767),
+     (1092, 0.2963857428060501),
+     (1096, 0.0034944515359529213),
+     (1106, 0.004619413661598463),
+     (1109, 0.0052926025501080385),
+     (1110, 0.012289911985492293),
+     (1112, 0.004499848502582165),
+     (1115, 0.021170410200432154),
+     (1116, 0.0036202802368266104),
+     (1117, 0.004343522025395784),
+     (1118, 0.019779661155706285),
+     (1120, 0.024153713875869433),
+     (1122, 0.032204951834492575),
+     (1123, 0.004619413661598463),
+     (1125, 0.0049159647941969175),
+     (1132, 0.0011249621256455412),
+     (1136, 0.006069742088431479),
+     (1139, 0.00258591445487615),
+     (1141, 0.00103436578195046),
+     (1142, 0.000775774336462845),
+     (1143, 0.011154516310531663),
+     (1150, 0.015403855857400867),
+     (1157, 0.0024579823970984588),
+     (1169, 0.0052926025501080385),
+     (1173, 0.0030139521361860224),
+     (1174, 0.011470584519792807),
+     (1175, 0.0024579823970984588),
+     (1176, 0.002575290552478557),
+     (1179, 0.013858240984795388),
+     (1184, 0.00258591445487615),
+     (1186, 0.006069742088431479),
+     (1187, 0.0017981510141551168),
+     (1192, 0.01646619074411817),
+     (1193, 0.009041856408558067),
+     (1196, 0.011608316733504306),
+     (1208, 0.006988903071905843),
+     (1209, 0.00258591445487615),
+     (1210, 0.006749772753873247),
+     (1214, 0.006988903071905843),
+     (1221, 0.001292957227438075),
+     (1229, 0.010651257054093321),
+     (1230, 0.006905176763662459),
+     (1232, 0.015069760680930112),
+     (1239, 0.0033748863769366235),
+     (1245, 0.010858805063489461),
+     (1247, 0.007251642134165076),
+     (1249, 0.002575290552478557),
+     (1251, 0.021170410200432154),
+     (1254, 0.018209226265294434),
+     (1255, 0.06949635240633255),
+     (1260, 0.003361688791338995),
+     (1267, 0.01205580854474409),
+     (1275, 0.011685683753890314),
+     (1286, 0.001593502330075952),
+     (1296, 0.004025618979311572),
+     (1297, 0.008687044050791569),
+     (1300, 0.00290065685366603),
+     (1310, 0.008193274656994863),
+     (1314, 0.03862935828717835),
+     (1315, 0.03145006382357629),
+     (1323, 0.04120464883965691),
+     (1333, 0.09990100658410304),
+     (1342, 0.020966709215717527),
+     (1343, 0.00051718289097523),
+     (1359, 0.004619413661598463),
+     (1363, 0.05933898346711886),
+     (1379, 0.0035963020283102335),
+     (1380, 0.0052926025501080385),
+     (1386, 0.000258591445487615),
+     (1390, 0.017374088101583137),
+     (1393, 0.0022499242512910825),
+     (1407, 0.005150581104957114),
+     (1410, 0.0035963020283102335),
+     (1411, 0.002171761012697892),
+     (1414, 0.0035963020283102335),
+     (1416, 0.006069742088431479),
+     (1423, 0.015069760680930112),
+     (1425, 0.002171761012697892),
+     (1426, 0.009238827323196926),
+     (1428, 0.03605040849077739),
+     (1433, 0.017472257679764607),
+     (1441, 0.016227730395102766),
+     (1445, 0.055112480219654564),
+     (1449, 0.008113865197551383),
+     (1450, 0.0024579823970984588),
+     (1451, 0.002171761012697892),
+     (1457, 0.020602324419828455),
+     (1464, 0.01847765464639385),
+     (1465, 0.006515283038093677),
+     (1466, 0.001593502330075952),
+     (1471, 0.032582522131439494),
+     (1475, 0.00870197056099809),
+     (1478, 0.004343522025395784),
+     (1480, 0.004249339546869205),
+     (1485, 0.02212184157388613),
+     (1488, 0.004025618979311572),
+     (1489, 0.018027033867349895),
+     (1493, 0.005150581104957114),
+     (1497, 0.010483354607858764),
+     (1500, 0.00103436578195046),
+     (1502, 0.012076856937934716),
+     (1503, 0.005947603246215146),
+     (1506, 0.03605406773469979),
+     (1520, 0.004350985280499045),
+     (1523, 0.041933418431435054),
+     (1524, 0.10424452860949883),
+     (1527, 0.0475209930105702),
+     (1533, 0.004025618979311572),
+     (1535, 0.0033748863769366235),
+     (1537, 0.0049159647941969175),
+     (1541, 0.0489223215033409),
+     (1542, 0.000775774336462845),
+     (1543, 0.006027904272372045),
+     (1552, 0.034392662249852796),
+     (1553, 0.00155154867292569),
+     (1554, 0.034944515359529214),
+     (1559, 0.00413746312780184),
+     (1561, 0.00899969700516433),
+     (1562, 0.003277309862797945),
+     (1566, 0.010858805063489461),
+     (1568, 0.034944515359529214),
+     (1569, 0.000258591445487615),
+     (1576, 0.0022499242512910825),
+     (1590, 0.006988903071905843),
+     (1599, 0.00290065685366603),
+     (1605, 0.004025618979311572),
+     (1607, 0.013030566076187354),
+     (1614, 0.0011249621256455412),
+     (1625, 0.006988903071905843),
+     (1627, 0.0034944515359529213),
+     (1628, 0.020602324419828455),
+     (1629, 0.004096637328497432),
+     (1630, 0.0008193274656994863),
+     (1635, 0.017472257679764607),
+     (1637, 0.020966709215717527),
+     (1640, 0.006069742088431479),
+     (1647, 0.005842841876945157),
+     (1651, 0.0005311674433586506),
+     (1653, 0.0018101401184133052),
+     (1657, 0.027556240109827282),
+     (1661, 0.004249339546869205),
+     (1666, 0.0036202802368266104),
+     (1668, 0.0030139521361860224),
+     (1670, 0.06639457918310551),
+     (1672, 0.012216851197248964),
+     (1677, 0.0038788716823142254),
+     (1680, 0.0037181721035105544),
+     (1686, 0.020966709215717527),
+     (1692, 0.008687044050791569),
+     (1695, 0.00539445304246535),
+     (1706, 0.00206873156390092),
+     (1710, 0.005624810628227706),
+     (1713, 0.00051718289097523),
+     (1722, 0.006988903071905843),
+     (1726, 0.009012602122694348),
+     (1743, 0.003187004660151904),
+     (1751, 0.08992036246364693),
+     (1754, 0.009564193624384399),
+     (1761, 0.007967511650379759),
+     (1763, 0.013977806143811685),
+     (1766, 0.006988903071905843),
+     (1768, 0.020966709215717527),
+     (1772, 0.030903486629742682),
+     (1774, 0.0052926025501080385),
+     (1775, 0.024341595592654152),
+     (1780, 0.0010623348867173012),
+     (1781, 0.008687044050791569),
+     (1782, 0.004619413661598463),
+     (1785, 0.023216633467008613),
+     (1795, 0.00310309734585138),
+     (1798, 0.05946346550015361),
+     (1806, 0.015403855857400867),
+     (1834, 0.0017981510141551168),
+     (1846, 0.019128387248768797),
+     (1847, 0.016102475917246287),
+     (1850, 0.004619413661598463),
+     (1851, 0.017472257679764607),
+     (1853, 0.02795561228762337),
+     (1858, 0.00655461972559589),
+     (1859, 0.06091379392698662),
+     (1860, 0.007725871657435671),
+     (1861, 0.012374583382100953),
+     (1869, 0.009238827323196926),
+     (1878, 0.17179527176260329),
+     (1881, 0.02795561228762337),
+     (1884, 0.006069742088431479),
+     (1885, 0.014503284268330151),
+     (1890, 0.00206873156390092),
+     (1904, 0.018209226265294434),
+     (1905, 0.008051237958623144),
+     (1923, 0.004619413661598463),
+     (1931, 0.0008193274656994863),
+     (1937, 0.013858240984795388),
+     (1940, 0.018027033867349895),
+     (1941, 0.008193274656994863),
+     (1945, 0.0022499242512910825),
+     (1954, 0.005150581104957114),
+     (1957, 0.0018101401184133052),
+     (1961, 0.0030139521361860224),
+     (1966, 0.02621847890238356),
+     (1978, 0.0038788716823142254),
+     (1979, 0.006515283038093677),
+     (1980, 0.015069760680930112),
+     (1982, 0.004619413661598463),
+     (1985, 0.010585205100216077),
+     (1986, 0.05233304673105044),
+     (1990, 0.016227730395102766),
+     (1991, 0.0011249621256455412),
+     (1993, 0.034944515359529214),
+     (1994, 0.010585205100216077),
+     (1995, 0.0103436578195046),
+     (1997, 0.005150581104957114),
+     (1998, 0.005842841876945157),
+     (2000, 0.012587057099085818),
+     (2002, 0.0036202802368266104),
+     (2008, 0.01137802360145506),
+     (2012, 0.027857133833782532),
+     (2014, 0.004350985280499045),
+     (2020, 0.013052955841497136),
+     (2022, 0.052122264304749415),
+     (2023, 0.0030139521361860224),
+     (2024, 0.000775774336462845),
+     (2026, 0.020602324419828455),
+     (2035, 0.00310309734585138),
+     (2040, 0.001292957227438075),
+     (2041, 0.00539445304246535),
+     (2049, 0.012876452762392783),
+     (2051, 0.010585205100216077),
+     (2055, 0.015953612695163162),
+     (2060, 0.000775774336462845),
+     (2061, 0.0069819690281656055),
+     (2065, 0.005311674433586506),
+     (2067, 0.03175561530064823),
+     (2069, 0.004025618979311572),
+     (2076, 0.005624810628227706),
+     (2082, 0.0030139521361860224),
+     (2083, 0.0017981510141551168),
+     (2084, 0.005150581104957114),
+     (2086, 0.010585205100216077),
+     (2087, 0.001450328426833015),
+     (2088, 0.0011249621256455412),
+     (2089, 0.002171761012697892),
+     (2095, 0.006988903071905843),
+     (2096, 0.0011249621256455412),
+     (2099, 0.028676461299482023),
+     (2111, 0.00206873156390092),
+     (2119, 0.006515283038093677),
+     (2122, 0.00849867909373841),
+     (2128, 0.02012809489655786),
+     (2134, 0.027125569225674204),
+     (2136, 0.016102475917246287),
+     (2138, 0.006988903071905843),
+     (2144, 0.05933898346711886),
+     (2145, 0.009564193624384399),
+     (2146, 0.004249339546869205),
+     (2148, 0.00539445304246535),
+     (2154, 0.002655837216793253),
+     (2156, 0.09085573993477596),
+     (2158, 0.0772587165743567),
+     (2164, 0.01205580854474409),
+     (2182, 0.00465464601877707),
+     (2186, 0.02446116075167045),
+     (2187, 0.10207276759680094),
+     (2188, 0.002171761012697892),
+     (2195, 0.03480788224399236),
+     (2197, 0.0107889060849307),
+     (2202, 0.006069742088431479),
+     (2208, 0.002575290552478557),
+     (2210, 0.027716481969590777),
+     (2220, 0.00155154867292569),
+     (2233, 0.005947603246215146),
+     (2235, 0.010585205100216077),
+     (2237, 0.0016386549313989725),
+     (2239, 0.011119432155967446),
+     (2240, 0.0033748863769366235),
+     (2242, 0.007725871657435671),
+     (2244, 0.013977806143811685),
+     (2249, 0.002575290552478557),
+     (2250, 0.00580131370733206),
+     (2255, 0.010301162209914227),
+     (2266, 0.009564193624384399),
+     (2267, 0.0033748863769366235),
+     (2273, 0.010585205100216077),
+     (2277, 0.0017981510141551168),
+     (2279, 0.006069742088431479),
+     (2280, 0.011249621256455412),
+     (2281, 0.001450328426833015),
+     (2284, 0.016102475917246287),
+     (2285, 0.006988903071905843),
+     (2286, 0.002327323009388535),
+     (2289, 0.011119432155967446),
+     (2291, 0.00539445304246535),
+     (2294, 0.004619413661598463),
+     (2297, 0.006027904272372045),
+     (2300, 0.012587057099085818),
+     (2303, 0.003187004660151904),
+     (2305, 0.012139484176862957),
+     (2309, 0.008113865197551383),
+     (2311, 0.027716481969590777),
+     (2312, 0.00413746312780184),
+     (2313, 0.014503284268330151),
+     (2315, 0.0034944515359529213),
+     (2317, 0.0018101401184133052),
+     (2322, 0.002171761012697892),
+     (2323, 0.006749772753873247),
+     (2330, 0.04120464883965691),
+     (2332, 0.0033748863769366235),
+     (2334, 0.00051718289097523),
+     (2335, 0.009041856408558067),
+     (2336, 0.01205580854474409),
+     (2338, 0.00051718289097523),
+     (2340, 0.05591122457524674),
+     (2342, 0.0024579823970984588),
+     (2344, 0.005624810628227706),
+     (2346, 0.008990755070775583),
+     (2348, 0.0033748863769366235),
+     (2352, 0.0033748863769366235),
+     (2353, 0.0024579823970984588),
+     (2359, 0.004025618979311572),
+     (2363, 0.0017981510141551168),
+     (2369, 0.002171761012697892),
+     (2372, 0.02610591168299427),
+     (2373, 0.018027033867349895),
+     (2375, 0.019124356135974203),
+     (2377, 0.028328196077264122),
+     (2381, 0.0052926025501080385),
+     (2382, 0.0049159647941969175),
+     (2383, 0.0022499242512910825),
+     (2384, 0.000258591445487615),
+     (2385, 0.0017981510141551168),
+     (2389, 0.010301162209914227),
+     (2390, 0.004780506990227856),
+     (2393, 0.002844505900363765),
+     (2396, 0.013977806143811685),
+     (2400, 0.00465464601877707),
+     (2408, 0.012748018640607615),
+     (2418, 0.006988903071905843),
+     (2421, 0.017981510141551166),
+     (2423, 0.006988903071905843),
+     (2432, 0.011685683753890314),
+     (2434, 0.00580131370733206),
+     (2449, 0.012076856937934716),
+     (2454, 0.00258591445487615),
+     (2459, 0.001593502330075952),
+     (2468, 0.031907225390326324),
+     (2474, 0.0024579823970984588),
+     (2478, 0.0030139521361860224),
+     (2480, 0.01954584911428103),
+     (2481, 0.0038788716823142254),
+     (2484, 0.0011249621256455412),
+     (2488, 0.0037181721035105544),
+     (2491, 0.0018101401184133052),
+     (2492, 0.011608316733504306),
+     (2493, 0.0008193274656994863),
+     (2494, 0.004499848502582165),
+     (2502, 0.004025618979311572),
+     (2509, 0.050813550277583094),
+     (2511, 0.00899969700516433),
+     (2514, 0.013052955841497136),
+     (2516, 0.00539445304246535),
+     (2517, 0.04377993939213546),
+     (2530, 0.0049159647941969175),
+     (2532, 0.00568901180072753),
+     (2533, 0.0017981510141551168),
+     (2534, 0.008113865197551383),
+     (2540, 0.004249339546869205),
+     (2543, 0.00899969700516433),
+     (2554, 0.00290065685366603),
+     (2566, 0.004780506990227856),
+     (2573, 0.020249318261619742),
+     (2588, 0.001292957227438075),
+     (2590, 0.0008193274656994863),
+     (2593, 0.01861858407510828),
+     (2594, 0.013963938056331211),
+     (2595, 0.002844505900363765),
+     (2598, 0.00899969700516433),
+     (2599, 0.03145006382357629),
+     (2604, 0.012076856937934716),
+     (2607, 0.0030139521361860224),
+     (2629, 0.01954584911428103),
+     (2631, 0.001450328426833015),
+     (2635, 0.00870197056099809),
+     (2636, 0.004619413661598463),
+     (2653, 0.021754926402495222),
+     (2657, 0.0049159647941969175),
+     (2659, 0.00539445304246535),
+     (2660, 0.013977806143811685),
+     (2662, 0.0034944515359529213),
+     (2663, 0.007967511650379759),
+     (2667, 0.003277309862797945),
+     (2668, 0.0017981510141551168),
+     (2671, 0.0011249621256455412),
+     (2674, 0.00206873156390092),
+     (2683, 0.00103436578195046),
+     (2691, 0.002844505900363765),
+     (2695, 0.10424452860949883),
+     (2697, 0.006069742088431479),
+     (2699, 0.005150581104957114),
+     (2701, 0.0018101401184133052),
+     (2707, 0.0030139521361860224),
+     (2708, 0.017472257679764607),
+     (2709, 0.0022499242512910825),
+     (2712, 0.00580131370733206),
+     (2717, 0.03441175355937842),
+     (2720, 0.013030566076187354),
+     (2722, 0.0052926025501080385),
+     (2731, 0.010152298987831104),
+     (2733, 0.00290065685366603),
+     (2736, 0.006905176763662459),
+     (2738, 0.006515283038093677),
+     (2744, 0.006069742088431479),
+     (2754, 0.0011249621256455412),
+     (2766, 0.0016386549313989725),
+     (2796, 0.013977806143811685),
+     (2818, 0.0024579823970984588),
+     (2820, 0.008113865197551383),
+     (2839, 0.001450328426833015),
+     (2853, 0.0011249621256455412),
+     (2861, 0.0008193274656994863),
+     (2863, 0.006069742088431479),
+     (2878, 0.009564193624384399),
+     (2887, 0.007251642134165076),
+     (2896, 0.0016386549313989725),
+     (2897, 0.0035963020283102335),
+     (2906, 0.001450328426833015),
+     (2915, 0.008113865197551383),
+     (2925, 0.015102768269457228),
+     (2936, 0.001450328426833015),
+     (2972, 0.0022499242512910825),
+     (2973, 0.012876452762392783),
+     (2981, 0.0017981510141551168),
+     (2994, 0.0011249621256455412),
+     (2995, 0.008687044050791569),
+     (3002, 0.0035963020283102335),
+     (3030, 0.004343522025395784),
+     (3032, 0.010585205100216077),
+     (3043, 0.007192604056620467),
+     (3045, 0.004499848502582165),
+     (3063, 0.008113865197551383),
+     (3069, 0.01699735818747682),
+     (3070, 0.006069742088431479),
+     (3073, 0.002575290552478557),
+     (3074, 0.0018101401184133052),
+     (3076, 0.012587057099085818),
+     (3078, 0.005150581104957114),
+     (3084, 0.006027904272372045),
+     (3124, 0.012076856937934716),
+     (3129, 0.013052955841497136),
+     (3144, 0.010585205100216077),
+     (3147, 0.016227730395102766),
+     (3153, 0.038248712271948405),
+     (3157, 0.032204951834492575),
+     (3158, 0.006988903071905843),
+     (3170, 0.004499848502582165),
+     (3172, 0.015069760680930112),
+     (3188, 0.0034944515359529213),
+     (3197, 0.01160262741466412),
+     (3198, 0.007373947191295377),
+     (3223, 0.005150581104957114),
+     (3224, 0.023216633467008613),
+     (3229, 0.0033748863769366235),
+     (3231, 0.018027033867349895),
+     (3232, 0.0033748863769366235),
+     (3234, 0.002327323009388535),
+     (3248, 0.004619413661598463),
+     (3254, 0.04619413661598463),
+     (3258, 0.0022499242512910825),
+     (3259, 0.0035963020283102335),
+     (3264, 0.002171761012697892),
+     (3268, 0.006988903071905843),
+     (3271, 0.006988903071905843),
+     (3282, 0.012876452762392783),
+     (3283, 0.009564193624384399),
+     (3287, 0.019779661155706285),
+     (3288, 0.02137428038726528),
+     (3292, 0.011608316733504306),
+     (3294, 0.006069742088431479),
+     (3306, 0.006069742088431479),
+     (3310, 0.0024579823970984588),
+     (3311, 0.00539445304246535),
+     (3318, 0.000775774336462845),
+     (3322, 0.04157472295438616),
+     (3324, 0.00155154867292569),
+     (3327, 0.0017981510141551168),
+     (3336, 0.0369553092927877),
+     (3338, 0.005150581104957114),
+     (3360, 0.004025618979311572),
+     (3378, 0.001450328426833015),
+     (3381, 0.016227730395102766),
+     (3393, 0.003361688791338995),
+     (3403, 0.013030566076187354),
+     (3409, 0.0017981510141551168),
+     (3411, 0.006988903071905843),
+     (3436, 0.0035963020283102335),
+     (3452, 0.0052926025501080385),
+     (3453, 0.004619413661598463),
+     (3457, 0.0030139521361860224),
+     (3463, 0.013928566916891266),
+     (3469, 0.08113865197551383),
+     (3476, 0.00290065685366603),
+     (3479, 0.002171761012697892),
+     (3480, 0.007240560473653221),
+     (3486, 0.012139484176862957),
+     (3490, 0.03175561530064823),
+     (3503, 0.012139484176862957),
+     (3515, 0.002655837216793253),
+     (3516, 0.006515283038093677),
+     (3526, 0.01205580854474409),
+     (3528, 0.005150581104957114),
+     (3554, 0.008051237958623144),
+     (3556, 0.009564193624384399),
+     (3559, 0.019128387248768797),
+     (3569, 0.00155154867292569),
+     (3574, 0.006069742088431479),
+     (3580, 0.002655837216793253),
+     (3583, 0.0052926025501080385),
+     (3590, 0.0034944515359529213),
+     (3598, 0.006988903071905843),
+     (3599, 0.007192604056620467),
+     (3600, 0.0034944515359529213),
+     (3611, 0.008193274656994863),
+     (3623, 0.03037397739242961),
+     (3629, 0.006069742088431479),
+     (3632, 0.019653195404270074),
+     (3634, 0.015069760680930112),
+     (3640, 0.002327323009388535),
+     (3647, 0.004025618979311572),
+     (3666, 0.00290065685366603),
+     (3669, 0.015877807650324115),
+     (3682, 0.004619413661598463),
+     (3688, 0.010301162209914227),
+     (3689, 0.008051237958623144),
+     (3705, 0.0016386549313989725),
+     (3725, 0.006988903071905843),
+     (3731, 0.019124356135974203),
+     (3733, 0.005150581104957114),
+     (3745, 0.017472257679764607),
+     (3751, 0.010585205100216077),
+     (3770, 0.001450328426833015),
+     (3786, 0.0024579823970984588),
+     (3793, 0.004343522025395784),
+     (3796, 0.006988903071905843),
+     (3801, 0.002575290552478557),
+     (3805, 0.034944515359529214),
+     (3812, 0.00899969700516433),
+     (3817, 0.001292957227438075),
+     (3819, 0.010483354607858764),
+     (3825, 0.005842841876945157),
+     (3826, 0.011608316733504306),
+     (3836, 0.002575290552478557),
+     (3841, 0.026999091015492988),
+     (3846, 0.010585205100216077),
+     (3855, 0.007373947191295377),
+     (3856, 0.0018101401184133052),
+     (3860, 0.008687044050791569),
+     (3862, 0.012139484176862957),
+     (3865, 0.008113865197551383),
+     (3866, 0.008051237958623144),
+     (3871, 0.0051718289097523),
+     (3878, 0.004343522025395784),
+     (3879, 0.0215778121698614),
+     (3910, 0.006988903071905843),
+     (3927, 0.00580131370733206),
+     (3929, 0.0049159647941969175),
+     (3938, 0.004619413661598463),
+     (3950, 0.008113865197551383),
+     (3968, 0.004499848502582165),
+     (3983, 0.003187004660151904),
+     (3985, 0.005311674433586506),
+     (3995, 0.0034944515359529213),
+     (4003, 0.006988903071905843),
+     (4041, 0.008687044050791569),
+     (4049, 0.00051718289097523),
+     (4053, 0.010651257054093321),
+     (4067, 0.013858240984795388),
+     (4069, 0.005735292259896403),
+     (4072, 0.004025618979311572),
+     (4074, 0.008113865197551383),
+     (4075, 0.009238827323196926),
+     (4079, 0.001450328426833015),
+     (4086, 0.010585205100216077),
+     (4099, 0.010585205100216077),
+     (4101, 0.0021246697734346024),
+     (4105, 0.004619413661598463),
+     (4117, 0.009238827323196926),
+     (4124, 0.004025618979311572),
+     (4149, 0.004025618979311572),
+     (4165, 0.019128387248768797),
+     (4166, 0.003361688791338995),
+     (4172, 0.00899969700516433),
+     (4178, 0.003277309862797945),
+     (4183, 0.006988903071905843),
+     (4192, 0.007251642134165076),
+     (4196, 0.001450328426833015),
+     (4205, 0.03932771835357534),
+     (4206, 0.030276544271443086),
+     (4210, 0.007436344207021109),
+     (4215, 0.00206873156390092),
+     (4219, 0.012139484176862957),
+     (4222, 0.008113865197551383),
+     (4224, 0.0030139521361860224),
+     (4236, 0.003277309862797945),
+     (4246, 0.005947603246215146),
+     (4247, 0.007436344207021109),
+     (4281, 0.01799939401032866),
+     (4282, 0.006069742088431479),
+     (4302, 0.0008193274656994863),
+     (4355, 0.007874734879518789),
+     (4368, 0.011608316733504306),
+     (4378, 0.0034944515359529213),
+     (4379, 0.023889371139676815),
+     (4409, 0.0052926025501080385),
+     (4414, 0.006069742088431479),
+     (4416, 0.03480788224399236),
+     (4435, 0.018844531711088186),
+     (4441, 0.0030139521361860224),
+     (4443, 0.006069742088431479),
+     (4455, 0.004350985280499045),
+     (4457, 0.018590860517552772),
+     (4459, 0.021170410200432154),
+     (4460, 0.006069742088431479),
+     (4465, 0.016227730395102766),
+     (4476, 0.005430420355239916),
+     (4478, 0.010301162209914227),
+     (4537, 0.0011249621256455412),
+     (4542, 0.026972265212326752),
+     (4552, 0.004619413661598463),
+     (4554, 0.046433266934017225),
+     (4558, 0.011119432155967446),
+     (4566, 0.018209226265294434),
+     (4569, 0.00870197056099809),
+     (4573, 0.00580131370733206),
+     (4574, 0.013977806143811685),
+     (4577, 0.0030139521361860224),
+     (4618, 0.004780506990227856),
+     (4619, 0.013977806143811685),
+     (4620, 0.006027904272372045),
+     (4631, 0.008113865197551383),
+     (4640, 0.024278968353725915),
+     (4642, 0.006069742088431479),
+     (4660, 0.02012809489655786),
+     (4662, 0.0038788716823142254),
+     (4663, 0.0282328931650726),
+     (4671, 0.01654985251120736),
+     (4672, 0.009564193624384399),
+     (4675, 0.011608316733504306),
+     (4677, 0.00849867909373841),
+     (4695, 0.002327323009388535),
+     (4712, 0.0017981510141551168),
+     (4716, 0.06080930835554099),
+     (4718, 0.007436344207021109),
+     (4721, 0.02411161708948818),
+     (4728, 0.008113865197551383),
+     (4732, 0.0036202802368266104),
+     (4739, 0.0863112486794456),
+     (4745, 0.010858805063489461),
+     (4747, 0.002575290552478557),
+     (4764, 0.006069742088431479),
+     (4767, 0.012139484176862957),
+     (4775, 0.004343522025395784),
+     (4776, 0.012076856937934716),
+     (4792, 0.004025618979311572),
+     (4796, 0.0011249621256455412),
+     (4804, 0.004499848502582165),
+     (4812, 0.010301162209914227),
+     (4821, 0.0030139521361860224),
+     (4832, 0.0035963020283102335),
+     (4840, 0.01847765464639385),
+     (4876, 0.004025618979311572),
+     (4880, 0.004913237464264685),
+     (4890, 0.012876452762392783),
+     (4896, 0.0016386549313989725),
+     (4897, 0.0017981510141551168),
+     (4900, 0.006027904272372045),
+     (4901, 0.01740394112199618),
+     (4909, 0.009564193624384399),
+     (4913, 0.0018101401184133052),
+     (4914, 0.002575290552478557),
+     (4921, 0.0033748863769366235),
+     (4926, 0.015102768269457228),
+     (4929, 0.007192604056620467),
+     (4930, 0.0035963020283102335),
+     (4933, 0.005150581104957114),
+     (4936, 0.005430420355239916),
+     (4937, 0.006749772753873247),
+     (4939, 0.0215778121698614),
+     (4947, 0.004025618979311572),
+     (4948, 0.04274856077453056),
+     (4949, 0.0064647861371903755),
+     (4950, 0.0005311674433586506),
+     (4952, 0.0016386549313989725),
+     (4954, 0.006988903071905843),
+     (4956, 0.0033748863769366235),
+     (4957, 0.007251642134165076),
+     (4967, 0.0016386549313989725),
+     (4968, 0.004343522025395784),
+     (4970, 0.023371367507780627),
+     (4971, 0.008113865197551383),
+     (4974, 0.011685683753890314),
+     (4975, 0.004619413661598463),
+     (4979, 0.004619413661598463),
+     (4981, 0.006988903071905843),
+     (4987, 0.01966385917678767),
+     (4993, 0.004025618979311572),
+     (5000, 0.05679705638285969),
+     (5005, 0.030348710442157395),
+     (5009, 0.004619413661598463),
+     (5013, 0.006988903071905843),
+     (5015, 0.0052926025501080385),
+     (5023, 0.005150581104957114),
+     (5035, 0.018209226265294434),
+     (5040, 0.11182244915049348),
+     (5047, 0.001450328426833015),
+     (5049, 0.009041856408558067),
+     (5050, 0.010585205100216077),
+     (5051, 0.006515283038093677),
+     (5053, 0.017472257679764607),
+     (5062, 0.007192604056620467),
+     (5063, 0.009238827323196926),
+     (5072, 0.0030139521361860224),
+     (5078, 0.018854269548829194),
+     (5082, 0.0011249621256455412),
+     (5095, 0.007251642134165076),
+     (5098, 0.00290065685366603),
+     (5100, 0.006988903071905843),
+     (5104, 0.013977806143811685),
+     (5112, 0.010301162209914227),
+     (5124, 0.00539445304246535),
+     (5129, 0.0011249621256455412),
+     (5156, 0.009041856408558067),
+     (5161, 0.015877807650324115),
+     (5178, 0.002171761012697892),
+     (5181, 0.006988903071905843),
+     (5184, 0.014385208113240934),
+     (5199, 0.0038788716823142254),
+     (5204, 0.03523108102507791),
+     (5222, 0.008990755070775583),
+     (5229, 0.007874734879518789),
+     (5236, 0.031134443696580475),
+     (5246, 0.012139484176862957),
+     (5258, 0.019128387248768797),
+     (5260, 0.0052926025501080385),
+     (5262, 0.006069742088431479),
+     (5264, 0.02012809489655786),
+     (5265, 0.011608316733504306),
+     (5279, 0.01847765464639385),
+     (5281, 0.03641845253058887),
+     ...]
+
+
+
+
+```python
+%%nose
+# This needs to be included at the beginning of every @tests cell.
+
+import gensim.models.tfidfmodel
+
+
+def test_model_type():
+    assert isinstance(model, gensim.models.tfidfmodel.TfidfModel), \
+    'The tf-idf model should be created using the TfidfModel() function and the model variable should be of type "gensim.models.tfidfmodel.TfidfModel".'
+```
+
+
+
+
+
+
+    1/1 tests passed
+
+
+
+
+## 9. The results of the tf-idf model
+<p>Once again, the format of those results is hard to interpret for a human. Therefore, we will transform it into a more readable version and display the 10 most specific words for the "<em>On the Origin of Species</em>" book.</p>
+
+
+```python
+# Convert the tf-idf model for "On the Origin of Species" into a DataFrame
+df_tfidf = pd.DataFrame(model[bows[ori]])
+
+# Name the columns of the DataFrame id and score
+df_tfidf.columns = ['id', 'score']
+
+# Add the tokens corresponding to the numerical indices for better readability
+df_tfidf["token"] = [dictionary[index] for index in df_tfidf.id]
+
+# Sort the DataFrame by descending tf-idf score and print the first 10 rows.
+df_tfidf.sort_values(by=['score'], ascending = False).head(10)
+```
+
+
+
+
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>score</th>
+      <th>token</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>254</th>
+      <td>1092</td>
+      <td>0.296386</td>
+      <td>glacial</td>
+    </tr>
+    <tr>
+      <th>203</th>
+      <td>917</td>
+      <td>0.200873</td>
+      <td>extinct</td>
+    </tr>
+    <tr>
+      <th>1420</th>
+      <td>11955</td>
+      <td>0.191284</td>
+      <td>wax</td>
+    </tr>
+    <tr>
+      <th>1571</th>
+      <td>16224</td>
+      <td>0.179948</td>
+      <td>silurian</td>
+    </tr>
+    <tr>
+      <th>436</th>
+      <td>1878</td>
+      <td>0.171795</td>
+      <td>pollen</td>
+    </tr>
+    <tr>
+      <th>82</th>
+      <td>369</td>
+      <td>0.164239</td>
+      <td>breed</td>
+    </tr>
+    <tr>
+      <th>1446</th>
+      <td>12472</td>
+      <td>0.139778</td>
+      <td>flora</td>
+    </tr>
+    <tr>
+      <th>1636</th>
+      <td>20890</td>
+      <td>0.135925</td>
+      <td>melipona</td>
+    </tr>
+    <tr>
+      <th>181</th>
+      <td>822</td>
+      <td>0.133963</td>
+      <td>embryo</td>
+    </tr>
+    <tr>
+      <th>1293</th>
+      <td>10108</td>
+      <td>0.121395</td>
+      <td>pigeon</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+```python
+%%nose
+# This needs to be included at the beginning of every @tests cell.
+
+# One or more tests of the students code. 
+# The @solution should pass the tests.
+# The purpose of the tests is to try to catch common errors and to 
+# give the student a hint on how to resolve these errors.
+
+import pandas.core.frame
+
+### Recomputing object to avoid hard-coded values
+df_tfidf_test = pd.DataFrame(model[bows[ori]])
+n_rows_test_tfidf = df_tfidf_test.shape[0]
+
+def test_df_type():
+    assert isinstance(df_tfidf, pandas.core.frame.DataFrame), \
+    'The df_tfidf variable should contain a pandas DataFrame of type pandas.core.frame.DataFrame.'
+    
+def test_df_dim1():
+    assert df_tfidf.shape[1] == 3, \
+    'The df_bow_origin DataFrame should have 3 columns.'
+    
+def test_df_dim2():
+    assert df_tfidf.shape[0] == n_rows_test_tfidf, \
+    'The df_bow_origin DataFrame should have ' + str(n_rows_test_tfidf) + ' rows.'    
+    
+def test_df_columns():
+    assert all(df_tfidf.columns == list(["id", "score", "token"])), \
+    'The columns of the df_bow_origin DataFrame should be named "index", "score" and "token".'    
+        
+    
+```
+
+
+
+
+
+
+    4/4 tests passed
+
+
+
+
+## 10. Compute distance between texts
+<p>The results of the tf-idf algorithm now return stemmed tokens which are specific to each book. We can, for example, see that topics such as selection, breeding or domestication are defining "<em>On the Origin of Species</em>" (and yes, in this book, Charles Darwin talks quite a lot about pigeons too). Now that we have a model associating tokens to how specific they are to each book, we can measure how related to books are between each other.</p>
+<p>To this purpose, we will use a measure of similarity called <strong>cosine similarity</strong> and we will visualize the results as a distance matrix, i.e., a matrix showing all pairwise distances between Darwin's books.</p>
+
+
+```python
+# Load the library allowing similarity computations
+from gensim import similarities
+
+# Compute the similarity matrix (pairwise distance between all texts)
+sims = similarities.MatrixSimilarity(model[bows])
+
+# Transform the resulting list into a dataframe
+sim_df = pd.DataFrame(list(sims))
+
+# Add the titles of the books as columns and index of the dataframe
+sim_df.columns = titles
+
+# Print the resulting matrix
+sim_df
+
+```
+
+
+
+
+<div>
+<style>
+    .dataframe thead tr:only-child th {
+        text-align: right;
+    }
+
+    .dataframe thead th {
+        text-align: left;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Autobiography</th>
+      <th>CoralReefs</th>
+      <th>DescentofMan</th>
+      <th>DifferentFormsofFlowers</th>
+      <th>EffectsCrossSelfFertilization</th>
+      <th>ExpressionofEmotionManAnimals</th>
+      <th>FormationVegetableMould</th>
+      <th>FoundationsOriginofSpecies</th>
+      <th>GeologicalObservationsSouthAmerica</th>
+      <th>InsectivorousPlants</th>
+      <th>LifeandLettersVol1</th>
+      <th>LifeandLettersVol2</th>
+      <th>MonographCirripedia</th>
+      <th>MonographCirripediaVol2</th>
+      <th>MovementClimbingPlants</th>
+      <th>OriginofSpecies</th>
+      <th>PowerMovementPlants</th>
+      <th>VariationPlantsAnimalsDomestication</th>
+      <th>VolcanicIslands</th>
+      <th>VoyageBeagle</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1.000000</td>
+      <td>0.025451</td>
+      <td>0.090304</td>
+      <td>0.046261</td>
+      <td>0.021180</td>
+      <td>0.100203</td>
+      <td>0.042420</td>
+      <td>0.118626</td>
+      <td>0.038058</td>
+      <td>0.020544</td>
+      <td>0.339267</td>
+      <td>0.233771</td>
+      <td>0.004573</td>
+      <td>0.008187</td>
+      <td>0.007992</td>
+      <td>0.113236</td>
+      <td>0.010052</td>
+      <td>0.055785</td>
+      <td>0.052752</td>
+      <td>0.156566</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.025451</td>
+      <td>1.000000</td>
+      <td>0.010950</td>
+      <td>0.006036</td>
+      <td>0.003758</td>
+      <td>0.008870</td>
+      <td>0.023547</td>
+      <td>0.041456</td>
+      <td>0.050971</td>
+      <td>0.005987</td>
+      <td>0.027165</td>
+      <td>0.013818</td>
+      <td>0.006525</td>
+      <td>0.008878</td>
+      <td>0.002669</td>
+      <td>0.037073</td>
+      <td>0.004451</td>
+      <td>0.015390</td>
+      <td>0.056380</td>
+      <td>0.161937</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.090304</td>
+      <td>0.010950</td>
+      <td>1.000000</td>
+      <td>0.055337</td>
+      <td>0.024749</td>
+      <td>0.200441</td>
+      <td>0.026394</td>
+      <td>0.157973</td>
+      <td>0.014364</td>
+      <td>0.011489</td>
+      <td>0.046925</td>
+      <td>0.047856</td>
+      <td>0.049996</td>
+      <td>0.027745</td>
+      <td>0.008667</td>
+      <td>0.237937</td>
+      <td>0.010315</td>
+      <td>0.212504</td>
+      <td>0.015086</td>
+      <td>0.122905</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.046261</td>
+      <td>0.006036</td>
+      <td>0.055337</td>
+      <td>1.000000</td>
+      <td>0.304642</td>
+      <td>0.011003</td>
+      <td>0.025398</td>
+      <td>0.058794</td>
+      <td>0.012971</td>
+      <td>0.027665</td>
+      <td>0.010945</td>
+      <td>0.031059</td>
+      <td>0.008347</td>
+      <td>0.007852</td>
+      <td>0.039354</td>
+      <td>0.192194</td>
+      <td>0.029957</td>
+      <td>0.082392</td>
+      <td>0.013976</td>
+      <td>0.019275</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.021180</td>
+      <td>0.003758</td>
+      <td>0.024749</td>
+      <td>0.304642</td>
+      <td>1.000000</td>
+      <td>0.008067</td>
+      <td>0.050609</td>
+      <td>0.038762</td>
+      <td>0.007815</td>
+      <td>0.027763</td>
+      <td>0.006952</td>
+      <td>0.013521</td>
+      <td>0.003425</td>
+      <td>0.004660</td>
+      <td>0.038817</td>
+      <td>0.102055</td>
+      <td>0.101039</td>
+      <td>0.049614</td>
+      <td>0.007038</td>
+      <td>0.025778</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>0.100203</td>
+      <td>0.008870</td>
+      <td>0.200441</td>
+      <td>0.011003</td>
+      <td>0.008067</td>
+      <td>1.000000</td>
+      <td>0.028496</td>
+      <td>0.084503</td>
+      <td>0.011811</td>
+      <td>0.024792</td>
+      <td>0.061393</td>
+      <td>0.041388</td>
+      <td>0.011114</td>
+      <td>0.016440</td>
+      <td>0.011469</td>
+      <td>0.084302</td>
+      <td>0.018689</td>
+      <td>0.092685</td>
+      <td>0.014944</td>
+      <td>0.109110</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>0.042420</td>
+      <td>0.023547</td>
+      <td>0.026394</td>
+      <td>0.025398</td>
+      <td>0.050609</td>
+      <td>0.028496</td>
+      <td>1.000000</td>
+      <td>0.036072</td>
+      <td>0.063964</td>
+      <td>0.066118</td>
+      <td>0.020017</td>
+      <td>0.012417</td>
+      <td>0.018055</td>
+      <td>0.017659</td>
+      <td>0.021286</td>
+      <td>0.069607</td>
+      <td>0.051806</td>
+      <td>0.029571</td>
+      <td>0.053170</td>
+      <td>0.094223</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>0.118626</td>
+      <td>0.041456</td>
+      <td>0.157973</td>
+      <td>0.058794</td>
+      <td>0.038762</td>
+      <td>0.084503</td>
+      <td>0.036072</td>
+      <td>1.000000</td>
+      <td>0.067212</td>
+      <td>0.026674</td>
+      <td>0.089769</td>
+      <td>0.068693</td>
+      <td>0.014785</td>
+      <td>0.016605</td>
+      <td>0.013134</td>
+      <td>0.406380</td>
+      <td>0.022062</td>
+      <td>0.272508</td>
+      <td>0.050530</td>
+      <td>0.171394</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>0.038058</td>
+      <td>0.050971</td>
+      <td>0.014364</td>
+      <td>0.012971</td>
+      <td>0.007815</td>
+      <td>0.011811</td>
+      <td>0.063964</td>
+      <td>0.067212</td>
+      <td>1.000000</td>
+      <td>0.015839</td>
+      <td>0.030663</td>
+      <td>0.016112</td>
+      <td>0.009296</td>
+      <td>0.013801</td>
+      <td>0.006960</td>
+      <td>0.081047</td>
+      <td>0.009430</td>
+      <td>0.021966</td>
+      <td>0.273759</td>
+      <td>0.290871</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>0.020544</td>
+      <td>0.005987</td>
+      <td>0.011489</td>
+      <td>0.027665</td>
+      <td>0.027763</td>
+      <td>0.024792</td>
+      <td>0.066118</td>
+      <td>0.026674</td>
+      <td>0.015839</td>
+      <td>1.000000</td>
+      <td>0.007961</td>
+      <td>0.016592</td>
+      <td>0.017685</td>
+      <td>0.018836</td>
+      <td>0.046066</td>
+      <td>0.025875</td>
+      <td>0.107746</td>
+      <td>0.019151</td>
+      <td>0.017712</td>
+      <td>0.038466</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>0.339267</td>
+      <td>0.027165</td>
+      <td>0.046925</td>
+      <td>0.010945</td>
+      <td>0.006952</td>
+      <td>0.061393</td>
+      <td>0.020017</td>
+      <td>0.089769</td>
+      <td>0.030663</td>
+      <td>0.007961</td>
+      <td>1.000000</td>
+      <td>0.953910</td>
+      <td>0.003300</td>
+      <td>0.015032</td>
+      <td>0.006680</td>
+      <td>0.075467</td>
+      <td>0.010400</td>
+      <td>0.036384</td>
+      <td>0.035527</td>
+      <td>0.138434</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>0.233771</td>
+      <td>0.013818</td>
+      <td>0.047856</td>
+      <td>0.031059</td>
+      <td>0.013521</td>
+      <td>0.041388</td>
+      <td>0.012417</td>
+      <td>0.068693</td>
+      <td>0.016112</td>
+      <td>0.016592</td>
+      <td>0.953910</td>
+      <td>1.000000</td>
+      <td>0.003281</td>
+      <td>0.013999</td>
+      <td>0.009592</td>
+      <td>0.058652</td>
+      <td>0.008609</td>
+      <td>0.026244</td>
+      <td>0.023944</td>
+      <td>0.083000</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>0.004573</td>
+      <td>0.006525</td>
+      <td>0.049996</td>
+      <td>0.008347</td>
+      <td>0.003425</td>
+      <td>0.011114</td>
+      <td>0.018055</td>
+      <td>0.014785</td>
+      <td>0.009296</td>
+      <td>0.017685</td>
+      <td>0.003300</td>
+      <td>0.003281</td>
+      <td>1.000000</td>
+      <td>0.484633</td>
+      <td>0.007194</td>
+      <td>0.024247</td>
+      <td>0.014391</td>
+      <td>0.029749</td>
+      <td>0.013417</td>
+      <td>0.013286</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>0.008187</td>
+      <td>0.008878</td>
+      <td>0.027745</td>
+      <td>0.007852</td>
+      <td>0.004660</td>
+      <td>0.016440</td>
+      <td>0.017659</td>
+      <td>0.016605</td>
+      <td>0.013801</td>
+      <td>0.018836</td>
+      <td>0.015032</td>
+      <td>0.013999</td>
+      <td>0.484633</td>
+      <td>1.000000</td>
+      <td>0.010489</td>
+      <td>0.026954</td>
+      <td>0.015223</td>
+      <td>0.031983</td>
+      <td>0.014877</td>
+      <td>0.020030</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>0.007992</td>
+      <td>0.002669</td>
+      <td>0.008667</td>
+      <td>0.039354</td>
+      <td>0.038817</td>
+      <td>0.011469</td>
+      <td>0.021286</td>
+      <td>0.013134</td>
+      <td>0.006960</td>
+      <td>0.046066</td>
+      <td>0.006680</td>
+      <td>0.009592</td>
+      <td>0.007194</td>
+      <td>0.010489</td>
+      <td>1.000000</td>
+      <td>0.016152</td>
+      <td>0.095672</td>
+      <td>0.013789</td>
+      <td>0.007445</td>
+      <td>0.023717</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>0.113236</td>
+      <td>0.037073</td>
+      <td>0.237937</td>
+      <td>0.192194</td>
+      <td>0.102055</td>
+      <td>0.084302</td>
+      <td>0.069607</td>
+      <td>0.406380</td>
+      <td>0.081047</td>
+      <td>0.025875</td>
+      <td>0.075467</td>
+      <td>0.058652</td>
+      <td>0.024247</td>
+      <td>0.026954</td>
+      <td>0.016152</td>
+      <td>1.000000</td>
+      <td>0.023954</td>
+      <td>0.318713</td>
+      <td>0.060506</td>
+      <td>0.181492</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>0.010052</td>
+      <td>0.004451</td>
+      <td>0.010315</td>
+      <td>0.029957</td>
+      <td>0.101039</td>
+      <td>0.018689</td>
+      <td>0.051806</td>
+      <td>0.022062</td>
+      <td>0.009430</td>
+      <td>0.107746</td>
+      <td>0.010400</td>
+      <td>0.008609</td>
+      <td>0.014391</td>
+      <td>0.015223</td>
+      <td>0.095672</td>
+      <td>0.023954</td>
+      <td>1.000000</td>
+      <td>0.019244</td>
+      <td>0.008945</td>
+      <td>0.048913</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>0.055785</td>
+      <td>0.015390</td>
+      <td>0.212504</td>
+      <td>0.082392</td>
+      <td>0.049614</td>
+      <td>0.092685</td>
+      <td>0.029571</td>
+      <td>0.272508</td>
+      <td>0.021966</td>
+      <td>0.019151</td>
+      <td>0.036384</td>
+      <td>0.026244</td>
+      <td>0.029749</td>
+      <td>0.031983</td>
+      <td>0.013789</td>
+      <td>0.318713</td>
+      <td>0.019244</td>
+      <td>1.000000</td>
+      <td>0.025918</td>
+      <td>0.147054</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>0.052752</td>
+      <td>0.056380</td>
+      <td>0.015086</td>
+      <td>0.013976</td>
+      <td>0.007038</td>
+      <td>0.014944</td>
+      <td>0.053170</td>
+      <td>0.050530</td>
+      <td>0.273759</td>
+      <td>0.017712</td>
+      <td>0.035527</td>
+      <td>0.023944</td>
+      <td>0.013417</td>
+      <td>0.014877</td>
+      <td>0.007445</td>
+      <td>0.060506</td>
+      <td>0.008945</td>
+      <td>0.025918</td>
+      <td>1.000000</td>
+      <td>0.146669</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>0.156566</td>
+      <td>0.161937</td>
+      <td>0.122905</td>
+      <td>0.019275</td>
+      <td>0.025778</td>
+      <td>0.109110</td>
+      <td>0.094223</td>
+      <td>0.171394</td>
+      <td>0.290871</td>
+      <td>0.038466</td>
+      <td>0.138434</td>
+      <td>0.083000</td>
+      <td>0.013286</td>
+      <td>0.020030</td>
+      <td>0.023717</td>
+      <td>0.181492</td>
+      <td>0.048913</td>
+      <td>0.147054</td>
+      <td>0.146669</td>
+      <td>1.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+```python
+%%nose
+
+import gensim.similarities.docsim
+import pandas.core.frame
+
+def test_sims_type():
+    assert isinstance(sims, gensim.similarities.docsim.MatrixSimilarity), \
+    'The sims variable should be created using the similarities.MatrixSimilarity() function and be of type gensim.similarities.docsim.MatrixSimilarity.'
+    
+def test_sim_df_type():
+    assert isinstance(sim_df, pandas.core.frame.DataFrame), \
+    'The sim_df variable should be a pandas DataFrame of type pandas.core.frame.DataFrame.'
+    
+def test_df_dims():
+    assert sim_df.shape[0] == 20 and sim_df.shape[1] == 20 , \
+    'The sim_df DataFrame should have 20 rows and 20 columns.'    
+    
+def test_df_columns():
+    assert all(sim_df.columns == titles), \
+    'The columns of the df_bow_origin DataFrame should be named "index", "score" and "token".'    
+        
+    
+```
+
+
+
+
+
+
+    4/4 tests passed
+
+
+
+
+## 11. The book most similar to "On the Origin of Species"
+<p>We now have a matrix containing all the similarity measures between any pair of books from Charles Darwin! We can now use this matrix to quickly extract the information we need, i.e., the distance between one book and one or several others. </p>
+<p>As a first step, we will display which books are the most similar to "<em>On the Origin of Species</em>," more specifically we will produce a bar chart showing all books ranked by how similar they are to Darwin's landmark work.</p>
+
+
+```python
+# This is needed to display plots in a notebook
+%matplotlib inline
+
+# Import libraries
+import matplotlib.pyplot as plt
+
+# Select the column corresponding to "On the Origin of Species" and 
+v = sim_df['OriginofSpecies']
+
+# Sort by ascending scores
+v_sorted = v.sort_values()
+v_sorted = v_sorted.reset_index()
+v_sorted = v_sorted['OriginofSpecies']
+
+
+# Plot this data has a horizontal bar plot
+#v_sorted.plot.barh().plot()
+
+
+
+
+
+
+#-----------------------------------------------
+titles_labels = []
+ax = v.sort_values().plot.barh()
+
+# Modify the axes labels and plot title for a better readability
+plt.title("Similarity of Books to On the Origin of Species")
+plt.xlabel("Similarity")
+plt.ylabel("Book Title")
+locs, labels = plt.yticks()
+
+#for label in ax.yaxis.get_ticklabels():
+for label in labels:
+    titles_labels.append(titles[int(label.get_text())])
+plt.yticks(locs, titles_labels)
+plt.show()
+```
+
+
+![png](output_31_0.png)
+
+
+
+```python
+%%nose
+# This needs to be included at the beginning of every @tests cell.
+
+# One or more tests of the students code. 
+# The @solution should pass the tests.
+# The purpose of the tests is to try to catch common errors and to 
+# give the student a hint on how to resolve these errors.
+
+import pandas.core.series
+
+## Variable types
+def test_v_type():
+    assert isinstance(v, pandas.core.series.Series), \
+    'The v variable should be a series of type pandas.core.series.Series.'
+
+def test_v_sorted_type():
+    assert isinstance(v_sorted, pandas.core.series.Series), \
+    'The v_sorted variable should be a series of type pandas.core.series.Series.'
+
+## Variable lengths    
+def test_v_len():
+    assert len(v) == 20, \
+    'The v series should be of length 20.'
+
+def test_v_sorted_len():
+    assert len(v_sorted) == 20, \
+    'The v_sorted series should be of length 20.'
+    
+## Is the series sorted?
+def test_is_series_sorted():
+    assert all(v_sorted[i] <= v_sorted[i+1] for i in range(len(v_sorted)-1)), \
+    'The v_sorted series should be sorted by ascending scores.'
+
+```
+
+
+
+
+
+
+    5/5 tests passed
+
+
+
+
+## 12. Which books have similar content?
+<p>This turns out to be extremely useful if we want to determine a given book's most similar work. For example, we have just seen that if you enjoyed "<em>On the Origin of Species</em>," you can read books discussing similar concepts such as "<em>The Variation of Animals and Plants under Domestication</em>" or "<em>The Descent of Man, and Selection in Relation to Sex</em>." If you are familiar with Darwin's work, these suggestions will likely seem natural to you. Indeed, <em>On the Origin of Species</em> has a whole chapter about domestication and <em>The Descent of Man, and Selection in Relation to Sex</em> applies the theory of natural selection to human evolution. Hence, the results make sense.</p>
+<p>However, we now want to have a better understanding of the big picture and see how Darwin's books are generally related to each other (in terms of topics discussed). To this purpose, we will represent the whole similarity matrix as a dendrogram, which is a standard tool to display such data. <strong>This last approach will display all the information about book similarities at once.</strong> For example, we can find a book's closest relative but, also, we can visualize which groups of books have similar topics (e.g., the cluster about Charles Darwin personal life with his autobiography and letters). If you are familiar with Darwin's bibliography, the results should not surprise you too much, which indicates the method gives good results. Otherwise, next time you read one of the author's book, you will know which other books to read next in order to learn more about the topics it addressed.</p>
+
+
+```python
+# Import libraries
+from scipy.cluster import hierarchy
+
+# Compute the clusters from the similarity matrix,
+# using the Ward variance minimization algorithm
+Z = hierarchy.linkage(sim_df, 'ward')
+
+# Display this result as a horizontal dendrogram
+
+R = hierarchy.dendrogram(Z, leaf_font_size=8, labels=sim_df.index , orientation="left")
+temp = {R["leaves"][i]: titles[i] for i in sim_df.index }
+def llf(xx):
+    return temp[xx]
+dend = hierarchy.dendrogram(Z, leaf_font_size=8, leaf_label_func=llf , orientation="left")
+dend
+```
+
+
+
+
+    {'color_list': ['g',
+      'r',
+      'c',
+      'c',
+      'c',
+      'c',
+      'c',
+      'm',
+      'm',
+      'm',
+      'y',
+      'y',
+      'y',
+      'y',
+      'y',
+      'b',
+      'b',
+      'b',
+      'b'],
+     'dcoord': [[0.0, 0.14421741985454192, 0.14421741985454192, 0.0],
+      [0.0, 0.7294507722346358, 0.7294507722346358, 0.0],
+      [0.0, 0.8585928739427128, 0.8585928739427128, 0.0],
+      [0.0, 1.0614754009136729, 1.0614754009136729, 0.8585928739427128],
+      [0.0, 1.1517983171163997, 1.1517983171163997, 0.0],
+      [0.0, 1.3964654740310107, 1.3964654740310107, 1.1517983171163997],
+      [1.0614754009136729,
+       1.5771665997675328,
+       1.5771665997675328,
+       1.3964654740310107],
+      [0.0, 1.037709763592402, 1.037709763592402, 0.0],
+      [0.0, 1.196901469573153, 1.196901469573153, 1.037709763592402],
+      [0.0, 1.4213624470164252, 1.4213624470164252, 1.196901469573153],
+      [0.0, 0.9921630402822105, 0.9921630402822105, 0.0],
+      [0.0, 1.2652162973565597, 1.2652162973565597, 0.0],
+      [0.0, 1.3338112351434654, 1.3338112351434654, 1.2652162973565597],
+      [0.0, 1.3825318027851081, 1.3825318027851081, 1.3338112351434654],
+      [0.9921630402822105,
+       1.6529154439199383,
+       1.6529154439199383,
+       1.3825318027851081],
+      [1.4213624470164252,
+       1.903658132870821,
+       1.903658132870821,
+       1.6529154439199383],
+      [1.5771665997675328,
+       2.030463873830914,
+       2.030463873830914,
+       1.903658132870821],
+      [0.7294507722346358,
+       2.1121676898365274,
+       2.1121676898365274,
+       2.030463873830914],
+      [0.14421741985454192,
+       2.5937597393262215,
+       2.5937597393262215,
+       2.1121676898365274]],
+     'icoord': [[5.0, 5.0, 15.0, 15.0],
+      [25.0, 25.0, 35.0, 35.0],
+      [55.0, 55.0, 65.0, 65.0],
+      [45.0, 45.0, 60.0, 60.0],
+      [85.0, 85.0, 95.0, 95.0],
+      [75.0, 75.0, 90.0, 90.0],
+      [52.5, 52.5, 82.5, 82.5],
+      [125.0, 125.0, 135.0, 135.0],
+      [115.0, 115.0, 130.0, 130.0],
+      [105.0, 105.0, 122.5, 122.5],
+      [145.0, 145.0, 155.0, 155.0],
+      [185.0, 185.0, 195.0, 195.0],
+      [175.0, 175.0, 190.0, 190.0],
+      [165.0, 165.0, 182.5, 182.5],
+      [150.0, 150.0, 173.75, 173.75],
+      [113.75, 113.75, 161.875, 161.875],
+      [67.5, 67.5, 137.8125, 137.8125],
+      [30.0, 30.0, 102.65625, 102.65625],
+      [10.0, 10.0, 66.328125, 66.328125]],
+     'ivl': ['Autobiography',
+      'CoralReefs',
+      'DescentofMan',
+      'DifferentFormsofFlowers',
+      'EffectsCrossSelfFertilization',
+      'ExpressionofEmotionManAnimals',
+      'FormationVegetableMould',
+      'FoundationsOriginofSpecies',
+      'GeologicalObservationsSouthAmerica',
+      'InsectivorousPlants',
+      'LifeandLettersVol1',
+      'LifeandLettersVol2',
+      'MonographCirripedia',
+      'MonographCirripediaVol2',
+      'MovementClimbingPlants',
+      'OriginofSpecies',
+      'PowerMovementPlants',
+      'VariationPlantsAnimalsDomestication',
+      'VolcanicIslands',
+      'VoyageBeagle'],
+     'leaves': [10,
+      11,
+      12,
+      13,
+      17,
+      7,
+      15,
+      0,
+      2,
+      5,
+      1,
+      19,
+      8,
+      18,
+      3,
+      4,
+      6,
+      14,
+      9,
+      16]}
+
+
+
+
+![png](output_34_1.png)
+
+
+
+```python
+%%nose
+
+import numpy
+
+def test_Z_type():
+    assert isinstance(Z, numpy.ndarray), \
+    'The Z variable should be generated by the hierarchy.linkage() function and of type numpy.ndarray.'
+```
+
+
+
+
+
+
+    1/1 tests passed
+
+
+
