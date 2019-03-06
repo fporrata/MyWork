@@ -3,7 +3,9 @@
 <p>After a debt has been legally declared "uncollectable" by a bank, the account is considered to be "charged-off." But that doesn't mean the bank simply <strong><em>walks away</em></strong> from the debt. They still want to collect some of the money they are owed. The bank will score the account to assess the expected recovery amount, that is, the expected amount that the bank may be able to receive from the customer in the future (for a fixed time period such as one year). This amount is a function of the probability of the customer paying, the total debt, and other factors that impact the ability and willingness to pay.</p>
 <p>The bank has implemented different recovery strategies at different thresholds (\$1000, \$2000, etc.) where the greater the expected recovery amount, the more effort the bank puts into contacting the customer. For low recovery amounts (Level 0), the bank just adds the customer's contact information to their automatic dialer and emailing system. For higher recovery strategies, the bank incurs more costs as they leverage human resources in more efforts to contact the customer and obtain payments. Each additional level of recovery strategy requires an additional \$50 per customer so that customers in the Recovery Strategy Level 1 cost the company \$50 more than those in Level 0. Customers in Level 2 cost \$50 more than those in Level 1, etc. </p>
 <p><strong>The big question</strong>: does the extra amount that is recovered at the higher strategy level exceed the extra \$50 in costs? In other words, was there a jump (also called a "discontinuity") of more than \$50 in the amount recovered at the higher strategy level? We'll find out in this notebook.</p>
-<p>![Regression discontinuity graph](https://assets.datacamp.com/production/project_504/img/Regression Discontinuity graph.png)</p>
+
+![png](Regression Discontinuity graph.png)
+
 <p>First, we'll load the banking dataset and look at the first few rows of data. This puts us in a good position to understand the dataset itself and begin thinking about how to analyze the data.</p>
 
 
@@ -23,19 +25,6 @@ df.head()
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -100,45 +89,6 @@ df.head()
 
 
 
-
-```python
-%%nose
-
-first_value = _
-    
-def test_pandas_loaded():
-    assert pd.__name__ == 'pandas', \
-        "pandas should be imported as pd."
-
-def test_numpy_loaded():
-    assert np.__name__ == 'numpy', \
-        "numpy should be imported as np."
-        
-import pandas as pd
-
-def test_df_correctly_loaded():
-    correct_df = pd.read_csv('datasets/bank_data.csv')
-    
-    assert correct_df.equals(df), \
-        "The variable df should contain the data in 'datasets/bank_data.csv'."
-        
-def test_2030_was_selected():
-    try:
-        assert "2030" in first_value.to_string()
-    except AttributeError:
-        assert False, "It seems you have not displayed the first entries of df."
-```
-
-
-
-
-
-
-    4/4 tests passed
-
-
-
-
 ## 2. Graphical exploratory data analysis
 <p>The bank has implemented different recovery strategies at different thresholds (\$1000, \$2000, \$3000 and \$5000) where the greater the Expected Recovery Amount, the more effort the bank puts into contacting the customer. Zeroing in on the first transition (between Level 0 and Level 1) means we are focused on the population with Expected Recovery Amounts between \$0 and \$2000 where the transition between Levels occurred at \$1000. We know that the customers in Level 1 (expected recovery amounts between \$1001 and \$2000) received more attention from the bank and, by definition, they had higher Expected Recovery Amounts than the customers in Level 0 (between \$1 and \$1000).</p>
 <p>Here's a quick summary of the Levels and thresholds again:</p>
@@ -167,30 +117,6 @@ plt.show()
 ![png](output_4_0.png)
 
 
-
-```python
-%%nose
-
-# no tests for plots
-
-# def test_nothing():
-#     assert True, "Nothing to test."
-
-def test_matplotlib_loaded_2():
-    assert 'plt' in globals(), \
-    'Did you import the pyplot module from matplotlib under the alias plt?'
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
-
 ## 3. Statistical test:  age vs. expected recovery amount
 <p>We want to convince ourselves that variables such as age and sex are similar above and below the \$1000 Expected Recovery Amount threshold. This is important because we want to be able to conclude that differences in the actual recovery amount are due to the higher Recovery Strategy and not due to some other difference like age or sex.</p>
 <p>The scatter plot of age versus Expected Recovery Amount did not show an obvious jump around \$1000.  We will be more confident in our conclusions if we do statistical analysis examining the average age of the customers just above and just below the threshold. We can start by exploring the range from \$900 to \$1100.</p>
@@ -213,43 +139,7 @@ Level_1_age = era_900_1100.loc[df['recovery_strategy']=="Level 1 Recovery"]['age
 stats.kruskal(Level_0_age,Level_1_age)
 ```
 
-
-
-
     KruskalResult(statistic=3.4572342749517513, pvalue=0.06297556896097407)
-
-
-
-
-```python
-%%nose
-
-def test_stats_loaded():
-    assert 'stats' in globals(), \
-    'Did you import the stats module from scipy?'
-
-def test_level_0():
-    correct_Level_0_age_mean= df.loc[(df['expected_recovery_amount']<1100) & (df['expected_recovery_amount']>=900) & 
-                     (df['recovery_strategy']=="Level 0 Recovery")]['age'].mean()
-    Level_0_age_mean= Level_0_age.mean()
-    assert correct_Level_0_age_mean == Level_0_age_mean, \
-        "The mean age for Level_0_actual appears to be incorrect. Did you correctly assign Level_0_actual?"
-
-def test_level_1():
-    correct_Level_1_age_mean= df.loc[(df['expected_recovery_amount']<1100) & (df['expected_recovery_amount']>=900) & 
-                     (df['recovery_strategy']=="Level 1 Recovery")]['age'].mean()
-    Level_1_age_mean= Level_1_age.mean()
-    assert correct_Level_1_age_mean == Level_1_age_mean, \
-        "The mean age for Level_1_actual appears to be incorrect. Did you correctly assign Level_1_actual?"
-```
-
-
-
-
-
-
-    3/3 tests passed
-
 
 
 
@@ -284,32 +174,6 @@ p_val
     0.3941650543686612
 
 
-
-
-```python
-%%nose
-
-def test_crosstab():
-    correct_crosstab = pd.crosstab(df.loc[(df['expected_recovery_amount']<2000) & (df['expected_recovery_amount']>=0)]['recovery_strategy'], df['sex'])
-    assert correct_crosstab.equals(crosstab), \
-    "The crosstab should select the expected_recovery_amount <2000 and >=0."
-
-def test_pval():
-    chi2_stat, correct_p_val, dof, ex = stats.chi2_contingency(crosstab)
-    assert correct_p_val==p_val, \
-    "The chi-square test function should use crosstab as the input variable."
-```
-
-
-
-
-
-
-    2/2 tests passed
-
-
-
-
 ## 5. Exploratory graphical analysis: recovery amount
 <p>We are now reasonably confident that customers just above and just below the \$1000 threshold are, on average, similar in terms of their average age and the percentage that are male.  </p>
 <p>It is now time to focus on the key outcome of interest, the actual recovery amount.</p>
@@ -329,30 +193,6 @@ plt.show()
 
 
 ![png](output_13_0.png)
-
-
-
-```python
-%%nose
-
-# no tests for plots
-
-# def test_nothing():
-#     assert True, "Nothing to test."
-
-def test_matplotlib_loaded_5():
-    assert 'plt' in globals(), \
-    'Did you import the pyplot module from matplotlib under the alias plt?'
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
 
 
 ## 6. Statistical analysis:  recovery amount
@@ -380,41 +220,7 @@ stats.kruskal(Level_0_actual,Level_1_actual)
 
     KruskalResult(statistic=65.37966302528878, pvalue=6.177308752803109e-16)
 
-
-
-
-
     KruskalResult(statistic=30.246000000000038, pvalue=3.80575314300276e-08)
-
-
-
-
-```python
-%%nose
-
-def test_level_0():
-    correct_Level_0_actual_mean= df.loc[(df['expected_recovery_amount']<1050) & (df['expected_recovery_amount']>=950) & 
-                     (df['recovery_strategy']=="Level 0 Recovery")]['actual_recovery_amount'].mean()
-    Level_0_actual_mean= Level_0_actual.mean()
-    assert correct_Level_0_actual_mean == Level_0_actual_mean, \
-        "The mean actual_recovery_amount for Level_0_actual appears to be incorrect. Did you correctly assign Level_0_actual?"
-
-def test_level_1():
-    correct_Level_1_actual_mean= df.loc[(df['expected_recovery_amount']<1050) & (df['expected_recovery_amount']>=950) & 
-                     (df['recovery_strategy']=="Level 1 Recovery")]['actual_recovery_amount'].mean()
-    Level_1_actual_mean= Level_1_actual.mean()
-    assert correct_Level_1_actual_mean == Level_1_actual_mean, \
-        "The mean actual_recovery_amount for Level_1_actual appears to be incorrect. Did you correctly assign Level_1_actual?"
-```
-
-
-
-
-
-
-    2/2 tests passed
-
-
 
 
 ## 7. Regression modeling: no threshold
@@ -498,35 +304,6 @@ model.summary()
   <th>Kurtosis:</th>      <td> 6.977</td> <th>  Cond. No.          </th> <td>1.80e+04</td>
 </tr>
 </table><br/><br/>Warnings:<br/>[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.<br/>[2] The condition number is large, 1.8e+04. This might indicate that there are<br/>strong multicollinearity or other numerical problems.
-
-
-
-
-```python
-%%nose
-
-def test_x():
-    correct_x= df.loc[(df['expected_recovery_amount']<1100) & (df['expected_recovery_amount']>=900)]['expected_recovery_amount']
-    correct_x = sm.add_constant(correct_x)
-    assert correct_x['expected_recovery_amount'].mean() == X['expected_recovery_amount'].mean(), \
-        "The mean expected_recovery_amount for X appears incorrect. Check your assignment of X.  It should include expected_recovery_amount and indicator_1000 when the expected_recovery_amount is <1100 and >=900."
-def test_y():
-    correct_y= df.loc[(df['expected_recovery_amount']<1100) & (df['expected_recovery_amount']>=900)]['actual_recovery_amount']
-    assert correct_y.mean() == y.mean(), \
-        "The mean actual_recovery_amount for y appears incorrect. Check your assignment of y. It should include the actual_recovery_amount when the expected_recovery_amount is <1100 and >=900."
-        
-# def test_df_correctly_loaded():
-#     correct_model = sm.OLS(y,x).fit()
-#     assert correct_model.params[1] == model.params[1], \
-#         "Check your assignment of model. It should be equal to sm.OLS(y,X).fit()."
-```
-
-
-
-
-
-
-    2/2 tests passed
 
 
 
@@ -621,38 +398,6 @@ model.summary()
 </table><br/><br/>Warnings:<br/>[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.<br/>[2] The condition number is large, 3.37e+04. This might indicate that there are<br/>strong multicollinearity or other numerical problems.
 
 
-
-
-```python
-%%nose
-
-def test_x():
-    correct_x= df.loc[(df['expected_recovery_amount']<1100) & (df['expected_recovery_amount']>=900),
-           ['expected_recovery_amount','indicator_1000']]
-    correct_x = sm.add_constant(correct_x)
-    assert correct_x['expected_recovery_amount'].mean() == X['expected_recovery_amount'].mean(), \
-        "The mean expected_recovery_amount for X appears incorrect. Check your assignment of X.  It should include expected_recovery_amount and indicator_1000 when the expected_recovery_amount is <1100 and >=900."
-def test_y():
-    correct_y= df.loc[(df['expected_recovery_amount']<1100) & (df['expected_recovery_amount']>=900)]['actual_recovery_amount']
-    assert correct_y.mean() == y.mean(), \
-        "The mean actual_recovery_amount for y appears incorrect. Check your assignment of y. It should include the actual_recovery_amount when the expected_recovery_amount is <1100 and >=900."
-        
-# def test_df_correctly_loaded():
-#     correct_model = sm.OLS(y,X).fit()
-#     assert correct_model.params[1] == model.params[1], \
-#         "Check your assignment of model. It should be equal to sm.OLS(y,X).fit()."
-```
-
-
-
-
-
-
-    2/2 tests passed
-
-
-
-
 ## 9. Regression modeling: adjusting the window
 <p>The regression coefficient for the true threshold was statistically significant with an estimated impact of around \$278 and a 95 percent confidence interval of \$132 to \$424.  This is much larger than the incremental cost of running the higher recovery strategy which was \$50 per customer. At this point, we are feeling reasonably confident that the higher recovery strategy is worth the additional costs of the program for customers just above and just below the threshold.  </p>
 <p>Before showing this to our managers, we want to convince ourselves that this result wasn't due just to us choosing a window of \$900 to \$1100 for the expected recovery amount. If the higher recovery strategy really had an impact of an extra few hundred dollars, then we should see a similar regression coefficient if we choose a slightly bigger or a slightly smaller window for the expected recovery amount.  Let's repeat this analysis for the window of expected recovery amount from \$950 to \$1050 to see if we get similar results.</p>
@@ -737,35 +482,5 @@ model.summary()
   <th>Kurtosis:</th>      <td> 6.186</td> <th>  Cond. No.          </th> <td>6.81e+04</td>
 </tr>
 </table><br/><br/>Warnings:<br/>[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.<br/>[2] The condition number is large, 6.81e+04. This might indicate that there are<br/>strong multicollinearity or other numerical problems.
-
-
-
-
-```python
-%%nose
-
-def test_x():
-    correct_x= df.loc[(df['expected_recovery_amount']<1050) & (df['expected_recovery_amount']>=950),['expected_recovery_amount','indicator_1000']]
-    correct_x = sm.add_constant(correct_x)
-    assert correct_x['expected_recovery_amount'].mean() == X['expected_recovery_amount'].mean(), \
-        "The mean expected_recovery_amount for X appears incorrect. Check your assignment of X.  It should include expected_recovery_amount and indicator_1000 when the expected_recovery_amount is <1050 and >=950."
-def test_y():
-    correct_y= df.loc[(df['expected_recovery_amount']<1050) & (df['expected_recovery_amount']>=950)]['actual_recovery_amount']
-    assert correct_y.mean() == y.mean(), \
-        "The mean actual_recovery_amount for y appears incorrect. Check your assignment of y. It should include the actual_recovery_amount when the expected_recovery_amount is <1050 and >=950."
-        
-# def test_df_correctly_loaded():
-#     correct_model = sm.OLS(y,X).fit()
-#     assert correct_model.params[1] == model.params[1], \
-#         "Check your assignment of model.  It should be equal to sm.OLS(y,X).fit()."
-```
-
-
-
-
-
-
-    2/2 tests passed
-
 
 
