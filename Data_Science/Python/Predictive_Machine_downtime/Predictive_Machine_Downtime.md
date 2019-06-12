@@ -229,7 +229,7 @@ plt.style.use('fivethirtyeight')
 import statsmodels.api as sm
 
 #needed to use panda's read_sql functionality.  FP 6/12/2019
-quoted = urllib.parse.quote_plus('DRIVER={ODBC Driver 13 for SQL Server}; SERVER=us-mersql05; DATABASE=odendata; Trusted_Connection=yes')
+quoted = urllib.parse.quote_plus('DRIVER={ODBC Driver 13 for SQL Server}; SERVER=####; DATABASE=#####; Trusted_Connection=yes')
 engine = create_engine('mssql+pyodbc:///?odbc_connect={}'.format(quoted))
 
 # setting the plot settings
