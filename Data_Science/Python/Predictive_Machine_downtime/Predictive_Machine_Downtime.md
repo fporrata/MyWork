@@ -1,5 +1,7 @@
 
 
+#Ongoing Project.
+
 # Python
 ### LocalLibrary:
 * Library uses the OS and shell utilities.
@@ -121,7 +123,7 @@ class DatabaseClient:
     def __init__(self):
         self._currentQuery = ""
         ####self._conn = mysql.connector.connect(user = _userName, password= _password, host = _host)
-        self._conn = pyodbc.connect('DRIVER={ODBC Driver 13 for SQL Server}; SERVER=us-mersql05; DATABASE=odendata; Trusted_Connection=yes')
+        self._conn = pyodbc.connect('DRIVER={ODBC Driver 13 for SQL Server}; SERVER=######; DATABASE=#####; Trusted_Connection=yes')
         self._mycursor = self._conn.cursor()
     # sets the query to the desired string to perform
     def setQuery(self, newQ):
@@ -159,11 +161,11 @@ def SendEmails():
     from email.mime.image import MIMEImage
     from email.mime.multipart import MIMEMultipart
     #server = smtplib.SMTP('smtp.gmail.com', 587)
-    server = smtplib.SMTP('mailgw.rfsamericas.com', 25)
+    server = smtplib.SMTP('#######', 25)
     ###server.starttls()
     # credentials
-    fromEmail = "RFSAI@rfsworld.com"
-    ###fromPass = "rfstest1"
+    fromEmail = "#######"
+    ###fromPass = "######"
     # who receives email
     recipients = _recipients
     # login
@@ -177,7 +179,7 @@ def SendEmails():
         msg.attach(MIMEImage(img_data, name=os.path.basename(img)))
     _emailImages = []
     msg.attach(text)
-    msg['Subject'] = "AI has taken over RFS Cable Production"
+    msg['Subject'] = "Predicted downtime"
     msg['From'] = fromEmail
     msg['To'] = ", ".join(recipients)
     #send email
