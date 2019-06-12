@@ -109,8 +109,8 @@ def DeleteImageFolder(path):
 ####import mysql.connector
 import pyodbc
 
-####_userName = "root"
-####_password = "password"
+####_userName = "####"
+####_password = "####"
 _records = []
 _recipients = []
 _emailData = "Forecasting summary/information:"
