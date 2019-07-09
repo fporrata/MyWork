@@ -50,7 +50,7 @@ with open("haberman.csv") as f:
         linenum += 1
 ```
 
-**Observation about raw file**
+#### Observation about raw file
 1. The file contains a header row.
 2. No skipping lines.
 3. All values are numeric.
@@ -267,7 +267,7 @@ haberman['age'].value_counts()
 
 
 
-** Observation ** <br/>
+#### Observation  <br/>
 1. The dataset has 3 features and 1 classification target (Status) and 306 records.
 2. There are no missing values.
 3. age seems to follow a normal distribution.  <br/>
@@ -419,7 +419,7 @@ haberman["status"].value_counts()
 
 
 
-** Observations: **
+#### Observations: 
 1. The dataset has 225 records labeled as 1 (the patient survived 5 years or longer) and 81 records labeled as 2 (the patient died within 5 year)
 2. This is an imbalanced dataset with almost a 3:1 ratio of patients who survived against patient who died.
 3. About 25% of people have no axilary nodes detected.
@@ -445,7 +445,7 @@ plt.show()
 ![png](output_21_0.png)
 
 
-** Observation **
+#### Observation 
 1. Data is overlapping.  No concrete observations can be made from these plots.  Need more detail and will display them separately
 
 # Correlation
@@ -521,7 +521,7 @@ plt.show()
 ![png](output_25_0.png)
 
 
-** Observation **
+#### Observation 
 1. All correlations are very weak.  There is a small correlation between status and nodes of 0.286768.
 
 # Bi Variate Analysis
@@ -545,7 +545,7 @@ plt.show()
 ![png](output_28_1.png)
 
 
-** Observation **
+#### Observation 
 1. Survival rate of women below 41 years of age is high.  There were few deaths recorded for this group.
 2. From 41 to 70 the incidence of death is higher with some ages not showing deaths at all such as 58 and 68.
 3. 53 has the highest death count
@@ -571,7 +571,7 @@ plt.show()
 ![png](output_30_1.png)
 
 
-** Observation **
+#### Observation 
 1. Most of the patients did not have any nodes. (44%)
 2. Survival rate was high for patients with 4 or less nodes
 
@@ -594,7 +594,7 @@ plt.show()
 ![png](output_32_1.png)
 
 
-** Observation **
+#### Observation 
 1. For the years 58 to 61 we see a downward trend of deaths for somewhat similar count of people getting the surgery.
 2. From year 62 to 65 there was an upward trend with 65 been the worst year.
 3. Year 66 and 67 show a lower trend with good survival rate.
@@ -630,7 +630,7 @@ plt.show();
 ![png](output_37_0.png)
 
 
-** Observations: **
+#### Observations: 
 1. The data is overlapping not much information can be extracted from this plot.
 2. Patients with age less than 40 yrs. has higher chance to survive and patient with age more than 78 yrs are most likely to died within 5 yrs. of surgery
 
@@ -647,7 +647,7 @@ plt.show();
 ![png](output_39_0.png)
 
 
-** Observations: **
+#### Observations: 
 1. Data is overlapping so no concrete conclusion can be obtained on the Year of operation. 
 2. Patients who had undergone surgery between the year 1960 - 1963 had higher probability of survival.
 3. Around year 1965 there was a higher probability of dying.
@@ -665,7 +665,7 @@ plt.show();
 ![png](output_41_0.png)
 
 
-** Observations: **
+#### Observations:
 1. Around 90% of the patient has axil nodes between 0 to 13.
 2. Patient with 0-4 axil node had higher chances of survival.
 3. Data is overlapping so it is difficult to determine a cutoff value for survival.
@@ -762,7 +762,7 @@ plt.show()
 ![png](output_43_1.png)
 
 
-** Observations: **
+#### Observations: 
 1. Operations done between 1961 to 1965 had a higher rate of survival.
 2. Operations done between 1965 to 1967 had a lower rate of survival
 3. Younger patients (age < 34) survived the operation and pataient (age >= 77) died.
@@ -874,7 +874,7 @@ plt.show();
 ![png](output_53_0.png)
 
 
-** Observations: **
+#### Observations: 
 1. No major conclusion can be determined from these plots (boxplot, violin and kde) as the data for survived and died are  overlapping.
 
 
