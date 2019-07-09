@@ -610,7 +610,7 @@ plt.show()
 ![png](output_34_0.png)
 
 
-** Observation **
+#### Observation 
 1.  There is no clear pattern of number of nodes by age
 
 # Histogram, PDF, CDF
