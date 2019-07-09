@@ -1,5 +1,5 @@
 
-# (3.12) Exercise:
+# Study:
 
 1. Download Haberman Cancer Survival dataset from Kaggle. You may have to create a Kaggle account to donwload data. (https://www.kaggle.com/gilsousa/habermans-survival-data-set)
 2. Perform a similar alanlaysis as above on this dataset with the following sections:
