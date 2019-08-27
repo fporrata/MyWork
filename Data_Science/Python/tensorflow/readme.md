@@ -1,1 +1,1 @@
-tensorflow and tensorflow projects and code snippets
+tensorflow and tensorflow.js projects and code snippets
