@@ -1,0 +1,1 @@
+Click <a href="https://github.com/fporrata/MyWork/blob/Data-Science-and-Machine-Learning/Data_Science/Python/Donors_Choose_EDA_t-SNE/2_DonorsChoose_EDA_TSNE_V2.html"   target="_blank">here</a> to open file.  Github cannot render big files.
