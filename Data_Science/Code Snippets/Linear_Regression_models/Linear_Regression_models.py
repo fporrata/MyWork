@@ -60,7 +60,7 @@ f4 = plt.figure(4)
 plt.scatter(X, Y)
 plt.plot(X, Y_pred, color='yellow')
 plt.suptitle("Apple Share from 1/1/2019 until 9/6/2019")
-plt.title("Ridge Regression")
+plt.title("ElasticNet Regression")
 plt.xlabel("Days from 1/1/2019")
 plt.ylabel("Price")
 
