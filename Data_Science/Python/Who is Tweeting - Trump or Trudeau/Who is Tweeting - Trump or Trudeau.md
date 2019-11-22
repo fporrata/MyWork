@@ -19,51 +19,6 @@ from sklearn.svm import LinearSVC
 from sklearn import metrics
 ```
 
-
-```python
-%%nose
-# This needs to be included at the beginning of every @tests cell.
-
-# One or more tests of the students code.
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-
-def test_CountVectorizer():
-    assert 'CountVectorizer' in globals(), \
-    'CountVectorizer should be imported.'
-    
-def test_TfidfVectorizer():
-    assert 'TfidfVectorizer' in globals(), \
-    'TfidfVectorizer should be imported.'
-    
-def test_train_test_split():
-    assert 'train_test_split' in globals(), \
-    'train_test_split should be imported.'
-    
-def test_MultinomialNB():
-    assert 'MultinomialNB' in globals(), \
-    'MultinomialNB should be imported.'
-
-def test_LinearSVC():
-    assert 'LinearSVC' in globals(), \
-    'LinearSVC should be imported.'
-
-def test_metrics():
-    assert 'metrics' in globals(), \
-    'metrics should be imported.'
-```
-
-
-
-
-
-
-    6/6 tests passed
-
-
-
-
 ## 2. Transforming our collected data
 <p>To begin, let's start with a corpus of tweets which were collected in November 2017. They are available in CSV format. We'll use a Pandas DataFrame to help import the data and pass it to scikit-learn for further processing.</p>
 <p>Since the data has been collected via the Twitter API and not split into test and training sets, we'll need to do this. Let's use <code>train_test_split()</code> with <code>random_state=53</code> and a test size of 0.33, just as we did in the DataCamp course. This will ensure we have enough test data and we'll get the same results no matter where or when we run this code.</p>
@@ -81,41 +36,6 @@ y = tweet_df["author"]
 # Split training and testing data
 X_train, X_test, y_train, y_test = train_test_split(tweet_df["status"], y, test_size=.33, random_state=53)
 ```
-
-
-```python
-%%nose
-# This needs to be included at the beginning of every @tests cell.
-
-# One or more tests of the students code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-
-def test_df():
-    assert isinstance(tweet_df, pd.DataFrame), \
-    'tweet_df should be a Pandas DataFrame.'
-
-def test_y():
-    assert isinstance(y, pd.Series), \
-    'y should be a Pandas Series.'
-
-def train_test_split_test():
-    assert len(y_train) == len(X_train), \
-    'Make sure to run the train-test split.'
-    assert len(y_test) == len(X_test), \
-    'Make sure to run the train-test split.'
-```
-
-
-
-
-
-
-    3/3 tests passed
-
-
-
 
 ## 3. Vectorize the tweets
 <p>We have the training and testing data all set up, but we need to create vectorized representations of the tweets in order to apply machine learning.</p>
@@ -138,59 +58,6 @@ tfidf_vectorizer = TfidfVectorizer(stop_words="english", max_df=0.9, min_df=0.05
 tfidf_train = tfidf_vectorizer.fit_transform(X_train)
 tfidf_test = tfidf_vectorizer.transform(X_test)
 ```
-
-
-```python
-%%nose
-# This needs to be included at the beginning of every @tests cell.
-
-# One or more tests of the students code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-import scipy
-
-def test_train():
-    assert isinstance(count_train, scipy.sparse.csr.csr_matrix), \
-    'Make sure to run the count vectorizer for the training data.'
-    assert isinstance(tfidf_train, scipy.sparse.csr.csr_matrix), \
-    'Make sure to run the TFIDF vectorizer for the training data.'
-
-def test_test():
-    assert isinstance(count_test, scipy.sparse.csr.csr_matrix), \
-    'Make sure to run the count vectorizer for the test data.'
-    assert isinstance(tfidf_test, scipy.sparse.csr.csr_matrix), \
-    'Make sure to run the TFIDF vectorizer for the test data.'
-    
-def test_vectorizers():
-    assert isinstance(tfidf_vectorizer, TfidfVectorizer), \
-    'tfidf_vectorizer is missing or an incorrect type.'
-    assert isinstance(count_vectorizer, CountVectorizer), \
-    'count_vectorizer is missing or an incorrect type.'
-    assert tfidf_vectorizer.stop_words == 'english', \
-    'Use parameters to set the stop words for the TFIDF vectorizer.'
-    assert count_vectorizer.stop_words == 'english', \
-    'Use parameters to set the stop words for the count vectorizer.'
-    assert tfidf_vectorizer.max_df == 0.9, \
-    'Use parameters to set the max_df for the TFIDF vectorizer.'
-    assert count_vectorizer.max_df == 0.9, \
-    'Use parameters to set the max_df for the count vectorizer.'
-    assert tfidf_vectorizer.min_df == 0.05, \
-    'Use parameters to set the min_df for the TFIDF vectorizer.'
-    assert count_vectorizer.min_df == 0.05, \
-    'Use parameters to set the min_df for the count vectorizer.'
-
-```
-
-
-
-
-
-
-    3/3 tests passed
-
-
-
 
 ## 4. Training a multinomial naive Bayes model
 <p>Now that we have the data in vectorized form, we can train the first model. Investigate using the Multinomial Naive Bayes model with both the <code>CountVectorizer</code> and <code>TfidfVectorizer</code> data. Which do will perform better? How come?</p>
@@ -227,62 +94,6 @@ print('NaiveBayes Count Score: ', count_nb_score)
     NaiveBayes Count Score:  0.7954545454545454
 
 
-
-```python
-%%nose
-# This needs to be included at the beginning of every @tests cell.
-
-# One or more tests of the students code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-
-import numpy
-
-def test_models():
-    assert isinstance(count_nb, MultinomialNB), \
-    'count_nb should be a MultinomialNB model.'
-    assert isinstance(tfidf_nb, MultinomialNB), \
-    'tfidf_nb should be a MultinomialNB model.'
-    assert isinstance(count_nb.classes_, numpy.ndarray)
-    assert len(count_nb.classes_) == 2, \
-    'count_nb should have only two classes.'
-    assert isinstance(tfidf_nb.classes_, numpy.ndarray)
-    assert len(tfidf_nb.classes_) == 2, \
-    'tfidf_nb should have only two classes.' 
-    
-
-def test_pred():
-    assert isinstance(tfidf_nb_pred, numpy.ndarray), \
-    'tfidf_nb_pred should be a numpy array.'
-    assert isinstance(count_nb_pred, numpy.ndarray), \
-    'count_nb_pred should be a numpy array.'
-    assert set(tfidf_nb_pred) == set(tfidf_nb.classes_), \
-    'tfidf_nb_pred should use the same classes as the model for prediction.'
-    assert set(count_nb_pred) == set(count_nb.classes_), \
-    'count_nb_pred should use the same classes as the model for prediction.'
-
-def test_score():
-    assert isinstance(tfidf_nb_score, float), \
-    'tfidf_nb_score should be a float.'
-    assert isinstance(count_nb_score, float), \
-    'count_nb_score should be a float.'
-    assert tfidf_nb_score > .802, \
-    'tfidf_nb_score should be above .802'
-    assert count_nb_score > .794, \
-    'count_nb_score should be above .794'
-```
-
-
-
-
-
-
-    3/3 tests passed
-
-
-
-
 ## 5. Evaluating our model using a confusion matrix
 <p>We see that the TF-IDF model performs better than the count-based approach. Based on what we know from the NLP fundamentals course, why might that be? We know that TF-IDF allows unique tokens to have a greater weight - perhaps tweeters are using specific important words that identify them! Let's continue the investigation.</p>
 <p>For classification tasks, an accuracy score doesn't tell the whole picture. A better evaluation can be made if we look at the confusion matrix, which shows the number correct and incorrect classifications based on each class. We can use the metrics, True Positives, False Positives, False Negatives, and True Negatives, to determine how well the model performed on a given class. How many times was Trump misclassified as Trudeau?</p>
@@ -314,37 +125,6 @@ plot_confusion_matrix(count_nb_cm, classes=['Donald J. Trump', 'Justin Trudeau']
 
 
 ![png](output_13_2.png)
-
-
-
-```python
-%%nose
-# This needs to be included at the beginning of every @tests cell
-
-# One or more tests of the students code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-import numpy
-
-
-def test_cm():
-    assert isinstance(tfidf_nb_cm, numpy.ndarray), \
-    'tfidf_nb_cm should be a NumPy array.'
-    assert isinstance(count_nb_cm, numpy.ndarray), \
-    'count_nb_cm should be a NumPy array.'
-    assert tfidf_nb_cm[0][0] == 56, \
-    'The true label and predicted label for Trump in the TFIDF MultinomialNB model should be 56.'
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
 
 
 ## 6. Trying out another classifier: Linear SVC
@@ -379,48 +159,6 @@ plot_confusion_matrix(svc_cm, classes=['Donald J. Trump', 'Justin Trudeau'], tit
 
 
 ![png](output_16_1.png)
-
-
-
-```python
-%%nose
-# This needs to be included at the beginning of every @tests cell.
-
-# One or more tests of the students code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-import numpy
-
-def test_models():
-    assert isinstance(tfidf_svc, LinearSVC), \
-    'tfidf_svc should be a LinearSVC model.'
-    assert isinstance(tfidf_svc.classes_, numpy.ndarray), \
-    'tfidf_svc should have the proper classes.'
-    assert len(tfidf_svc.classes_) == 2, \
-    'tfidf_svc should have exactly 2 classes.' 
-
-def test_pred():
-    assert isinstance(tfidf_svc_pred, numpy.ndarray), \
-    'tfidf_svc_pred should be a numpy array.'
-    assert set(tfidf_svc_pred) == set(tfidf_svc.classes_), \
-    'tfidf_svc_pred should have the same classes as the model.'
-    
-def test_score():
-    assert isinstance(tfidf_svc_score, float), \
-    'tfidf_svc_score should be a float.'
-    assert tfidf_svc_score > .84, \
-    'tfidf_svc_score should be > .84.' 
-```
-
-
-
-
-
-
-    3/3 tests passed
-
-
 
 
 ## 7. Introspecting our top model
@@ -464,39 +202,6 @@ pprint(top_features)
      (1.6567944065231532, 'canada')]
 
 
-
-```python
-%%nose
-# This needs to be included at the beginning of every @tests cell.
-
-# One or more tests of the students code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-
-def test_example():
-    assert isinstance(top_features, list), \
-    'top_features should be a Python list.'
-    assert isinstance(top_features[0], tuple), \
-    'The top_features should be a list of tuples.'
-    assert isinstance(top_features[0][0], float), \
-    'The first element of each tuple in the top_features list should be a float.'
-    assert isinstance(top_features[0][1], str), \
-    'The second element of each tuple in the top_features list should be a string.'
-    assert top_features[0][1] == 'great', \
-    'The top feature for Trump (i.e. first feature returned) should be the word: great.'
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
-
 ## 8. Bonus: can you write a Trump or Trudeau tweet?
 <p>So, what did our model learn? It seems like it learned that Trudeau tweets in French!</p>
 <p>I challenge you to write your own tweet using the knowledge gained to trick the model! Use the printed list or plot above to make some inferences about what words will classify your text as Trump or Trudeau. Can you fool the model into thinking you are Trump or Trudeau?</p>
@@ -531,40 +236,5 @@ print("Predicted Trudeau tweet", trudeau_tweet_pred)
 
     Predicted Trump tweet ['Donald J. Trump']
     Predicted Trudeau tweet ['Justin Trudeau']
-
-
-
-```python
-%%nose
-# This needs to be included at the beginning of every @tests cell.
-
-# One or more tests of the students code. 
-# The @solution should pass the tests.
-# The purpose of the tests is to try to catch common errors and to 
-# give the student a hint on how to resolve these errors.
-import scipy
-
-def test_example():
-    assert isinstance(trump_tweet, str), \
-    "trump_tweet should be a Python string"
-    assert isinstance(trudeau_tweet, str), \
-    "trudeau_tweet should be a Python string"
-    assert isinstance(trump_tweet_vectorized, scipy.sparse.csr.csr_matrix), \
-    'Make sure to transform the Trump tweet using the TF-IDF vectorizer.'
-    assert isinstance(trudeau_tweet_vectorized, scipy.sparse.csr.csr_matrix), \
-    'Make sure to transform the Trudeau tweet using hte TF-IDF vectorizer.'
-    assert trump_tweet_pred == ['Donald J. Trump'], \
-    'Your tweet was not classified as a Trump tweet, try again!'
-    assert trudeau_tweet_pred == ['Justin Trudeau'], \
-    'Your tweet was not classified as a Trudeau tweet, try again!'    
-```
-
-
-
-
-
-
-    1/1 tests passed
-
 
 
