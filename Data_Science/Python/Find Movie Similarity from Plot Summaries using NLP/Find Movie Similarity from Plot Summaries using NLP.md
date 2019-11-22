@@ -2,8 +2,10 @@
 ## 1. Import and observe dataset
 <p>We all love watching movies! There are some movies we like, some we don't. Most people have a preference for movies of a similar genre. Some of us love watching action movies, while some of us like watching horror. Some of us like watching movies that have ninjas in them, while some of us like watching superheroes.</p>
 <p>Movies within a genre often share common base parameters. Consider the following two movies:</p>
-<p><img style="margin:5px 20px 5px 1px; height: 250px; display: inline-block;" alt="2001: A Space Odyssey" src="https://assets.datacamp.com/production/project_648/img/movie1.jpg">
-<img style="margin:5px 20px 5px 1px; height: 250px; display: inline-block;" alt="Close Encounters of the Third Kind" src="https://assets.datacamp.com/production/project_648/img/movie2.jpg"></p>
+
+![png](movie1.jpg)
+![png](movie2.jpg)
+
 <p>Both movies, <em>2001: A Space Odyssey</em> and <em>Close Encounters of the Third Kind</em>, are movies based on aliens coming to Earth. I've seen both, and they indeed share many similarities. We could conclude that both of these fall into the same genre of movies based on intuition, but that's no fun in a data science context. In this notebook, we will quantify the similarity of movies based on their plot summaries available on IMDb and Wikipedia, then separate them into groups, also known as clusters. We'll create a dendrogram to represent how closely the movies are related to each other.</p>
 <p>Let's start by importing the dataset and observing the data provided.</p>
 
@@ -33,19 +35,6 @@ movies_df
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -552,38 +541,6 @@ movies_df
 </div>
 
 
-
-
-```python
-%%nose
-
-def test_pandas_loaded():   
-    assert ('pd' in globals()), "Please check your pandas import statement."
-    
-def test_numpy_loaded():   
-    assert ('np' in globals()), "Please check your numpy import statement."
-
-def test_nltk_loaded():   
-    assert ('nltk' in globals()), "Please check your nltk import statement."
-    
-# def test_movies_loaded():
-#     assert (movies_df.shape == (100, 6)), "Make sure you have loaded correctly the dataset file `datasets/movies.csv`"
-
-def test_movies_correctly_loaded():
-    correct_movies_df = pd.read_csv('datasets/movies.csv')
-    assert correct_movies_df.equals(movies_df), "The variable movies_df does not contain the data in movies.csv."
-```
-
-
-
-
-
-
-    4/4 tests passed
-
-
-
-
 ## 2. Combine Wikipedia and IMDb plot summaries
 <p>The dataset we imported currently contains two columns titled <code>wiki_plot</code> and <code>imdb_plot</code>. They are the plot found for the movies on Wikipedia and IMDb, respectively. The text in the two columns is similar, however, they are often written in different tones and thus provide context on a movie in a different manner of linguistic expression. Further, sometimes the text in one column may mention a feature of the plot that is not present in the other column. For example, consider the following plot extracts from <em>The Godfather</em>:</p>
 <ul>
@@ -607,19 +564,6 @@ movies_df.head()
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -682,28 +626,6 @@ movies_df.head()
 </table>
 </div>
 
-
-
-
-```python
-%%nose
-
-def test_plot_correctly_added():
-    correct_movies_df = pd.read_csv('datasets/movies.csv')
-    correct_movies_df["plot"] = correct_movies_df["wiki_plot"].astype(str) + "\n" + correct_movies_df["imdb_plot"].astype(str)
-    assert correct_movies_df.equals(movies_df), "The variable movies_df does not contain the data in movies.csv."
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
-
-
 ## 3. Tokenization
 <p>Tokenization is the process  by which we break down articles into individual sentences or words, as needed. Besides the tokenization method provided by NLTK, we might have to perform additional filtration to remove tokens which are entirely numeric values or punctuation.</p>
 <p>While a program may fail to build context from "While waiting at a bus stop in 1981" (<em>Forrest Gump</em>), because this string would not match in any dictionary, it is possible to build context from the words "while", "waiting" or "bus" because they are present in the English dictionary. </p>
@@ -733,50 +655,6 @@ filtered
 
 
     ['Today', 'May', 'is', 'his', 'only', 'daughter', "'s", 'wedding']
-
-
-
-
-```python
-%%nose
-
-correct_sent_tokenized = [sent for sent in nltk.sent_tokenize("""
-                        Today (May 19, 2016) is his only daughter's wedding. 
-                        Vito Corleone is the Godfather.
-                        """)]
-
-correct_words_tokenized = [word for word in nltk.word_tokenize(correct_sent_tokenized[0])]
-
-correct_filtered = [word for word in correct_words_tokenized if re.search('[a-zA-Z]', word)]
-
-def test_nltk_sent_tokenize_present():
-    assert nltk.sent_tokenize("abc def"), "Did you import the nltk module correctly? nltk.sent_tokenize() isn't working as expected."
-    
-def test_sent_tokenized():
-    assert sent_tokenized == correct_sent_tokenized, \
-    "Please check you have tokenized the sentences correctly and stored them in sent_tokenized."
-
-def test_words_tokenized():    
-    assert words_tokenized == correct_words_tokenized, \
-    "Please check you have tokenized the words correctly and stored them in words_tokenized."
-    
-def test_re_import():
-    assert "re" in globals(), "Please check that you have correctly imported the re module."
-
-def test_filtered():
-    assert filtered == correct_filtered, \
-    "Please check you have filtered the tokens correctly and stored them in filtered."
-    
-```
-
-
-
-
-
-
-    5/5 tests passed
-
-
 
 
 ## 4. Stemming
@@ -809,33 +687,6 @@ print("After stemming:   ", stemmed_words)
 
     Without stemming:  ['Today', 'May', 'is', 'his', 'only', 'daughter', "'s", 'wedding']
     After stemming:    ['today', 'may', 'is', 'his', 'onli', 'daughter', "'s", 'wed']
-
-
-
-```python
-%%nose
-
-def test_nltk_sent_tokenize_present():
-    assert "SnowballStemmer" in globals(), "Did you import the SnowballStemmer correctly?"
-    
-def test_english_stemmer():
-    assert str(stemmer.__dict__["stemmer"]) == "<EnglishStemmer>", \
-    "Please check you have initialized the stemmer with 'english' language."
-
-def test_stemmed_words():
-    assert stemmed_words == [stemmer.stem(t) for t in filtered] , \
-    "Please make sure you have correctly stemmed the words and stored them in stemmed_words."
-```
-
-
-
-
-
-
-    3/3 tests passed
-
-
-
 
 ## 5. Club together Tokenize & Stem
 <p>We are now able to tokenize and stem sentences. But we may have to use the two functions repeatedly one after the other to handle a large amount of data, hence we can think of wrapping them in a function and passing the text to be tokenized and stemmed as the function argument. Then we can pass the new wrapping function, which shall perform both tokenizing and stemming instead of just tokenizing, as the tokenizer argument while creating the TF-IDF vector of the text.  </p>
@@ -872,43 +723,6 @@ print(words_stemmed)
     ['today', 'may', 'is', 'his', 'onli', 'daughter', "'s", 'wed']
 
 
-
-```python
-%%nose
-
-def test_tokenize_and_stem():
-    assert "tokenize_and_stem" in globals(), "Make sure you have declared the tokenize_and_stem() function correctly."
-    
-def test_correct_stems():
-    
-    def c_tokenize_and_stem(text):
-        tokens = [word for sent in nltk.sent_tokenize(text) for word in nltk.word_tokenize(sent)]
-        filtered_tokens = [token for token in tokens if re.search('[a-zA-Z]', token)]
-        stems = [stemmer.stem(t) for t in filtered_tokens]
-        return stems
-    
-    stemsList = [0 for x in movies_df["plot"] if c_tokenize_and_stem(x) == tokenize_and_stem(x)]
-    
-    assert sum(stemsList) == 0, \
-    "Your definition for tokenize_and_stem is wrong. Some common errors are using filtered instead of filtered_tokens during stemming or repeating variable names that lead to variable override."
-    
-def test_correct_tokenize_and_stem():
-    c_words_stemmed = tokenize_and_stem("Today (May 19, 2016) is his only daughter's wedding.")
-    
-    assert words_stemmed == c_words_stemmed, \
-    "Please check you have correctly created your tokenize_and_stem() function and stored the result of its call in words_stemmed."
-```
-
-
-
-
-
-
-    2/2 tests passed
-
-
-
-
 ## 6. Create TfidfVectorizer
 <p>Computers do not <em>understand</em> text. These are machines only capable of understanding numbers and performing numerical computation. Hence, we must convert our textual plot summaries to numbers for the computer to be able to extract meaning from them. One simple method of doing this would be to count all the occurrences of each word in the entire vocabulary and return the counts in a vector. Enter <code>CountVectorizer</code>.</p>
 <p>Consider the word 'the'. It appears quite frequently in almost all movie plots and will have a high count in each case. But obviously, it isn't the theme of all the movies! <a href="https://campus.datacamp.com/courses/natural-language-processing-fundamentals-in-python/simple-topic-identification?ex=11">Term Frequency-Inverse Document Frequency</a> (TF-IDF) is one method which overcomes the shortcomings of <code>CountVectorizer</code>. The Term Frequency of a word is the measure of how often it appears in a document, while the Inverse Document Frequency is the parameter which reduces the importance of a word if it frequently appears in several documents.</p>
@@ -928,38 +742,6 @@ tfidf_vectorizer = TfidfVectorizer(max_df=0.8, max_features=200000,
                                  ngram_range=(1,3))
 ```
 
-
-```python
-%%nose
-
-def test_tfidf_vectorizer_import():
-    assert "TfidfVectorizer" in globals(), "Please check if you have correctly imported the TfidfVectorizer."
-    
-def test_tfidf_stop_words():
-    if "TfidfVectorizer" in globals():
-        assert tfidf_vectorizer.__getattribute__("stop_words") == "english", \
-        "You have to use the english stop words in the tfidf_vectorizer."
-    else:
-        assert 1==2, "You have to use the english stop words in the tfidf_vectorizer."
-
-def test_tfidf_tokenizer():
-    if "TfidfVectorizer" in globals():
-        assert tfidf_vectorizer.__getattribute__("tokenizer") == tokenize_and_stem , \
-        "You have to use the tokenize_and_stem function as the tokenizer in the tfidf_vectorizer."
-    else:
-        assert 1==2, "You have to use the tokenize_and_stem function as the tokenizer in the tfidf_vectorizer."
-```
-
-
-
-
-
-
-    3/3 tests passed
-
-
-
-
 ## 7. Fit transform TfidfVectorizer
 <p>Once we create a TF-IDF Vectorizer, we must fit the text to it and then transform the text to produce the corresponding numeric form of the data which the computer will be able to understand and derive meaning from. To do this, we use the <code>fit_transform()</code> method of the <code>TfidfVectorizer</code> object. </p>
 <p>If we observe the <code>TfidfVectorizer</code> object we created, we come across a parameter stopwords. 'stopwords' are those words in a given text which do not contribute considerably towards the meaning of the sentence and are generally grammatical filler words. For example, in the sentence 'Dorothy Gale lives with her dog Toto on the farm of her Aunt Em and Uncle Henry', we could drop the words 'her' and 'the', and still have a similar overall meaning to the sentence. Thus, 'her' and 'the' are stopwords and can be conveniently dropped from the sentence. </p>
@@ -975,25 +757,6 @@ print(tfidf_matrix.shape)
 ```
 
     (100, 564)
-
-
-
-```python
-%%nose
-
-def test_tfidf_matrix_shape():
-    assert tfidf_matrix.shape == (100, 564), \
-    "Please make sure you have fit and transformed the training data in correct dimensions to the vectorizer and stored in tfidf_matrix."
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
 
 
 ## 8. Import KMeans and create clusters
@@ -1035,35 +798,6 @@ movies_df['cluster'].value_counts()
 
 
 
-
-```python
-%%nose
-
-def test_kmeans_imported():
-    assert "KMeans" in globals(), "Please check if you have imported KMeans correctly."
-    
-def test_num_clusters():
-    assert km.n_clusters == 5, "Make sure you have set n_clusters to 5 in the k-means object km."
-    
-def test_labels():
-    assert len(km.labels_.tolist()) == 100, \
-    "Make sure you have correctly used the fit method of the km object to train the k-means model."
-    
-def test_clusters_series():
-    assert len(movies_df["cluster"]) == 100 and movies_df["cluster"].equals(pd.Series(clusters)), \
-    "Make sure you have correctly created a new column in the movies_df DataFrame with the name of 'cluster' which holds the predicted clusters from the k-means object."
-```
-
-
-
-
-
-
-    4/4 tests passed
-
-
-
-
 ## 9. Calculate similarity distance
 <p>Consider the following two sentences from the movie <em>The Wizard of Oz</em>: </p>
 <blockquote>
@@ -1087,29 +821,6 @@ from sklearn.metrics.pairwise import cosine_similarity
 similarity_distance = 1 - cosine_similarity(tfidf_matrix)
 ```
 
-
-```python
-%%nose
-
-def test_cosine_similarity_import():
-    assert "cosine_similarity" in globals(), \
-    "Please check if you have correctly imported the cosine_similarity method from sklearn.metrics.pairwise."
-
-def test_similary_distance():
-    assert ("similarity_distance" in globals()) and (similarity_distance  == (1 - cosine_similarity(tfidf_matrix))).all(), \
-    "Check that you have correctly calculated and stored the similarity_distance."
-```
-
-
-
-
-
-
-    2/2 tests passed
-
-
-
-
 ## 10. Import Matplotlib, Linkage, and Dendrograms
 <p>We shall now create a tree-like diagram (called a dendrogram) of the movie titles to help us understand the level of similarity between them visually. Dendrograms help visualize the results of hierarchical clustering, which is an alternative to k-means clustering. Two pairs of movies at the same level of hierarchical clustering are expected to have similar strength of similarity between the corresponding pairs of movies. For example, the movie <em>Fargo</em> would be as similar to <em>North By Northwest</em> as the movie <em>Platoon</em> is to <em>Saving Private Ryan</em>, given both the pairs exhibit the same level of the hierarchy.</p>
 <p>Let's import the modules we'll need to create our dendrogram.</p>
@@ -1125,31 +836,6 @@ import matplotlib.pyplot as plt
 # Import modules necessary to plot dendrogram
 from scipy.cluster.hierarchy import linkage, dendrogram
 ```
-
-
-```python
-%%nose
-
-def test_plt():
-    assert "plt" in globals(), "Please check you have correctly imported matplotlib.pyplot as plt."
-    
-def test_linkage():
-    assert "linkage" in globals(), "Please check you have correctly imported linkage from scipy.cluster.hierarchy."
-    
-def test_dendrogram():
-    assert "dendrogram" in globals(), "Please check you have correctly imported dendrogram from scipy.cluster.hierarchy."
-    
-```
-
-
-
-
-
-
-    3/3 tests passed
-
-
-
 
 ## 11. Create merging and plot dendrogram
 <p>We shall plot a dendrogram of the movies whose similarity measure will be given by the similarity distance we previously calculated. The lower the similarity distance between any two movies, the lower their linkage will make an intercept on the y-axis. For instance, the lowest dendrogram linkage we shall discover will be between the movies, <em>It's a Wonderful Life</em> and <em>A Place in the Sun</em>. This indicates that the movies are very similar to each other in their plots.</p>
@@ -1178,29 +864,7 @@ plt.show()
 
 ![png](output_31_0.png)
 
-
-
-```python
-%%nose
-
-def test_mergings():
-    c_mergings = linkage(similarity_distance, method='complete')
-    assert (mergings == c_mergings).all(), "Make sure you have correctly used the linkage method over similarity_distance and stored the result in mergings."
-    
-def test_dendrogram():
-    c_dendrogram = {'icoord': [[25.0, 25.0, 35.0, 35.0], [15.0, 15.0, 30.0, 30.0], [5.0, 5.0, 22.5, 22.5], [55.0, 55.0, 65.0, 65.0], [45.0, 45.0, 60.0, 60.0], [75.0, 75.0, 85.0, 85.0], [95.0, 95.0, 105.0, 105.0], [80.0, 80.0, 100.0, 100.0], [125.0, 125.0, 135.0, 135.0], [115.0, 115.0, 130.0, 130.0], [90.0, 90.0, 122.5, 122.5], [52.5, 52.5, 106.25, 106.25], [13.75, 13.75, 79.375, 79.375], [145.0, 145.0, 155.0, 155.0], [165.0, 165.0, 175.0, 175.0], [185.0, 185.0, 195.0, 195.0], [215.0, 215.0, 225.0, 225.0], [205.0, 205.0, 220.0, 220.0], [190.0, 190.0, 212.5, 212.5], [170.0, 170.0, 201.25, 201.25], [150.0, 150.0, 185.625, 185.625], [245.0, 245.0, 255.0, 255.0], [235.0, 235.0, 250.0, 250.0], [275.0, 275.0, 285.0, 285.0], [265.0, 265.0, 280.0, 280.0], [242.5, 242.5, 272.5, 272.5], [305.0, 305.0, 315.0, 315.0], [295.0, 295.0, 310.0, 310.0], [325.0, 325.0, 335.0, 335.0], [345.0, 345.0, 355.0, 355.0], [365.0, 365.0, 375.0, 375.0], [350.0, 350.0, 370.0, 370.0], [330.0, 330.0, 360.0, 360.0], [302.5, 302.5, 345.0, 345.0], [257.5, 257.5, 323.75, 323.75], [167.8125, 167.8125, 290.625, 290.625], [405.0, 405.0, 415.0, 415.0], [395.0, 395.0, 410.0, 410.0], [385.0, 385.0, 402.5, 402.5], [435.0, 435.0, 445.0, 445.0], [455.0, 455.0, 465.0, 465.0], [440.0, 440.0, 460.0, 460.0], [425.0, 425.0, 450.0, 450.0], [393.75, 393.75, 437.5, 437.5], [475.0, 475.0, 485.0, 485.0], [505.0, 505.0, 515.0, 515.0], [495.0, 495.0, 510.0, 510.0], [535.0, 535.0, 545.0, 545.0], [525.0, 525.0, 540.0, 540.0], [565.0, 565.0, 575.0, 575.0], [555.0, 555.0, 570.0, 570.0], [532.5, 532.5, 562.5, 562.5], [502.5, 502.5, 547.5, 547.5], [480.0, 480.0, 525.0, 525.0], [585.0, 585.0, 595.0, 595.0], [605.0, 605.0, 615.0, 615.0], [590.0, 590.0, 610.0, 610.0], [502.5, 502.5, 600.0, 600.0], [625.0, 625.0, 635.0, 635.0], [665.0, 665.0, 675.0, 675.0], [655.0, 655.0, 670.0, 670.0], [645.0, 645.0, 662.5, 662.5], [630.0, 630.0, 653.75, 653.75], [685.0, 685.0, 695.0, 695.0], [705.0, 705.0, 715.0, 715.0], [690.0, 690.0, 710.0, 710.0], [725.0, 725.0, 735.0, 735.0], [745.0, 745.0, 755.0, 755.0], [765.0, 765.0, 775.0, 775.0], [750.0, 750.0, 770.0, 770.0], [730.0, 730.0, 760.0, 760.0], [700.0, 700.0, 745.0, 745.0], [641.875, 641.875, 722.5, 722.5], [785.0, 785.0, 795.0, 795.0], [805.0, 805.0, 815.0, 815.0], [790.0, 790.0, 810.0, 810.0], [825.0, 825.0, 835.0, 835.0], [845.0, 845.0, 855.0, 855.0], [865.0, 865.0, 875.0, 875.0], [850.0, 850.0, 870.0, 870.0], [830.0, 830.0, 860.0, 860.0], [800.0, 800.0, 845.0, 845.0], [682.1875, 682.1875, 822.5, 822.5], [885.0, 885.0, 895.0, 895.0], [905.0, 905.0, 915.0, 915.0], [890.0, 890.0, 910.0, 910.0], [935.0, 935.0, 945.0, 945.0], [925.0, 925.0, 940.0, 940.0], [955.0, 955.0, 965.0, 965.0], [932.5, 932.5, 960.0, 960.0], [985.0, 985.0, 995.0, 995.0], [975.0, 975.0, 990.0, 990.0], [946.25, 946.25, 982.5, 982.5], [900.0, 900.0, 964.375, 964.375], [752.34375, 752.34375, 932.1875, 932.1875], [551.25, 551.25, 842.265625, 842.265625], [415.625, 415.625, 696.7578125, 696.7578125], [229.21875, 229.21875, 556.19140625, 556.19140625], [46.5625, 46.5625, 392.705078125, 392.705078125]], 'dcoord': [[0.0, 0.2787094302645489, 0.2787094302645489, 0.0], [0.0, 0.8172836789210608, 0.8172836789210608, 0.2787094302645489], [0.0, 1.1894660657146754, 1.1894660657146754, 0.8172836789210608], [0.0, 1.2259173682111164, 1.2259173682111164, 0.0], [0.0, 1.3472949604309772, 1.3472949604309772, 1.2259173682111164], [0.0, 1.2100386272658268, 1.2100386272658268, 0.0], [0.0, 1.2910078363550863, 1.2910078363550863, 0.0], [1.2100386272658268, 1.352735693873075, 1.352735693873075, 1.2910078363550863], [0.0, 1.3015772300698019, 1.3015772300698019, 0.0], [0.0, 1.4677321321279562, 1.4677321321279562, 1.3015772300698019], [1.352735693873075, 1.5473996472844698, 1.5473996472844698, 1.4677321321279562], [1.3472949604309772, 1.719965964755748, 1.719965964755748, 1.5473996472844698], [1.1894660657146754, 1.9432740781675348, 1.9432740781675348, 1.719965964755748], [0.0, 1.0028170615552476, 1.0028170615552476, 0.0], [0.0, 1.0381649276863196, 1.0381649276863196, 0.0], [0.0, 0.8314072653177778, 0.8314072653177778, 0.0], [0.0, 0.7553538076145848, 0.7553538076145848, 0.0], [0.0, 0.8456374462267305, 0.8456374462267305, 0.7553538076145848], [0.8314072653177778, 1.078117803037354, 1.078117803037354, 0.8456374462267305], [1.0381649276863196, 1.1330390511933564, 1.1330390511933564, 1.078117803037354], [1.0028170615552476, 1.2022707135579105, 1.2022707135579105, 1.1330390511933564], [0.0, 0.7303008576285346, 0.7303008576285346, 0.0], [0.0, 0.9614233166122937, 0.9614233166122937, 0.7303008576285346], [0.0, 1.049156445273212, 1.049156445273212, 0.0], [0.0, 1.1537880797876277, 1.1537880797876277, 1.049156445273212], [0.9614233166122937, 1.344841441831146, 1.344841441831146, 1.1537880797876277], [0.0, 0.7620024400941099, 0.7620024400941099, 0.0], [0.0, 1.0061975163637775, 1.0061975163637775, 0.7620024400941099], [0.0, 0.9635372238285962, 0.9635372238285962, 0.0], [0.0, 0.9045396944477267, 0.9045396944477267, 0.0], [0.0, 1.0497803115093862, 1.0497803115093862, 0.0], [0.9045396944477267, 1.2350006085207865, 1.2350006085207865, 1.0497803115093862], [0.9635372238285962, 1.3980433268189865, 1.3980433268189865, 1.2350006085207865], [1.0061975163637775, 1.475202709415688, 1.475202709415688, 1.3980433268189865], [1.344841441831146, 1.6729103655212556, 1.6729103655212556, 1.475202709415688], [1.2022707135579105, 1.794890720368648, 1.794890720368648, 1.6729103655212556], [0.0, 0.8430542664780709, 0.8430542664780709, 0.0], [0.0, 1.0801505370386209, 1.0801505370386209, 0.8430542664780709], [0.0, 1.1289232081202225, 1.1289232081202225, 1.0801505370386209], [0.0, 0.9756695249805762, 0.9756695249805762, 0.0], [0.0, 1.117746492134165, 1.117746492134165, 0.0], [0.9756695249805762, 1.2148735439153626, 1.2148735439153626, 1.117746492134165], [0.0, 1.3118286525278535, 1.3118286525278535, 1.2148735439153626], [1.1289232081202225, 1.4221979530778903, 1.4221979530778903, 1.3118286525278535], [0.0, 1.077729878786937, 1.077729878786937, 0.0], [0.0, 1.0467673241334103, 1.0467673241334103, 0.0], [0.0, 1.1862349890360238, 1.1862349890360238, 1.0467673241334103], [0.0, 1.043561733298193, 1.043561733298193, 0.0], [0.0, 1.1388679585630797, 1.1388679585630797, 1.043561733298193], [0.0, 1.118901552905375, 1.118901552905375, 0.0], [0.0, 1.194119898248351, 1.194119898248351, 1.118901552905375], [1.1388679585630797, 1.251497933066662, 1.251497933066662, 1.194119898248351], [1.1862349890360238, 1.377234356406368, 1.377234356406368, 1.251497933066662], [1.077729878786937, 1.387180497549022, 1.387180497549022, 1.377234356406368], [0.0, 0.9181769196839356, 0.9181769196839356, 0.0], [0.0, 1.1820658130840584, 1.1820658130840584, 0.0], [0.9181769196839356, 1.4269796609809122, 1.4269796609809122, 1.1820658130840584], [1.387180497549022, 1.4600847124514604, 1.4600847124514604, 1.4269796609809122], [0.0, 1.0885850135995854, 1.0885850135995854, 0.0], [0.0, 1.041713743061957, 1.041713743061957, 0.0], [0.0, 1.1244489494731342, 1.1244489494731342, 1.041713743061957], [0.0, 1.187179607479755, 1.187179607479755, 1.1244489494731342], [1.0885850135995854, 1.3165764676063083, 1.3165764676063083, 1.187179607479755], [0.0, 0.9453468874865079, 0.9453468874865079, 0.0], [0.0, 1.0114306791873557, 1.0114306791873557, 0.0], [0.9453468874865079, 1.22802959348862, 1.22802959348862, 1.0114306791873557], [0.0, 1.0643865021895123, 1.0643865021895123, 0.0], [0.0, 1.0519126879398584, 1.0519126879398584, 0.0], [0.0, 1.0798707957051075, 1.0798707957051075, 0.0], [1.0519126879398584, 1.165312969004922, 1.165312969004922, 1.0798707957051075], [1.0643865021895123, 1.287982124878887, 1.287982124878887, 1.165312969004922], [1.22802959348862, 1.3511897654991216, 1.3511897654991216, 1.287982124878887], [1.3165764676063083, 1.3800933906241102, 1.3800933906241102, 1.3511897654991216], [0.0, 1.0951017490033617, 1.0951017490033617, 0.0], [0.0, 1.151957621128982, 1.151957621128982, 0.0], [1.0951017490033617, 1.3080681614123404, 1.3080681614123404, 1.151957621128982], [0.0, 0.9021860525378849, 0.9021860525378849, 0.0], [0.0, 0.9003093102219428, 0.9003093102219428, 0.0], [0.0, 0.9288388939307061, 0.9288388939307061, 0.0], [0.9003093102219428, 1.2177991442080265, 1.2177991442080265, 0.9288388939307061], [0.9021860525378849, 1.3919714080728927, 1.3919714080728927, 1.2177991442080265], [1.3080681614123404, 1.429667174344469, 1.429667174344469, 1.3919714080728927], [1.3800933906241102, 1.5050163486809163, 1.5050163486809163, 1.429667174344469], [0.0, 1.0052721386770818, 1.0052721386770818, 0.0], [0.0, 1.182747896800404, 1.182747896800404, 0.0], [1.0052721386770818, 1.5332815422756605, 1.5332815422756605, 1.182747896800404], [0.0, 1.0003206609986515, 1.0003206609986515, 0.0], [0.0, 1.1028431356087476, 1.1028431356087476, 1.0003206609986515], [0.0, 1.1351966178962787, 1.1351966178962787, 0.0], [1.1028431356087476, 1.3062337324254805, 1.3062337324254805, 1.1351966178962787], [0.0, 1.1712000424509748, 1.1712000424509748, 0.0], [0.0, 1.3710020543238846, 1.3710020543238846, 1.1712000424509748], [1.3062337324254805, 1.5646940153196518, 1.5646940153196518, 1.3710020543238846], [1.5332815422756605, 1.6123492188894006, 1.6123492188894006, 1.5646940153196518], [1.5050163486809163, 1.6716074509018797, 1.6716074509018797, 1.6123492188894006], [1.4600847124514604, 1.7983154751040344, 1.7983154751040344, 1.6716074509018797], [1.4221979530778903, 1.9282793755056098, 1.9282793755056098, 1.7983154751040344], [1.794890720368648, 2.2056276774833523, 2.2056276774833523, 1.9282793755056098], [1.9432740781675348, 2.5432342313306777, 2.5432342313306777, 2.2056276774833523]], 'ivl': ['The Philadelphia Story', "The King's Speech", "It's a Wonderful Life", 'A Place in the Sun', 'The Sound of Music', 'The African Queen', 'Mutiny on the Bounty', "Singin' in the Rain", 'Nashville', 'Amadeus', 'Yankee Doodle Dandy', 'Titanic', 'City Lights', 'Network', 'Vertigo', 'Double Indemnity', 'The French Connection', 'Pulp Fiction', 'The Maltese Falcon', 'The Third Man', 'Psycho', 'Fargo', 'North by Northwest', 'All Quiet on the Western Front', 'Saving Private Ryan', 'Platoon', 'The Deer Hunter', 'Casablanca', 'From Here to Eternity', 'Goodfellas', 'The Godfather', 'The Godfather: Part II', 'Gone with the Wind', 'Doctor Zhivago', "Schindler's List", 'The Pianist', 'The Best Years of Our Lives', 'Giant', 'The Bridge on the River Kwai', 'Lawrence of Arabia', 'Dr. Strangelove or: How I Learned to Stop Worrying and Love the Bomb', 'Apocalypse Now', 'Patton', 'Gladiator', 'Braveheart', 'The Lord of the Rings: The Return of the King', 'Dances with Wolves', 'Raging Bull', 'Rain Man', 'The Good, the Bad and the Ugly', 'Midnight Cowboy', 'Taxi Driver', 'Wuthering Heights', 'Out of Africa', 'Terms of Endearment', 'Good Will Hunting', 'Citizen Kane', 'Annie Hall', 'The Apartment', 'Rear Window', 'An American in Paris', 'Tootsie', 'Sunset Blvd.', 'Gandhi', 'Forrest Gump', 'To Kill a Mockingbird', 'My Fair Lady', 'The Exorcist', 'The Wizard of Oz', 'E.T. the Extra-Terrestrial', 'A Streetcar Named Desire', 'Ben-Hur', 'The Graduate', 'A Clockwork Orange', 'West Side Story', 'Rocky', 'On the Waterfront', 'Some Like It Hot', 'The Shawshank Redemption', 'The Silence of the Lambs', "One Flew Over the Cuckoo's Nest", 'Stagecoach', 'Chinatown', 'Jaws', '2001: A Space Odyssey', 'Close Encounters of the Third Kind', 'Star Wars', 'Raiders of the Lost Ark', 'The Green Mile', 'American Graffiti', 'It Happened One Night', 'Rebel Without a Cause', 'The Treasure of the Sierra Madre', 'Unforgiven', 'Butch Cassidy and the Sundance Kid', 'High Noon', 'Shane', 'The Grapes of Wrath', '12 Angry Men', 'Mr. Smith Goes to Washington'], 'leaves': [41, 65, 26, 67, 17, 87, 89, 25, 83, 30, 99, 9, 64, 82, 14, 94, 63, 86, 90, 97, 12, 76, 98, 62, 36, 55, 61, 4, 35, 59, 0, 11, 6, 47, 2, 58, 44, 77, 24, 10, 29, 31, 48, 34, 50, 33, 57, 3, 70, 51, 68, 92, 93, 72, 74, 73, 7, 71, 54, 96, 43, 75, 13, 32, 16, 42, 45, 60, 8, 20, 40, 46, 84, 91, 18, 39, 15, 27, 1, 22, 5, 88, 23, 49, 21, 81, 19, 38, 80, 85, 66, 95, 53, 37, 52, 56, 79, 78, 28, 69], 'color_list': ['g', 'g', 'g', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'r', 'b', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'c', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'm', 'b', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'k', 'k', 'k', 'k', 'k', 'k', 'k', 'k', 'k', 'k', 'k', 'k', 'k', 'k', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'g', 'b', 'b', 'b', 'b']}
-    
-    assert dendrogram_ == c_dendrogram, "Please make sure you have correctly created the dendrogram."
-```
-
-
-
-
-
-
-    2/2 tests passed
-
-
+![png](bravehart.PNG)
 
 
 ## 12. Which movies are most similar?
@@ -1214,22 +878,4 @@ print(ans)
 ```
 
     Gladiator
-
-
-
-```python
-%%nose
-
-def test_ans():
-    assert ans == "Gladiator", "Oops, your answer is incorrect! Please check the plot and your answer again."
-```
-
-
-
-
-
-
-    1/1 tests passed
-
-
 
