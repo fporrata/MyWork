@@ -118,4 +118,41 @@ print("Finished")
 ```
 
     Finished
-    
+
+# Create SQLite table using
+
+
+```python
+import pyodbc
+conn = pyodbc.connect('Driver={SQLite3 ODBC Driver};'
+                      'Server=localhost;'
+                      'Database=testDB.db;'
+                      'Trusted_Connection=yes;')
+cursor = conn.cursor()
+cursor.execute('''
+ CREATE TABLE PeopleInfo (
+        PersonId INTEGER PRIMARY KEY,
+        FirstName TEXT NOT NULL,
+        LastName  TEXT NOT NULL,
+        Age INTEGER NULL,
+        CreatedAt TEXT DEFAULT CURRENT_TIMESTAMP NOT NULL
+ 
+);
+
+               ''')
+conn.commit()
+
+cursor.execute('''
+                INSERT INTO PeopleInfo (PersonId, FirstName, LastName, Age)
+                VALUES
+                (1,'Bob','Smith', 55),
+                (2, 'Jenny','Smith', 66)
+                ''')
+conn.commit()
+
+cursor.execute('SELECT * FROM PeopleInfo ')
+for row in cursor:
+    print(row)
+
+conn.close()
+```
