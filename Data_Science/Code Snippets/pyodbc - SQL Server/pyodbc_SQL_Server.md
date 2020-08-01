@@ -156,3 +156,5 @@ for row in cursor:
 
 conn.close()
 ```
+(1, 'Bob', 'Smith', 55, '2020-08-01 20:37:04')
+(2, 'Jenny', 'Smith', 66, '2020-08-01 20:37:04')
