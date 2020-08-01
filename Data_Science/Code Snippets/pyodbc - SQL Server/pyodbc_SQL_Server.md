@@ -119,7 +119,7 @@ print("Finished")
 
     Finished
 
-# Create SQLite table using
+# Create SQLite table
 
 
 ```python
