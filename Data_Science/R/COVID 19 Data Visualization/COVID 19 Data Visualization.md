@@ -127,21 +127,12 @@ plt_cum_confirmed_cases_china_vs_world <- ggplot(confirmed_cases_china_vs_world)
 plt_cum_confirmed_cases_china_vs_world
 ```
 
-Rows: 112
-Columns: 4
-$ is_china  <chr> "China", "China", "China", "China", "China", "China", "China…
-$ date      <date> 2020-01-22, 2020-01-23, 2020-01-24, 2020-01-25, 2020-01-26,…
-$ cases     <dbl> 548, 95, 277, 486, 669, 802, 2632, 578, 2054, 1661, 2089, 47…
-$ cum_cases <dbl> 548, 643, 920, 1406, 2075, 2877, 5509, 6087, 8141, 9802, 118…
-
-   
-
     Rows: 112
     Columns: 4
-    $ is_china  [3m[90m<chr>[39m[23m "China", "China", "China", "China", "China", "China", "China…
-    $ date      [3m[90m<date>[39m[23m 2020-01-22, 2020-01-23, 2020-01-24, 2020-01-25, 2020-01-26,…
-    $ cases     [3m[90m<dbl>[39m[23m 548, 95, 277, 486, 669, 802, 2632, 578, 2054, 1661, 2089, 47…
-    $ cum_cases [3m[90m<dbl>[39m[23m 548, 643, 920, 1406, 2075, 2877, 5509, 6087, 8141, 9802, 118…
+    $ is_china  <chr> "China", "China", "China", "China", "China", "China", "China…
+    $ date      <date> 2020-01-22, 2020-01-23, 2020-01-24, 2020-01-25, 2020-01-26,…
+    $ cases     <dbl> 548, 95, 277, 486, 669, 802, 2632, 578, 2054, 1661, 2089, 47…
+    $ cum_cases <dbl> 548, 643, 920, 1406, 2075, 2877, 5509, 6087, 8141, 9802, 118…
 
 ![png](output_7_2.png)
 
