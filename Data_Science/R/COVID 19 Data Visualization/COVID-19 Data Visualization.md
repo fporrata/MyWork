@@ -311,5 +311,5 @@ ggplot(confirmed_cases_top7_outside_china, aes(x = date, y = cum_cases, color = 
     $ cum_cases <dbl> 16, 0, 3, 31, 2, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13,…
 
 
-![png](output_19_1.png)
+![png](output_19_1.PNG)
 
