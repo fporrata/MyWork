@@ -22,17 +22,6 @@ confirmed_cases_worldwide <- read_csv("datasets/confirmed_cases_worldwide.csv")
 confirmed_cases_worldwide
 ```
 
-    
-    [36m──[39m [1m[1mColumn specification[1m[22m [36m────────────────────────────────────────────────────────[39m
-    cols(
-      date = [34mcol_date(format = "")[39m,
-      cum_cases = [32mcol_double()[39m
-    )
-    
-    
-
-
-
 <table class="dataframe">
 <caption>A spec_tbl_df: 56 × 2</caption>
 <thead>
@@ -98,13 +87,6 @@ confirmed_cases_worldwide
 	<tr><td>2020-03-17</td><td>197146</td></tr>
 </tbody>
 </table>
-    
-    [36m──[39m [1m[1mColumn specification[1m[22m [36m────────────────────────────────────────────────────────[39m
-    cols(
-      date = [34mcol_date(format = "")[39m,
-      cum_cases = [32mcol_double()[39m
-    )
-    
  
 ## 2. Confirmed cases throughout the world
 <p>The table above shows the cumulative confirmed cases of COVID-19 worldwide by date. Just reading numbers in a table makes it hard to get a sense of the scale and growth of the outbreak. Let's draw a line plot to visualize the confirmed cases worldwide.</p>
@@ -145,18 +127,6 @@ plt_cum_confirmed_cases_china_vs_world <- ggplot(confirmed_cases_china_vs_world)
 plt_cum_confirmed_cases_china_vs_world
 ```
 
-    
-    [36m──[39m [1m[1mColumn specification[1m[22m [36m────────────────────────────────────────────────────────[39m
-    cols(
-      is_china = [31mcol_character()[39m,
-      date = [34mcol_date(format = "")[39m,
-      cases = [32mcol_double()[39m,
-      cum_cases = [32mcol_double()[39m
-    )
-    
-    
-
-
     Rows: 112
     Columns: 4
     $ is_china  [3m[90m<chr>[39m[23m "China", "China", "China", "China", "China", "China", "China…
@@ -168,16 +138,7 @@ plt_cum_confirmed_cases_china_vs_world
 
 ![png](output_7_2.png)
 
-
-    
-    [36m──[39m [1m[1mColumn specification[1m[22m [36m────────────────────────────────────────────────────────[39m
-    cols(
-      is_china = [31mcol_character()[39m,
-      date = [34mcol_date(format = "")[39m,
-      cases = [32mcol_double()[39m,
-      cum_cases = [32mcol_double()[39m
-    )
-  
+ 
 
 ## 4. Let's annotate!
 <p>Wow! The two lines have very different shapes. In February, the majority of cases were in China. That changed in March when it really became a global outbreak: around March 14, the total number of cases outside China overtook the cases inside China. This was days after the WHO declared a pandemic.</p>
@@ -223,12 +184,6 @@ ggplot(china_after_feb15, aes(x = date, y = cum_cases )) +
   geom_smooth(method = "lm", se = F) +
   ylab("Cumulative confirmed cases")
 ```
-
-    `geom_smooth()` using formula 'y ~ x'
-    
-
-
-
 ![png](output_13_1.png)
 
 
