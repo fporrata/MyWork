@@ -76,7 +76,7 @@ play_game <-function(){
 }
 
 winners <- replicate(100, play_game())
-hist(winners)
+hist(winners, main = "Histogram of winners using random play", xlab = "Player, -1 means a tie")
 
 
 play_strategic_game <-function(){
@@ -96,19 +96,7 @@ play_strategic_game <-function(){
 }
 
 winners <- replicate(100, play_game())
-hist(winners)
-
-
-
-
-
-
-
-
-
-
-
-
+hist(winners, main = "Histogram of winners using strategic play", xlab = "Player, -1 means a tie")
 
 #TESTS
 #board <- create_board()
