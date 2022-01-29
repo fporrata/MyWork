@@ -26,19 +26,16 @@ random_place <- function(board, player){
 
 
 row_win <- function(board, player){
-    rowcheck = np.all(board == player, axis=1)
-    return np.any(rowcheck == True)
+    return (any( c(all(board[c(1,4,7)] == player), all(board[c(2,5,8)] == player), all(board[c(3,6,9)] == player))))
+
 }
 
 col_win <- function(board, player){
-    colcheck = np.all(board == player, axis=0)
-    return np.any(colcheck == True)
+    return (any( c(all(board[c(1,2,3)] == player), all(board[c(4,5,6)] == player), all(board[c(7,8,9)] == player))))
 }
 
 diag_win <- function(board, player){
-    diagonal = board.diagonal()
-    rowcheck = np.all(diagonal == player)
-    return np.any(rowcheck == True)
+    return (any( c(all(board[c(1,5,9)] == player), all(board[c(3,5,7)] == player))))
 }
 
 
@@ -50,10 +47,15 @@ diag_win <- function(board, player){
 
 board <- create_board()
 board <- place(board, 5, 3)
-board <- place(board, 6, 1)
-board <- random_place(board, 20)
-board <- random_place(board, 11)
+board <- place(board, 5, 6)
+board <- place(board, 5, 9)
 board
+#board <- random_place(board, 20)
+#board <- random_place(board, 11)
+diag_win(board, 5)
+col_win(board, 5)
+row_win(board, 5)
+
 
 #board[1][1] = 1
 #board[2][1] = 1
