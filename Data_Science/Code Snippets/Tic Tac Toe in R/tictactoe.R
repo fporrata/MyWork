@@ -72,15 +72,11 @@ play_game <-function(){
             player <- 1
         }
      }
-    return winner
+    return (winner)
 }
 
-
-
-winner <- play_game()
-print("Winner is:")
-winner
-board
+winners <- replicate(1000, play_game())
+hist(winners)
 
 
 
@@ -90,16 +86,17 @@ board
 
 
 
-board <- create_board()
-board <- place(board, 5, 3)
-board <- place(board, 5, 6)
-board <- place(board, 5, 9)
-board
+#TESTS
+#board <- create_board()
+#board <- place(board, 5, 3)
+##board <- place(board, 5, 6)
+#board <- place(board, 5, 9)
+#board
 #board <- random_place(board, 20)
 #board <- random_place(board, 11)
-diag_win(board, 5)
-col_win(board, 5)
-row_win(board, 5)
+#iag_win(board, 5)
+#col_win(board, 5)
+#row_win(board, 5)
 
 
 #board[1][1] = 1
