@@ -52,7 +52,7 @@ evaluate <- function(board){
         }
     }
     # If so, store `player` as `winner`.
-    if (all(board != 0) and winner == 0){
+    if (all(board != 0) & winner == 0){
         winner = -1
     }
     return (winner)
@@ -62,7 +62,7 @@ play_game <-function(){
     winner <- 0
     player <- 1
     board <- create_board()
-    while(winner == 0):
+    while(winner == 0){
         board <- random_place(board, player)
         winner <- evaluate(board)
         if (player == 1){
@@ -71,8 +71,19 @@ play_game <-function(){
         else {
             player <- 1
         }
+     }
     return winner
 }
+
+
+
+winner <- play_game()
+print("Winner is:")
+winner
+board
+
+
+
 
 
 
