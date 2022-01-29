@@ -38,7 +38,41 @@ diag_win <- function(board, player){
     return (any( c(all(board[c(1,5,9)] == player), all(board[c(3,5,7)] == player))))
 }
 
+evaluate <- function(board){
+    winner = 0
+    for (player in c(1, 2)) {
+        if (row_win(board, player)){
+            winner = player
+        }
+        else if (col_win(board, player)){ 
+            winner = player
+        }
+        else if (diag_win(board, player)){
+            winner = player
+        }
+    }
+    # If so, store `player` as `winner`.
+    if (all(board != 0) and winner == 0){
+        winner = -1
+    }
+    return (winner)
+}
 
+play_game <-function(){
+    winner <- 0
+    player <- 1
+    board <- create_board()
+    while(winner == 0):
+        board <- random_place(board, player)
+        winner <- evaluate(board)
+        if (player == 1){
+            player <- 2
+        }
+        else {
+            player <- 1
+        }
+    return winner
+}
 
 
 
