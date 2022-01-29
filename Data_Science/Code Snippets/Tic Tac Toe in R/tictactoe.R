@@ -75,8 +75,32 @@ play_game <-function(){
     return (winner)
 }
 
-winners <- replicate(1000, play_game())
+winners <- replicate(100, play_game())
 hist(winners)
+
+
+play_strategic_game <-function(){
+    board <- create_board()
+    winner <- 0
+    board[c(5)] <- 1
+    while(winner == 0){
+        for (player in c(2,1)){
+            board <- random_place(board, player)
+            winner <- evaluate(board)
+            if (winner != 0) {
+                break
+            } 
+        }
+    }
+    return (winner)
+}
+
+winners <- replicate(100, play_game())
+hist(winners)
+
+
+
+
 
 
 
