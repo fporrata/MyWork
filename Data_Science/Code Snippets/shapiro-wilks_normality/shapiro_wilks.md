@@ -1,5 +1,6 @@
 A useful function to run simulations is the replicate function.  It allows you to run different function(s) any number of times.  Here are some examples to give you an idea:
 
+```R
 #Example 1
 
 #Select 10 samples of two location names each
@@ -9,8 +10,7 @@ samples_10 <- replicate(10,{
   locs = sample(location,2)
 })
 samples_10
-
-#\RESULT
+# RESULT
 
     [,1]          [,2]          [,3]         [,4]     [,5]       [,6]      
 [1,] "Barbados"    "Puerto Rico" "Mozambique" "Egypt"  "Barbados" "US"      
@@ -43,11 +43,11 @@ samples_1000 <- replicate(1000,{
   num1 + num2
 })
 hist(samples_1000)
-
+```
 ![png](image1.PNG)
 
  
-
+```R
 #Example 4 is to test if the distribution of sums is normal.  Here it gets ify for me and Prof. Larose will probably laugh at this.  
 #There is a normality test called shapiro.test.  It is part of base R and it is usually loaded by default.  The package name is "stats"
 
@@ -67,7 +67,7 @@ shapiro.test(samples_1000)
 ## Plot using a qqplot
 qqnorm(samples_1000)
 qqline(samples_1000, col = 2)
-
+```
 ![png](image2.PNG)
 ![png](image3.PNG)
  
