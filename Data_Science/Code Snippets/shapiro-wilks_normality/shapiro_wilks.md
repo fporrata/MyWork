@@ -48,8 +48,8 @@ hist(samples_1000)
 
  
 ```R
-#Example 4 is to test if the distribution of sums is normal.  Here it gets ify for me and Prof. Larose will probably laugh at this.  
-#There is a normality test called shapiro.test.  It is part of base R and it is usually loaded by default.  The package name is "stats"
+#Example 4 is to test if the distribution of sums is normal. There is a normality test called shapiro.test.   
+# It is part of base R and it is usually loaded by default.  The package name is "stats"
 
 numbers <- c(1,2,3,4,5,6,7,8,9)
 samples_1000 <- replicate(1000,{
