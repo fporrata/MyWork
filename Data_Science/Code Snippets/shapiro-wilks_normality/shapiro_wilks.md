@@ -44,11 +44,12 @@ samples_1000 <- replicate(1000,{
 })
 hist(samples_1000)
 
-
+![png](image1.PNG)
 
  
 
-#Example 4 is to test if the distribution of sums is normal.  Here it gets ify for me and Prof. Larose will probably laugh at this.  There is a normality test called shapiro.test.  I Googled it 😀.  It is part of base R and it is usually loaded by default.  The package name is "stats"
+#Example 4 is to test if the distribution of sums is normal.  Here it gets ify for me and Prof. Larose will probably laugh at this.  
+#There is a normality test called shapiro.test.  It is part of base R and it is usually loaded by default.  The package name is "stats"
 
 numbers <- c(1,2,3,4,5,6,7,8,9)
 samples_1000 <- replicate(1000,{
@@ -67,15 +68,9 @@ shapiro.test(samples_1000)
 qqnorm(samples_1000)
 qqline(samples_1000, col = 2)
 
-
-
+![png](image2.PNG)
+![png](image3.PNG)
  
-
-
-
- 
-
-
 Here is the definition of the Shapiro-Wilk test: 
 
 Shapiro-Wilks Normality Test. The Shapiro-Wilks test for normality is one of three general normality tests designed to detect all departures from normality. It is comparable in power to the other two tests. The test rejects the hypothesis of normality when the p-value is less than or equal to 0.05.
