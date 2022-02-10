@@ -37,3 +37,6 @@ rect.hclust(hc,k=5)
 df <- data.frame(misspelling,cutree(hc,k=5))
 ```
 ![png](dendo5.png)
+
+The correct number of clusters should have been 5 as there are 5 cities in the file.  The silhouette method correctly identified the clusters and you can see the 5 groups in the dendogram.  Levenshtein Distance was used to compute the distance between the different strings in the file and this allows for a successful clustering of the misspellings.  
+
