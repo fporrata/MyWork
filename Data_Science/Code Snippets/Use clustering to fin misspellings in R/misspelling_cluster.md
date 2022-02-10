@@ -19,14 +19,14 @@ d  <- adist(misspelling$city)
 # Use elbow method to determine best clusters
 fviz_nbclust(d, FUN = hcut, method = "wss")
 ```
-
+![png](elbow.png)
 
 ```R
 # Use silhouette meethod to determine best clusters
 fviz_nbclust(d, FUN = hcut, method = "silhouette")
 ```
 
-
+![png](silhouette.png)
 
 
 ```R
@@ -36,3 +36,4 @@ plot(hc)
 rect.hclust(hc,k=5)
 df <- data.frame(misspelling,cutree(hc,k=5))
 ```
+![png](dendo5.png)
