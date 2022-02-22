@@ -265,5 +265,5 @@ Rattle timestamp: 2022-02-22 10:12:30 franciscoporrata
 ======================================================================
 ```
 GRAPHS
-
+![png](rattle_linear_regression.png)
 
