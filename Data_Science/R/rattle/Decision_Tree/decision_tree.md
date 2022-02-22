@@ -327,5 +327,5 @@ Time taken: 0.54 secs
 Rattle timestamp: 2022-02-22 11:34:12 franciscoporrata
 ======================================================================
 ```
-GRAPHS
+GRAPH
 ![png](decision_tree.png)
