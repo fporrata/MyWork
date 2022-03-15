@@ -45,4 +45,6 @@ plt.ylim([-10, 10])
 # Show plot
 plt.show()
 ```
-!polynomial_graph.PNG
+
+![png](polynomial_graph.PNG)
+
